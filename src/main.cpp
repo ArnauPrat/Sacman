@@ -13,6 +13,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
 #include <iostream>
 #include <SDL.h>
+#include "dali/ResourceLoader.hpp"
+#include "dali/Texture.hpp"
+#include "dali/PixelShader.hpp"
+#include "dali/VertexShader.hpp"
 
 int main( int argc, char** argv ) {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
@@ -20,6 +24,7 @@ int main( int argc, char** argv ) {
 		return 1;
 	}
 	SDL_Quit();
+    dali::ResourceLoader<dali::Texture> loader;
 	return 0;
 }
 
