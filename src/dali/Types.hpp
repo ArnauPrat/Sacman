@@ -11,21 +11,19 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
-#include "RendererConfig.hpp"
+#ifndef TYPES_H
+#define TYPES_H
 
 namespace dali {
-
-    RendererConfig::RendererConfig() :
-        m_RenderingMode( PIXEL_ALIGNED ),
-        m_CellWidth( 32 ),
-        m_CellHeight( 32 ),
-        m_GridWidth( 40 ),
-        m_GridHeight( 22 ),
-        m_ViewportWidth( 1280 ),
-        m_ViewportHeight( 720 ) 
-    {
-    }
-
-    RendererConfig::~RendererConfig(){
-    }
+   struct Vector2f {
+       union {
+           float m_Data[2];
+           struct {
+               float m_X;
+               float m_Y;
+           } m_Component;
+       };
+   }; 
 }
+
+#endif

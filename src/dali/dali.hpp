@@ -11,21 +11,9 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
+
+#include "Effect.hpp"
+#include "Renderer.hpp"
 #include "RendererConfig.hpp"
-
-namespace dali {
-
-    RendererConfig::RendererConfig() :
-        m_RenderingMode( PIXEL_ALIGNED ),
-        m_CellWidth( 32 ),
-        m_CellHeight( 32 ),
-        m_GridWidth( 40 ),
-        m_GridHeight( 22 ),
-        m_ViewportWidth( 1280 ),
-        m_ViewportHeight( 720 ) 
-    {
-    }
-
-    RendererConfig::~RendererConfig(){
-    }
-}
+#include "SpriteBatch.hpp"
+#include "Texture.hpp"

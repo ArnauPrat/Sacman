@@ -11,21 +11,22 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
-#include "RendererConfig.hpp"
+#include "SpriteBatch.hpp"
 
 namespace dali {
+    SpriteBatch::SpriteBatch( const Texture& texture ) :
+        m_Texture( texture ) {
+        }
 
-    RendererConfig::RendererConfig() :
-        m_RenderingMode( PIXEL_ALIGNED ),
-        m_CellWidth( 32 ),
-        m_CellHeight( 32 ),
-        m_GridWidth( 40 ),
-        m_GridHeight( 22 ),
-        m_ViewportWidth( 1280 ),
-        m_ViewportHeight( 720 ) 
-    {
+    SpriteBatch::~SpriteBatch() {
     }
 
-    RendererConfig::~RendererConfig(){
+    void SpriteBatch::AddSprite( const Vector2f points[4], const Vector2f coords[2] ) {
+        for( int i = 0; i < 4; ++i ) {
+            m_Points.push_back( points[i] );
+        }
+        for( int i = 0; i < 2; ++i ) {
+            m_Coords.push_back( coords[i] );
+        }
     }
 }

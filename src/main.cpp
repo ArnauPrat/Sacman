@@ -13,19 +13,58 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
 #include <iostream>
 #include <SDL.h>
-#include "dali/ResourceLoader.hpp"
-#include "dali/Texture.hpp"
-#include "dali/PixelShader.hpp"
-#include "dali/VertexShader.hpp"
+#include "dali/dali.hpp"
+
+SDL_GLContext glcontext;
+SDL_Window *window;
+
+void SDLStartUp() {
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
+        std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
+        exit(1);
+    }
+    // Window mode MUST include SDL_WINDOW_OPENGL for use with OpenGL.
+    window = SDL_CreateWindow(
+            "SDL2/OpenGL Demo", 0, 0, 640, 480, 
+            SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
+
+    // Create an OpenGL context associated with the window.
+    glcontext = SDL_GL_CreateContext(window);
+
+    // now you can make GL calls.
+    glClearColor(0,0,0,1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    SDL_GL_SwapWindow(window);
+}
+
+void SDLShutDown() {
+    SDL_GL_DeleteContext(glcontext);
+    SDL_DestroyWindow(window);
+	SDL_Quit();
+}
 
 int main( int argc, char** argv ) {
-	if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
-		std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
-		return 1;
-	}
-	SDL_Quit();
-    dali::ResourceLoader<dali::Texture> loader;
-	return 0;
+    SDLStartUp(); 
+    dali::RendererConfig config;
+    config.m_ViewportWidth = 640;
+    config.m_ViewportHeight = 480;
+    dali::Renderer renderer( config );
+    renderer.StartUp();
+    renderer.ShutDown();
+    bool quit = false;
+    SDL_Event event;
+    while (!quit) {
+        /* Check for new events */
+        while(SDL_PollEvent(&event)) {
+            /* If a quit event has been sent */
+            if (event.type == SDL_QUIT) {
+                /* Quit the application */
+                quit = true;
+            }
+        }
+    }
+    SDLShutDown();
+    return 0;
 }
 
 
