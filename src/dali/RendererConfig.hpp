@@ -25,14 +25,13 @@ namespace dali {
             RendererConfig();
             ~RendererConfig();
 
-            RenderingMode   m_RenderingMode;
-            bool            m_FullScreen; 
-            int             m_CellWidth;
-            int             m_CellHeight;
-            int             m_GridWidth;
-            int             m_GridHeight;
-            int             m_ViewportWidth;
-            int             m_ViewportHeight;
+            RenderingMode   m_RenderingMode;    /**< @brief The rendering mode: pixel or grid aligned.*/
+            int             m_CellWidth;        /**< @brief The width of a cell.*/
+            int             m_CellHeight;       /**< @brief The height of a cell.*/
+            int             m_GridWidth;        /**< @brief The width of the grid.*/
+            int             m_GridHeight;       /**< @brief The height of the grid.*/
+            int             m_ViewportWidth;    /**< @brief The width of the viewport.*/
+            int             m_ViewportHeight;   /**< @brief THe heighr of the viewport.*/
 
     };
 }
