@@ -1,56 +1,73 @@
 /*Sacman is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-Sacman is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+  Sacman is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <http://www.gnu.org/licenses/>.*/
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
+#include "Config.hpp"
+#include "Context.hpp"
 #include <iostream>
-#include <SDL.h>
-#include "dali/dali.hpp"
 
-SDL_GLContext glcontext;
-SDL_Window *window;
-
-void SDLStartUp() {
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
-        std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
-        exit(1);
+#define CHECK_ARGUMENT_STRING(index, option,variable,setVariable) \
+    if( strcmp(argv[index],option) == 0 ){ \
+        setVariable = true; \
+        if( (index+1) < argc ) { \
+            variable = argv[index+1]; \
+        } else { \
+            printf( "Invalid options.\n" ); \
+            return 1;\
+        }\
     }
-    // Window mode MUST include SDL_WINDOW_OPENGL for use with OpenGL.
-    window = SDL_CreateWindow(
-            "SDL2/OpenGL Demo", 0, 0, 640, 480, 
-            SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
 
-    // Create an OpenGL context associated with the window.
-    glcontext = SDL_GL_CreateContext(window);
+#define CHECK_ARGUMENT_FLOAT(index, option,variable,setVariable) \
+    if( strcmp(argv[index],option) == 0 ){ \
+        setVariable = true; \
+        if( (index+1) < argc ) { \
+            variable = atof(argv[index+1]); \
+        } else { \
+            printf( "Invalid options.\n" ); \
+            return 1;\
+        }\
+    }
 
-    // now you can make GL calls.
-    glClearColor(0,0,0,1);
-    glClear(GL_COLOR_BUFFER_BIT);
-    SDL_GL_SwapWindow(window);
-}
+#define CHECK_ARGUMENT_INT(index, option,variable,setVariable) \
+    if( strcmp(argv[index],option) == 0 ){ \
+        setVariable = true; \
+        if( (index+1) < argc ) { \
+            variable = atoi(argv[index+1]); \
+        } else { \
+            printf( "Invalid options.\n" ); \
+            return 1;\
+        }\
+    }
 
-void SDLShutDown() {
-    SDL_GL_DeleteContext(glcontext);
-    SDL_DestroyWindow(window);
-	SDL_Quit();
-}
+#define CHECK_FLAG(index, option,setVariable) \
+    if( strcmp(argv[index],option) == 0 ){ \
+        setVariable = true; \
+    }
 
 int main( int argc, char** argv ) {
-    SDLStartUp(); 
-    dali::RendererConfig config;
-    config.m_ViewportWidth = 640;
-    config.m_ViewportHeight = 480;
-    dali::Renderer renderer( config );
-    renderer.StartUp();
-    renderer.ShutDown();
+
+    const char* configFilename;
+    bool configFilenameSet = false; 
+    for (int i = 1; i < argc; i++) {
+        CHECK_ARGUMENT_STRING(i, "-c", configFilename, configFilenameSet)
+    }
+
+    sacman::Config config; 
+    if( configFilenameSet ) {
+        sacman::Load( config, configFilename );
+    }
+
+    sacman::Context::StartUp();
+
     bool quit = false;
     SDL_Event event;
     while (!quit) {
@@ -63,9 +80,6 @@ int main( int argc, char** argv ) {
             }
         }
     }
-    SDLShutDown();
+    sacman::Context::ShutDown();
     return 0;
 }
-
-
-

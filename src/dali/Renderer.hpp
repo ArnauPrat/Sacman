@@ -16,10 +16,8 @@
 
 #include "RendererConfig.hpp"
 #include <GL/glew.h>
-#include <SDL/SDL.h>
 
 namespace dali {
-
     class Renderer {
         public:
 
