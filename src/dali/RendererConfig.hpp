@@ -32,7 +32,6 @@ namespace dali {
             int             m_GridHeight;       /**< @brief The height of the grid.*/
             int             m_ViewportWidth;    /**< @brief The width of the viewport.*/
             int             m_ViewportHeight;   /**< @brief THe heighr of the viewport.*/
-
     };
 }
 #endif
