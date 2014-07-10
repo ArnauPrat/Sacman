@@ -19,6 +19,9 @@ namespace sacman {
 
     SDL_GLContext   Context::m_GLcontext;
     SDL_Window*     Context::m_Window = NULL;
+    Config          Context::m_Config;
+    bool            Context::m_Run;
+    dali::Renderer  Context::m_Renderer;
 
     void Context::SDLStartUp() {
         if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
@@ -27,16 +30,14 @@ namespace sacman {
         }
         // Window mode MUST include SDL_WINDOW_OPENGL for use with OpenGL.
         m_Window = SDL_CreateWindow(
-                "SDL2/OpenGL Demo", 0, 0, 640, 480, 
+                "SDL2/OpenGL Demo", 0, 0, 
+                m_Config.m_RendererConfig.m_ViewportWidth,
+                m_Config.m_RendererConfig.m_ViewportHeight, 
                 SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
 
         // Create an OpenGL context associated with the window.
         m_GLcontext = SDL_GL_CreateContext(m_Window);
 
-        // now you can make GL calls.
-        glClearColor(0,0,0,1);
-        glClear(GL_COLOR_BUFFER_BIT);
-        SDL_GL_SwapWindow(m_Window);
     }
 
     void Context::SDLShutDown() {
@@ -45,11 +46,37 @@ namespace sacman {
         SDL_Quit();
     }
 
-    void Context::StartUp() {
+    void Context::ProcessEvents() {
+        SDL_Event event;
+        /* Check for new events */
+        while(SDL_PollEvent(&event)) {
+            /* If a quit event has been sent */
+            if (event.key.keysym.sym == SDLK_ESCAPE) {
+                /* Quit the application */
+                m_Run = false;
+            }
+        }
+    }
+
+    void Context::StartUp( const Config& config ) {
+        m_Config = config;
+        m_Run = true;
         SDLStartUp();
+        m_Renderer.StartUp( m_Config.m_RendererConfig );
     }
 
     void Context::ShutDown() {
+        m_Renderer.ShutDown();
         SDLShutDown();
     }
+
+    void Context::StartGameLoop() {
+        while (m_Run) {
+            ProcessEvents();
+            m_Renderer.BeginFrame();
+            m_Renderer.EndFrame();
+            SDL_GL_SwapWindow(m_Window);
+        }
+    }
+
 }

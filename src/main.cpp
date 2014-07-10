@@ -66,20 +66,8 @@ int main( int argc, char** argv ) {
         sacman::Load( config, configFilename );
     }
 
-    sacman::Context::StartUp();
-
-    bool quit = false;
-    SDL_Event event;
-    while (!quit) {
-        /* Check for new events */
-        while(SDL_PollEvent(&event)) {
-            /* If a quit event has been sent */
-            if (event.type == SDL_QUIT) {
-                /* Quit the application */
-                quit = true;
-            }
-        }
-    }
+    sacman::Context::StartUp( config );
+    sacman::Context::StartGameLoop();
     sacman::Context::ShutDown();
     return 0;
 }

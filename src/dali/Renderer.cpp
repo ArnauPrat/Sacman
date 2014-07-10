@@ -16,21 +16,23 @@
 
 namespace dali {
 
-    Renderer::Renderer(const RendererConfig& config) :
-           m_Config( config )
+    Renderer::Renderer()
     {
     }
 
     Renderer::~Renderer() {
     }
 
-    void Renderer::StartUp() {
+    void Renderer::StartUp( const RendererConfig& config ) {
+        m_Config = config;
+        InitOpenGL();
     }
 
     void Renderer::ShutDown() {
     }
 
     void Renderer::BeginFrame() {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     }
 
     void Renderer::EndFrame() {
