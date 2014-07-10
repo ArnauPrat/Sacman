@@ -14,6 +14,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 #ifndef SACMAN_CONTEXT_H
 #define SACMAN_CONTEXT_H
 
+#include "Config.hpp"
+#include "dali/Renderer.hpp"
 #include <GL/glew.h>
 #include <SDL.h>
 
@@ -22,11 +24,15 @@ namespace sacman {
     class Context {
         public:
 
-            /** @brief Initializes up the system.*/
-            static void StartUp();
+            /** @brief Initializes up the system.
+             *  @param config The configuration of the engine*/
+            static void StartUp( const Config& config );
 
             /** @brief Frees the system.*/
             static void ShutDown();
+
+            /** @brief Starts the game loop.*/
+            static void StartGameLoop();
 
         private:
             /** @brief Starts SDL stuff.*/
@@ -34,8 +40,21 @@ namespace sacman {
             /** @brief Frees SDL stuff.*/
             static void SDLShutDown();
 
+            /** @brief Processed events.*/
+            static void ProcessEvents();
+
+            /** SDL members **/
             static SDL_GLContext    m_GLcontext;
             static SDL_Window*      m_Window;
+
+            /** Configuration **/
+            static Config           m_Config;
+
+            /** Flow control **/
+            static bool             m_Run;
+
+            /** Rendering **/
+            static dali::Renderer   m_Renderer;
     };
 }
 

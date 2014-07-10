@@ -21,11 +21,11 @@ namespace dali {
     class Renderer {
         public:
 
-            Renderer( const RendererConfig& config );
+            Renderer();
             ~Renderer();
 
             /** @brief Starts up the renderer.*/
-            void            	StartUp();
+            void            	StartUp( const RendererConfig& config );
 
             /** @brief Shuts down the renderer.*/
             void            	ShutDown();
