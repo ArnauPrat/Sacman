@@ -12,21 +12,22 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
 #include "SpriteBatch.hpp"
+#include<cstring>
 
 namespace dali {
     SpriteBatch::SpriteBatch( const Texture& texture ) :
-        m_Texture( texture ) {
+        m_Texture( texture ),
+        m_TexQuads( NULL ) {
         }
 
     SpriteBatch::~SpriteBatch() {
+        if( m_TexQuads ) {
+            delete m_TexQuads;
+        }
     }
 
-    void SpriteBatch::AddSprite( const Vector2f points[4], const Vector2f coords[2] ) {
-        for( int i = 0; i < 4; ++i ) {
-            m_Points.push_back( points[i] );
-        }
-        for( int i = 0; i < 2; ++i ) {
-            m_Coords.push_back( coords[i] );
-        }
+    void SpriteBatch::AddTexQuads( const TexQuad texQuads[], const int numQuads ) {
+        m_TexQuads = new TexQuad[numQuads];
+        std::memcpy( m_TexQuads, texQuads, sizeof(TexQuad)*numQuads ); 
     }
 }
