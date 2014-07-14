@@ -15,7 +15,9 @@
 #define RENDERER_H
 
 #include "RendererConfig.hpp"
+#include "SpriteBatch.hpp"
 #include <GL/glew.h>
+#include <vector>
 
 namespace dali {
     class Renderer {
@@ -24,7 +26,8 @@ namespace dali {
             Renderer();
             ~Renderer();
 
-            /** @brief Starts up the renderer.*/
+            /** @brief Starts up the renderer.
+             *  @param config The structure holding the configuration of the renderer.*/
             void            	StartUp( const RendererConfig& config );
 
             /** @brief Shuts down the renderer.*/
@@ -35,6 +38,11 @@ namespace dali {
 
             /** @brief Ends the current frame.*/
             void            	EndFrame();
+
+            /** @brief Draws a sprite batch.
+             *  @param spriteBatch The sprite batch to draw.*/
+            void                DrawSpriteBach( const SpriteBatch& spriteBatch );
+
             /*                void            	DrawSprite(const SOGLSpriteInfo* spriteInfo);
                               void 				DrawSpriteBatch( const SOGLSpriteBatch* spriteBatch);
                               void            	DrawMesh(const SOGLMeshInfo* meshInfo);
@@ -56,10 +64,14 @@ namespace dali {
             /** @brief Sets the projection for the grid aligned rendering mode.*/
             void SetProjectionPixelAligned();
 
-            float   m_ProjectionMatrix[4][4];     
-            float   m_ScreenMatrix[4][4];     
+            /** Matrices.*/
+            float   m_ProjectionMatrix[3][3];       /**< @brief The projection matrix used to render.*/
+            float   m_ViewMatrix[3][3];             /**< @brief The view matrix.*/
 
+            /** Configuration.*/
             RendererConfig  m_Config;
+
+            /** Primitives to render.*/
 
             ///**	@brief Renders the specified primitive.
             // *   @param renderingInfo The rendering info of the primitive to render.*/

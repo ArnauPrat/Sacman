@@ -25,15 +25,14 @@ namespace dali {
             SpriteBatch( const Texture& texture );
             ~SpriteBatch();
             
-            /** @brief Adds a sprite into the batch.
-             *  @param points The points forming the sprite.
-             *  @param coords The texture coordinates of the sprite.*/
-            void AddSprite( const Vector2f points[4], const Vector2f coords[2] );
+            /** @brief Adds tex quads into the batch.
+             *  @param texQuads The tex quads forming the sprites.
+             *  @param numQuads The number of tex quads.*/
+            void AddTexQuads( const TexQuad texQuads[], const int numQuads );
 
         private:
-            const Texture& m_Texture;
-            std::vector<Vector2f>   m_Points; /**< @brief The vector of points.*/
-            std::vector<Vector2f>   m_Coords; /**< @brief The vector of texture coordinates.*/
+            const Texture&      m_Texture;
+            TexQuad*            m_TexQuads;   /**< @brief The tex quads forming the sprite batch.*/
     };
 }
 

@@ -24,6 +24,13 @@ namespace dali {
            } m_Component;
        };
    }; 
+
+   struct TexQuad {
+           Vector2f m_Min;
+           Vector2f m_Max;
+           Vector2f m_U;
+           Vector2f m_V;
+   };
 }
 
 #endif
