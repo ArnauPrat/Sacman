@@ -20,6 +20,7 @@
 namespace dali {
 
     class Texture {
+	    friend class Renderer;
         public:
             ~Texture();
 

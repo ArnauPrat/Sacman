@@ -19,17 +19,12 @@
 #include<string>
 
 	namespace dali {
-
 #define GLSLVARMACRO(varnumber, varstring) varnumber,
 #define GLSLVARENUM \
                 GLSLVARMACRO(E_PROJECTION_MATRIX,"ProjectionMatrix") \
-                GLSLVARMACRO(E_SCREEN_MATRIX,"ScreenMatrix") \
                 GLSLVARMACRO(E_VIEW_MATRIX,"ViewMatrix") \
                 GLSLVARMACRO(E_MODEL_MATRIX,"ModelMatrix") \
                 GLSLVARMACRO(E_TEX_DIFFUSE,"TexDiffuse") \
-                GLSLVARMACRO(E_AMBIENT,"Ambient") \
-                GLSLVARMACRO(E_LIGHT_POSITION,"LightPosition") \
-                GLSLVARMACRO(E_LIGHT_RADIUS,"LightRadius") \
                 GLSLVARMACRO(E_NUM_VARS,"Error") 
 
                 enum GlslVar 
