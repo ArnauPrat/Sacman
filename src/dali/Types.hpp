@@ -15,22 +15,17 @@
 #define TYPES_H
 
 namespace dali {
-   struct Vector2f {
-       union {
-           float m_Data[2];
-           struct {
-               float m_X;
-               float m_Y;
-           } m_Component;
-       };
-   }; 
+	struct Vector2f {
+		float m_X;
+		float m_Y;
+	};
 
-   struct TexQuad {
-           Vector2f m_Min;
-           Vector2f m_Max;
-           Vector2f m_U;
-           Vector2f m_V;
-   };
+	struct TexQuad {
+		Vector2f m_Min;
+		Vector2f m_Max;
+		Vector2f m_TexMin;
+		Vector2f m_TexMax;
+	};
 }
 
 #endif

@@ -28,11 +28,14 @@ namespace dali {
             /** @brief Adds tex quads into the batch.
              *  @param texQuads The tex quads forming the sprites.
              *  @param numQuads The number of tex quads.*/
-            void AddTexQuads( const TexQuad texQuads[], const int numQuads );
+            void AddTexQuads( const TexQuad texQuads[], const short numQuads );
 
-        private:
-            const Texture&      m_Texture;
-            TexQuad*            m_TexQuads;   /**< @brief The tex quads forming the sprite batch.*/
+	private:
+	    const Texture&      m_Texture;
+	    GLuint		m_Vertices;	/**< @brief The opengl buffer Id containing this batch vertices.*/
+	    GLuint		m_TexCoords;	/**< @brief The opengl buffer Id containing this batch texture coordinates.*/
+	    GLuint		m_Indices;	/**< @brief The opengl buffer Id containing this batch indices.*/
+	    short		m_NumQuads;	/**< @brief The number of quads in this sprite batch.*/
     };
 }
 
