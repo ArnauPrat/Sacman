@@ -15,6 +15,7 @@
 #include "Effect.hpp"
 #include "Renderer.hpp"
 #include <functional>
+#include <iostream>
 
 namespace dali {
 
@@ -32,7 +33,8 @@ namespace dali {
 		matrix[2][2] = 1.0f;
 	}
 
-	Renderer::Renderer()
+	Renderer::Renderer() :
+		m_Textured(NULL)
 	{
 	}
 
@@ -66,6 +68,8 @@ namespace dali {
 		Effect::SetStateFunction( E_VIEW_MATRIX, std::bind(&Renderer::ShaderSetViewMatrix, this, std::placeholders::_1 ));
 		Effect::SetStateFunction( E_MODEL_MATRIX, std::bind(&Renderer::ShaderSetModelMatrix, this, std::placeholders::_1 ));
 		Effect::SetStateFunction( E_TEX_DIFFUSE, std::bind(&Renderer::ShaderSetTexDiffuse, this, std::placeholders::_1 ));
+
+		m_Textured = m_EffectLoader.Load("./effects/E_Sprite.sha");
 	}
 
 	void Renderer::ShutDown() {
@@ -81,7 +85,20 @@ namespace dali {
 		for( int i = 0; i < size; ++i ) {
 			m_CurrentInfo = &m_FrameDrawingInfo[i];
 			// Set Effect
+			Effect::SetEffect(*m_Textured);
 			// Draw
+			glEnableClientState(GL_VERTEX_ARRAY);
+			glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_Vertices);
+			glVertexPointer(2,GL_FLOAT,0,0);
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+			glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_TexCoords);
+			glTexCoordPointer(2,GL_FLOAT,0,0);
+			glEnableClientState(GL_INDEX_ARRAY);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_CurrentInfo->m_Indices);
+			glDrawElements(GL_TRIANGLES,m_CurrentInfo->m_NumQuads*2,GL_UNSIGNED_SHORT,0);
+			glDisableClientState(GL_VERTEX_ARRAY);
+			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+			glDisableClientState(GL_INDEX_ARRAY);
 		}
 	}
 
@@ -97,8 +114,15 @@ namespace dali {
 	}	
 
 	void Renderer::InitOpenGL() {
+		GLuint err = glewInit();
+		if (GLEW_OK != err)
+		{
+			/* Problem: glewInit failed, something is seriously wrong. */
+			std::cout << "ERROR Loading glew" << std::endl;
+		}
+		std::cout << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
 		glViewport( 0, 0, m_Config.m_ViewportWidth, m_Config.m_ViewportHeight );
-		glClearColor(0.0f, 0.0f, 0.0f,1.0f);                   
+		glClearColor(0.0f, 0.0f, 1.0f,1.0f);                   
 		glClearDepth(1);                         
 		glDepthFunc(GL_LEQUAL);   
 		glDisable(GL_CULL_FACE);
@@ -159,13 +183,9 @@ namespace dali {
 	}
 
 	void Renderer::ShaderSetTexDiffuse( GLint pos ) {
-	/*	glActiveTexture(GL_TEXTURE0);
-		if( m_CurrentTexture != m_TexDiffuse->texID ) {
-			glBindTexture(GL_TEXTURE_2D, m_TexDiffuse->texID);
-			glUniform1i(pos, 0);
-			m_CurrentTexture = m_TexDiffuse->texID;
-		}    
-		*/
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, m_CurrentInfo->m_Texture);
+		glUniform1i(pos, 0);
 	}
 
 }

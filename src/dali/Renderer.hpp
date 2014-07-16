@@ -14,71 +14,78 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include "Effect.hpp"
 #include "RendererConfig.hpp"
+#include "ResourceLoader.hpp"
 #include "SpriteBatch.hpp"
 #include <GL/glew.h>
 #include <vector>
 
 namespace dali {
-    class Renderer {
+	class Renderer {
 
-	    struct DrawingInfo {
-		    GLuint m_Vertices;
-		    GLuint m_TexCoords;
-		    GLuint m_Indices;
-		    GLuint m_Texture;
-		    short  m_NumQuads;
-	    };
+		struct DrawingInfo {
+			GLuint m_Vertices;
+			GLuint m_TexCoords;
+			GLuint m_Indices;
+			GLuint m_Texture;
+			short  m_NumQuads;
+		};
 
-        public:
+		public:
 
-            Renderer();
-            ~Renderer();
+		Renderer();
+		~Renderer();
 
-            /** @brief Starts up the renderer.
-             *  @param config The structure holding the configuration of the renderer.*/
-            void            	StartUp( const RendererConfig& config );
+		/** @brief Starts up the renderer.
+		 *  @param config The structure holding the configuration of the renderer.*/
+		void            	StartUp( const RendererConfig& config );
 
-            /** @brief Shuts down the renderer.*/
-            void            	ShutDown();
+		/** @brief Shuts down the renderer.*/
+		void            	ShutDown();
 
-            /** @brief Starts a new frame.*/
-            void            	BeginFrame();
+		/** @brief Starts a new frame.*/
+		void            	BeginFrame();
 
-            /** @brief Ends the current frame.*/
-            void            	EndFrame();
+		/** @brief Ends the current frame.*/
+		void            	EndFrame();
 
-            /** @brief Draws a sprite batch.
-             *  @param spriteBatch The sprite batch to draw.*/
-            void                DrawSpriteBach( const SpriteBatch& spriteBatch );
+		/** @brief Draws a sprite batch.
+		 *  @param spriteBatch The sprite batch to draw.*/
+		void                DrawSpriteBach( const SpriteBatch& spriteBatch );
 
-        private:
-            /**	@brief Initializes OpenGL.*/
-            void InitOpenGL();
+		private:
+		/**	@brief Initializes OpenGL.*/
+		void InitOpenGL();
 
-            /** @brief Sets the projection for the grid aligned rendering mode.*/
-            void SetProjectionGridAligned();
+		/** @brief Sets the projection for the grid aligned rendering mode.*/
+		void SetProjectionGridAligned();
 
-            /** @brief Sets the projection for the grid aligned rendering mode.*/
-            void SetProjectionPixelAligned();
+		/** @brief Sets the projection for the grid aligned rendering mode.*/
+		void SetProjectionPixelAligned();
 
-	    /** Matrices.*/
-	    float   m_ProjectionMatrix[3][3];       /**< @brief The projection matrix used to render.*/
-	    float   m_ViewMatrix[3][3];             /**< @brief The current view matrix.*/
-	    float   m_ModelMatrix[3][3];            /**< @brief The current model matrix.*/
+		/** Matrices.*/
+		float   m_ProjectionMatrix[3][3];       /**< @brief The projection matrix used to render.*/
+		float   m_ViewMatrix[3][3];             /**< @brief The current view matrix.*/
+		float   m_ModelMatrix[3][3];            /**< @brief The current model matrix.*/
 
-	    /** Current rendering data */
-	    DrawingInfo*	m_CurrentInfo;	    /**< @brief The current texture to use for rendering.*/
-	    std::vector<DrawingInfo> m_FrameDrawingInfo;	/** @brief The drawing info objects to render this frame.*/
+		/** Current rendering data */
+		DrawingInfo*	m_CurrentInfo;	    /**< @brief The current texture to use for rendering.*/
+		std::vector<DrawingInfo> m_FrameDrawingInfo;	/** @brief The drawing info objects to render this frame.*/
 
-            /** Configuration. */
-            RendererConfig  m_Config;
+		/** Configuration. */
+		RendererConfig  m_Config;
 
-            /** Shader satate functions */
-            void ShaderSetProjectionMatrix( GLint pos );
-            void ShaderSetViewMatrix( GLint pos );
-            void ShaderSetModelMatrix( GLint pos );
-            void ShaderSetTexDiffuse( GLint pos );
-    };
+		/** Resources. */
+		ResourceLoader<Effect>	m_EffectLoader;
+		Effect*			m_Textured;
+
+
+		/** Shader satate functions */
+		void ShaderSetProjectionMatrix( GLint pos );
+		void ShaderSetViewMatrix( GLint pos );
+		void ShaderSetModelMatrix( GLint pos );
+		void ShaderSetTexDiffuse( GLint pos );
+	};
 }
 #endif

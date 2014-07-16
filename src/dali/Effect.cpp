@@ -13,12 +13,13 @@
   */
 
 #include "Effect.hpp"
+#include <GL/glew.h>
+#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <map>
 #include <string.h>
 #include <string>
-#include <cstring>
 
 namespace dali {
 
@@ -85,6 +86,7 @@ namespace dali {
 	}
 
 	void Effect::SetEffect( const Effect& effect ) {
+		glUseProgram( effect.m_ShaderID );
 		for( int i = 0; i < E_NUM_VARS; ++i ) {
 			if( effect.m_ShaderVars[i] != GL_INVALID_VALUE ) {
 				m_StateFunctions[i]( effect.m_ShaderVars[i] );
