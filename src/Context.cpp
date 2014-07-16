@@ -78,5 +78,4 @@ namespace sacman {
             SDL_GL_SwapWindow(m_Window);
         }
     }
-
 }
