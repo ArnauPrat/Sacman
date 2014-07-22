@@ -11,27 +11,22 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
-#ifndef TYPES_H
-#define TYPES_H
-
-#include "Buffer.hpp"
+#ifndef TEXCOORDBUFFER_H
+#define TEXCOORDBUFFER_H
+#include <GL/glew.h>
 
 namespace dali {
-	struct Vector2f {
-		float m_X;
-		float m_Y;
-	};
+    class TexCoordBuffer {
+        friend class Renderer;
+        public:
+        TexCoordBuffer();
+        ~TexCoordBuffer();
 
-	struct TexQuad {
-		Vector2f m_Min;
-		Vector2f m_Max;
-		Vector2f m_TexMin;
-		Vector2f m_TexMax;
-	};
+        void AddTexCoordinates( const Vector2f texCoords[], const int numTexCoords );
 
-typedef Buffer<Vector2f, GL_ARRAY_BUFFER> Vector2fBuffer;
-typedef Buffer<unsigned short, GL_ELEMENT_ARRAY_BUFFER> IndexBuffer;
-
+        private:
+        GLuint m_TexCoords;
+        int     m_NumTexCoords;
+    }; 
 }
-
 #endif

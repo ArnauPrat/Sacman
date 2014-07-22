@@ -31,10 +31,10 @@ namespace dali {
 
 			int width, height, channels;
 			unsigned char* image = SOIL_load_image( filename.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO );
-			for( int32_t j = 0; j*2 < height; ++j ) {
-				int32_t index1 = j * width * channels;
-				int32_t index2 = (height - 1 - j) * width * channels;
-				for( int32_t i = width * channels; i > 0; --i ) {
+			for( int j = 0; j*2 < height; ++j ) {
+				int index1 = j * width * channels;
+				int index2 = (height - 1 - j) * width * channels;
+				for( int i = width * channels; i > 0; --i ) {
 					unsigned char temp = image[index1];
 					image[index1] = image[index2];
 					image[index2] = temp;
@@ -52,7 +52,7 @@ namespace dali {
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
             } else {
-                std::cout << "DALI: Error loading " << filename << std::endl;
+                std::cout << "DALI: Error loading texture " << filename << std::endl;
             }
     }
 }

@@ -15,6 +15,12 @@
 
 namespace sacman {
 
+    EventManager::EventManager() {
+    }
+
+    EventManager::~EventManager() {
+    }
+
     void EventManager::RegisterListener( EventType eventType, void (*listener)(void*)) {
         m_EventTypeListeners[eventType].push_back(listener);
     }

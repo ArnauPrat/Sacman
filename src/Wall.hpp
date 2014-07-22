@@ -11,16 +11,19 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
-#ifndef EVENTS_H
-#define EVENTS_H
+#ifndef WALL_H
+#define wALL_H
+
+#include "dali/SpriteBatch.hpp"
 namespace sacman {
-    enum EventType {
-        K_UP,
-        K_DOWN,
-        K_RIGHT,
-        K_LEFT,
-        K_ESC,
-        NONE
+    struct Wall {
+
+        Wall();
+        ~Wall();
+
+        dali::SpriteBatch*  m_Batches;
+        int                 m_NumBatches;
     };
 }
+
 #endif

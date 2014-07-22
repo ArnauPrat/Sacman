@@ -14,6 +14,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 #ifndef SACMAN_CONTEXT_H
 #define SACMAN_CONTEXT_H
 
+#include "EventManager.hpp"
 #include "Config.hpp"
 #include "dali/Renderer.hpp"
 #include <GL/glew.h>
@@ -55,6 +56,9 @@ namespace sacman {
 
             /** Rendering **/
             static dali::Renderer   m_Renderer;
+
+            /** Event Handling **/
+            static EventManager     m_EventManager;
     };
 }
 

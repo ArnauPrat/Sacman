@@ -33,5 +33,7 @@ namespace dali {
             int             m_ViewportWidth;    /**< @brief The width of the viewport.*/
             int             m_ViewportHeight;   /**< @brief THe heighr of the viewport.*/
     };
+
+    void PrintConfig( const RendererConfig& config );
 }
 #endif

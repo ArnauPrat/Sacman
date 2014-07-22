@@ -11,16 +11,11 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
-#ifndef EVENTS_H
-#define EVENTS_H
+#ifndef LEVEL_H
+#define LEVEL_H
+
 namespace sacman {
-    enum EventType {
-        K_UP,
-        K_DOWN,
-        K_RIGHT,
-        K_LEFT,
-        K_ESC,
-        NONE
+    class Level {
     };
 }
 #endif

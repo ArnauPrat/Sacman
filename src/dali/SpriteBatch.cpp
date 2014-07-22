@@ -17,37 +17,39 @@
 #include <cstring>
 
 namespace dali {
-    SpriteBatch::SpriteBatch( const Texture& texture ) :
-        m_Texture( texture ),
-        m_Vertices( 0 ),
-        m_TexCoords( 0 ),
-	m_Indices( 0 )	{
+    SpriteBatch::SpriteBatch() :
+        m_Vertices( GL_INVALID_VALUE ),
+        m_TexCoords( GL_INVALID_VALUE ),
+        m_Indices( GL_INVALID_VALUE ),
+        m_NumQuads ( 0 )    {
         }
 
     SpriteBatch::~SpriteBatch() {
         if( m_Vertices ) {
-            glDeleteBuffers(1,&m_Vertices);
+            glDeleteBuffers(1, &m_Vertices);
         }
 
         if( m_TexCoords ) {
-            glDeleteBuffers(1,&m_TexCoords);
+            glDeleteBuffers(1, &m_TexCoords);
         }
 
         if( m_Indices ) {
-            glDeleteBuffers(1,&m_Indices);
+            glDeleteBuffers(1, &m_Indices);
         }
     }
 
-    void SpriteBatch::AddTexQuads( const TexQuad texQuads[], const short numQuads ) {
+    void SpriteBatch::AddTexQuads( const TexQuad texQuads[], const short numQuads, Texture& texture ) {
 	glGenBuffers(1,&m_Vertices);
 	glGenBuffers(1,&m_TexCoords);
 	glGenBuffers(1,&m_Indices);
 	assert( m_Vertices != GL_INVALID_VALUE );
 	assert( m_TexCoords != GL_INVALID_VALUE );
 	assert( m_Indices != GL_INVALID_VALUE );
-	float* tempBuffer = new float[numQuads*4*2];	
+    m_NumQuads = numQuads;
+    m_Texture = &texture;
+	float* tempBuffer = new float[m_NumQuads*4*2];	
 	int j = 0;
-	for( int i = 0; i < numQuads; ++i ) {
+	for( int i = 0; i < m_NumQuads; ++i ) {
 		tempBuffer[j++] = texQuads[i].m_Min.m_X;
 		tempBuffer[j++] = texQuads[i].m_Min.m_Y;
 
@@ -61,10 +63,10 @@ namespace dali {
 		tempBuffer[j++] = texQuads[i].m_Max.m_Y;
 	}
 	glBindBuffer( GL_ARRAY_BUFFER, m_Vertices );
-	glBufferData( GL_ARRAY_BUFFER, sizeof( float )*numQuads*4*2, tempBuffer, GL_STATIC_DRAW );
+	glBufferData( GL_ARRAY_BUFFER, sizeof( float )*m_NumQuads*4*2, tempBuffer, GL_STATIC_DRAW );
 
 	j = 0;
-	for( int i = 0; i < numQuads; ++i ) {
+	for( int i = 0; i < m_NumQuads; ++i ) {
 		tempBuffer[j++] = texQuads[i].m_TexMin.m_X;
 		tempBuffer[j++] = texQuads[i].m_TexMin.m_Y;
 
@@ -79,13 +81,13 @@ namespace dali {
 	}
 
 	glBindBuffer( GL_ARRAY_BUFFER, m_TexCoords );
-	glBufferData( GL_ARRAY_BUFFER, sizeof( float )*numQuads*4*2, tempBuffer, GL_STATIC_DRAW );
+	glBufferData( GL_ARRAY_BUFFER, sizeof( float )*m_NumQuads*4*2, tempBuffer, GL_STATIC_DRAW );
 	delete [] tempBuffer;
 	glBindBuffer( GL_ARRAY_BUFFER, 0 );
 
-	short* indexBuffer = new short[numQuads*6];
+	unsigned short* indexBuffer = new unsigned short[m_NumQuads*6];
 	j = 0;
-	for( int i = 0; i < numQuads; ++i ) {
+	for( int i = 0; i < m_NumQuads; ++i ) {
 		indexBuffer[j++] = i*4;
 		indexBuffer[j++] = i*4 + 1;
 		indexBuffer[j++] = i*4 + 3;
@@ -95,7 +97,7 @@ namespace dali {
 		indexBuffer[j++] = i*4 + 3;
 	}
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_Indices );
-	glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( short )*numQuads*6, indexBuffer, GL_STATIC_DRAW );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( unsigned short )*m_NumQuads*6, indexBuffer, GL_STATIC_DRAW );
 	delete [] indexBuffer;
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
     }

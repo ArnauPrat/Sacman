@@ -22,16 +22,16 @@ namespace dali {
     class SpriteBatch {
         friend class Renderer;
         public:
-            SpriteBatch( const Texture& texture );
+            SpriteBatch();
             ~SpriteBatch();
             
             /** @brief Adds tex quads into the batch.
              *  @param texQuads The tex quads forming the sprites.
              *  @param numQuads The number of tex quads.*/
-            void AddTexQuads( const TexQuad texQuads[], const short numQuads );
+            void AddTexQuads( const TexQuad texQuads[], const short numQuads, Texture& texture );
 
 	private:
-	    const Texture&      m_Texture;
+	    Texture*    m_Texture;
 	    GLuint		m_Vertices;	/**< @brief The opengl buffer Id containing this batch vertices.*/
 	    GLuint		m_TexCoords;	/**< @brief The opengl buffer Id containing this batch texture coordinates.*/
 	    GLuint		m_Indices;	/**< @brief The opengl buffer Id containing this batch indices.*/
