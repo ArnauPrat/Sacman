@@ -12,6 +12,7 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
 
+#include "Types.hpp"
 #include "Effect.hpp"
 #include "Renderer.hpp"
 #include "RendererConfig.hpp"

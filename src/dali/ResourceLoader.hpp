@@ -15,6 +15,7 @@
 #ifndef RESOURCE_LOADER_H
 #define RESOURCE_LOADER_H
 
+#include <iostream>
 #include <map>
 
 namespace dali {
@@ -40,6 +41,7 @@ namespace dali {
                T* resource = new T();
                resource->Load( filename );
                m_Resources.insert( std::pair< std::string, T*>( filename, resource ) );
+               std::cout << "Loaded resource: " << filename << std::endl; 
                return resource;
             }
 

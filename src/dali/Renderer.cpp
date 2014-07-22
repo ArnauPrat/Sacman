@@ -14,6 +14,8 @@
 
 #include "Effect.hpp"
 #include "Renderer.hpp"
+#include <cassert>
+#include <cstring>
 #include <functional>
 #include <iostream>
 
@@ -34,15 +36,20 @@ namespace dali {
 	}
 
 	Renderer::Renderer() :
-		m_Textured(NULL)
+		m_Textured(NULL),
+        m_Quad( GL_INVALID_VALUE )
 	{
 	}
 
 	Renderer::~Renderer() {
+        if( m_Quad != GL_INVALID_VALUE ) {
+            glDeleteBuffers(1, &m_Quad );
+        }
 	}
 
 	void Renderer::StartUp( const RendererConfig& config ) {
 		m_Config = config;
+        PrintConfig( m_Config );
 
 		/** Initialize Projection matrix. */
 		switch( m_Config.m_RenderingMode ) {
@@ -70,7 +77,24 @@ namespace dali {
 		Effect::SetStateFunction( E_TEX_DIFFUSE, std::bind(&Renderer::ShaderSetTexDiffuse, this, std::placeholders::_1 ));
 
 		m_Textured = m_EffectLoader.Load("./effects/E_Sprite.sha");
-	}
+
+        /** Creating Quad buffer. **/
+        glGenBuffers(1, &m_Quad);
+        assert( m_Quad != GL_INVALID_VALUE );
+        float tempBuffer[8];
+        tempBuffer[0] = 0.0;
+        tempBuffer[1] = 0.0;
+        tempBuffer[2] = 1.0;
+        tempBuffer[3] = 0.0;
+        tempBuffer[4] = 1.0;
+        tempBuffer[5] = 1.0;
+        tempBuffer[6] = 0.0;
+        tempBuffer[7] = 1.0;
+        
+        glBindBuffer( GL_ARRAY_BUFFER, m_Quad );
+        glBufferData( GL_ARRAY_BUFFER, sizeof( float )*4, tempBuffer, GL_STATIC_DRAW );
+        glBindBuffer( GL_ARRAY_BUFFER, 0 );
+    }
 
 	void Renderer::ShutDown() {
 	}
@@ -83,35 +107,48 @@ namespace dali {
 	void Renderer::EndFrame() {
 		int size = m_FrameDrawingInfo.size();
 		for( int i = 0; i < size; ++i ) {
-			m_CurrentInfo = &m_FrameDrawingInfo[i];
-			// Set Effect
-			Effect::SetEffect(*m_Textured);
-			// Draw
-			glEnableClientState(GL_VERTEX_ARRAY);
-			glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_Vertices);
-			glVertexPointer(2,GL_FLOAT,0,0);
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_TexCoords);
-			glTexCoordPointer(2,GL_FLOAT,0,0);
-			glEnableClientState(GL_INDEX_ARRAY);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_CurrentInfo->m_Indices);
-			glDrawElements(GL_TRIANGLES,m_CurrentInfo->m_NumQuads*2,GL_UNSIGNED_SHORT,0);
-			glDisableClientState(GL_VERTEX_ARRAY);
-			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-			glDisableClientState(GL_INDEX_ARRAY);
+            m_CurrentInfo = &m_FrameDrawingInfo[i];
+            // Set Effect
+            Effect::SetEffect(*m_Textured);
+            // Draw
+            glEnableClientState(GL_VERTEX_ARRAY);
+            glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_Vertices);
+            glVertexPointer(2,GL_FLOAT,0,0);
+
+            glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+            glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_TexCoords);
+            glTexCoordPointer(2,GL_FLOAT,0,0);
+
+            glEnableClientState(GL_INDEX_ARRAY);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_CurrentInfo->m_Indices);
+            glDrawElements(GL_TRIANGLES,m_CurrentInfo->m_NumIndices,GL_UNSIGNED_SHORT,0);
+            glDisableClientState(GL_INDEX_ARRAY);
+
+            glDisableClientState(GL_VERTEX_ARRAY);
+            glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
 		}
 	}
 
-	void Renderer::DrawSpriteBach( const SpriteBatch& spriteBatch ) {
-		DrawingInfo info;
-		info.m_Vertices = spriteBatch.m_Vertices;
-		info.m_TexCoords = spriteBatch.m_TexCoords;
-		info.m_Indices = spriteBatch.m_Indices;
-		info.m_NumQuads = spriteBatch.m_NumQuads;
-		info.m_Texture = spriteBatch.m_Texture.m_TextureID;
-		m_FrameDrawingInfo.push_back(info);
+    void    Renderer::Draw( const Vector2fBuffer& vertices, 
+            const Vector2fBuffer& texCoords,
+            const IndexBuffer& indices,
+            const Texture& texture,
+            const Vector2f& translate, 
+            const Vector2f& scale) {
 
-	}	
+        DrawingInfo info;
+        info.m_Vertices = vertices.m_Data;
+        info.m_TexCoords = texCoords.m_Data;
+        info.m_Indices = indices.m_Data;
+        info.m_Texture = texture.m_TextureID;
+        info.m_NumVertices = vertices.m_NumElements;
+        info.m_NumTexCoords = texCoords.m_NumElements;
+        info.m_NumIndices = indices.m_NumElements;
+        info.m_Translate = translate;
+        info.m_Scale = scale;
+        m_FrameDrawingInfo.push_back( info );
+    }
 
 	void Renderer::InitOpenGL() {
 		GLuint err = glewInit();
@@ -123,13 +160,9 @@ namespace dali {
 		std::cout << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
 		glViewport( 0, 0, m_Config.m_ViewportWidth, m_Config.m_ViewportHeight );
 		glClearColor(0.0f, 0.0f, 1.0f,1.0f);                   
-		glClearDepth(1);                         
-		glDepthFunc(GL_LEQUAL);   
 		glDisable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-		glFrontFace(GL_CW);
-		glEnable(GL_DEPTH_TEST); 
-		glEnable(GL_STENCIL_TEST);
+		glDisable(GL_DEPTH_TEST); 
+		glDisable(GL_STENCIL_TEST); 
 	}
 
 	void Renderer::SetProjectionGridAligned() {
@@ -179,6 +212,12 @@ namespace dali {
 	}
 
 	void Renderer::ShaderSetModelMatrix( GLint pos ) {
+        std::memset(&m_ModelMatrix[0][0],0,sizeof(float)*9);
+        m_ModelMatrix[2][0] = m_CurrentInfo->m_Translate.m_X;
+        m_ModelMatrix[2][1] = m_CurrentInfo->m_Translate.m_Y;
+        m_ModelMatrix[2][2] = 1.0f;
+        m_ModelMatrix[0][0] = m_CurrentInfo->m_Scale.m_X;
+        m_ModelMatrix[1][1] = m_CurrentInfo->m_Scale.m_Y;
 		glUniformMatrix3fv( pos, 1, GL_FALSE, static_cast<const GLfloat*>(&m_ModelMatrix[0][0]) );
 	}
 
@@ -187,5 +226,4 @@ namespace dali {
 		glBindTexture(GL_TEXTURE_2D, m_CurrentInfo->m_Texture);
 		glUniform1i(pos, 0);
 	}
-
 }
