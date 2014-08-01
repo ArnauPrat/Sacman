@@ -70,10 +70,10 @@ namespace dali {
 			char log[256];
 			glGetShaderInfoLog(m_ShaderID, 256, &len, log);
 			
-            if( result != GL_TRUE ) {
-                std::cout << "Error loading pixel shader: " << filename << std::endl;
-                std::cout << std::string(log) << std::endl;
-            }
+			if( result != GL_TRUE ) {
+				std::cout << "Error loading vertex shader: " << filename << std::endl;
+				std::cout << std::string(log) << std::endl;
+			}
 
 			m_Vars = ParseVars(source.size(), src, sizes); 
 			
