@@ -35,10 +35,8 @@ namespace dali {
 		matrix[2][2] = 1.0f;
 	}
 
-	Renderer::Renderer( ResourceLibrary& library) :
-		m_Textured(NULL),
-        m_Quad( GL_INVALID_VALUE ),
-        m_ResourceLibrary( library ) 
+	Renderer::Renderer() :
+        m_Quad( GL_INVALID_VALUE )
 	{
 	}
 
@@ -77,7 +75,7 @@ namespace dali {
 		Effect::SetStateFunction( E_MODEL_MATRIX, std::bind(&Renderer::ShaderSetModelMatrix, this, std::placeholders::_1 ));
 		Effect::SetStateFunction( E_TEX_DIFFUSE, std::bind(&Renderer::ShaderSetTexDiffuse, this, std::placeholders::_1 ));
 
-		m_Textured = m_ResourceLibrary.LoadEffect("./effects/E_Sprite.sha");
+		m_Textured.Load("./effects/E_Sprite.sha");
 
         /** Creating Quad buffer. **/
         glGenBuffers(1, &m_Quad);
@@ -110,7 +108,7 @@ namespace dali {
 		for( int i = 0; i < size; ++i ) {
             m_CurrentInfo = &m_FrameDrawingInfo[i];
             // Set Effect
-            Effect::SetEffect(*m_Textured);
+            Effect::SetEffect(m_Textured);
             // Draw
             glEnableClientState(GL_VERTEX_ARRAY);
             glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_Vertices);

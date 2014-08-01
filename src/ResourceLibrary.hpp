@@ -14,13 +14,13 @@
 #ifndef RESOURCE_LIBRARY_H
 #define RESOURCE_LIBRARY_H
 
-#include "Effect.hpp"
-#include "PixelShader.hpp"
+#include "dali/Effect.hpp"
+#include "dali/PixelShader.hpp"
+#include "objects/Sprite.hpp"
+#include "dali/Texture.hpp"
+#include "dali/Types.hpp"
+#include "dali/VertexShader.hpp"
 #include "ResourceLoader.hpp"
-#include "Sprite.hpp"
-#include "Texture.hpp"
-#include "Types.hpp"
-#include "VertexShader.hpp"
 
 namespace dali {
 

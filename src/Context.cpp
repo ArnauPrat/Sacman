@@ -13,7 +13,7 @@
 
 #include "Context.hpp"
 #include "Events.hpp"
-#include "dali/Sprite.hpp"
+#include "objects/Sprite.hpp"
 #include <iostream>
 
 namespace sacman {
@@ -24,7 +24,7 @@ namespace sacman {
     bool            Context::m_Run;
     Level           Context::m_CurrentLevel;
     dali::ResourceLibrary Context::m_ResourceLibrary;
-    dali::Renderer  Context::m_Renderer(Context::m_ResourceLibrary);
+    dali::Renderer  Context::m_Renderer;
 
     void Context::SDLStartUp() {
         if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
@@ -66,10 +66,14 @@ namespace sacman {
     }
 
     void Context::StartGameLoop() {
+        unsigned int currentTime = SDL_GetTicks();
         while (m_Run) {
+            unsigned int newTime = SDL_GetTicks();
+            double elapsedTime = (newTime - currentTime);
+            currentTime += elapsedTime;
             m_CurrentLevel.ProcessEvents();
             m_Renderer.BeginFrame();
-            m_CurrentLevel.Draw();
+            m_CurrentLevel.Draw( elapsedTime / 1000.0 );
             m_Renderer.EndFrame();
             SDL_GL_SwapWindow(m_Window);
         }

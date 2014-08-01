@@ -14,7 +14,6 @@
 
 #include "GLSL.hpp"
 #include "PixelShader.hpp"
-#include "ResourceLibrary.hpp"
 #include <fstream>
 #include <iostream>
 #include <list>
@@ -32,7 +31,7 @@ namespace dali {
         }
     }
 
-    void PixelShader::Load( ResourceLibrary& library, const char* filename ) {
+    void PixelShader::Load( const char* filename ) {
 
 			std::ifstream inFile;
 			inFile.open(filename);

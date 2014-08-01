@@ -14,6 +14,10 @@
 #include "ResourceLibrary.hpp"
 #include "Sprite.hpp"
 #include "Renderer.hpp"
+#include <json/json.h>
+#include <string>
+#include <fstream>
+#include <streambuf>
 
 namespace dali {
 
@@ -25,8 +29,8 @@ namespace dali {
 
     }
 
-    void Sprite::Load( ResourceLibrary& library, const char* fileName ) {
-        m_Texture = library.LoadTexture( "./textures/ball.png");
+    void Sprite::Load( const char* fileName ) {
+        m_Texture.Load("./textures/ball.png");
         dali::Vector2f data[4];
         data[0].m_X = 0.0f;
         data[0].m_Y = 0.0f;
@@ -46,10 +50,34 @@ namespace dali {
         indexData[4] = 2;
         indexData[5] = 3;
         m_Indices.AddData( indexData, 6 );
+/*        dali::Vector2f data[4];
+        data[0].m_X = 0.0f;
+        data[0].m_Y = 0.0f;
+        data[1].m_X = 1.0f;
+        data[1].m_Y = 0.0f;
+        data[2].m_X = 1.0f;
+        data[2].m_Y = 1.0f;
+        data[3].m_X = 0.0f;
+        data[3].m_Y = 1.0f;
+        m_Vertices.AddData( data, 4 );
+        */
+
+        std::ifstream t("sprites/Character.sprite");
+        std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+
+        Json::Value root;
+        Json::Reader reader;
+        bool parsedSuccess = reader.parse(str, root, false);
+        if(!parsedSuccess) {
+            cout<<"Failed to parse JSON"<<endl 
+                <<reader.getFormatedErrorMessages()
+                <<endl;
+            assert(false);
+        }
     }
 
     void Sprite::Draw( Renderer& renderer, const dali::Vector2f& position, 
                        const dali::Vector2f& scale ) {
-        renderer.Draw( m_Vertices, m_TexCoords, m_Indices, *m_Texture, position, scale );
+        renderer.Draw( m_Vertices, m_TexCoords, m_Indices, m_Texture, position, scale );
     }
 }
