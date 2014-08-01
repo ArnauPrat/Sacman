@@ -15,7 +15,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 #define SACMAN_CONTEXT_H
 
 #include "Config.hpp"
-#include "dali/Renderer.hpp"
+#include "Level.hpp"
+#include "dali/dali.hpp"
 #include <GL/glew.h>
 #include <SDL.h>
 
@@ -33,6 +34,16 @@ namespace sacman {
 
             /** @brief Starts the game loop.*/
             static void StartGameLoop();
+
+            /** @brief Exits the game loop.*/
+            static void Exit();
+
+            /** Resource Loading **/
+            static dali::ResourceLibrary m_ResourceLibrary;
+
+            /** Rendering **/
+            static dali::Renderer m_Renderer;
+
 
         private:
             /** @brief Starts SDL stuff.*/
@@ -52,9 +63,7 @@ namespace sacman {
 
             /** Flow control **/
             static bool             m_Run;
-
-            /** Rendering **/
-            static dali::Renderer   m_Renderer;
+            static Level            m_CurrentLevel;
     };
 }
 

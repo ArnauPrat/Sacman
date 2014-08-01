@@ -19,7 +19,8 @@ namespace sacman {
         K_DOWN,
         K_RIGHT,
         K_LEFT,
-        K_ESC
+        K_ESC,
+        NONE
     };
 }
 #endif
