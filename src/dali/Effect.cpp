@@ -13,6 +13,7 @@
   */
 
 #include "Effect.hpp"
+#include "ResourceLibrary.hpp"
 #include <GL/glew.h>
 #include <cstring>
 #include <fstream>
@@ -24,8 +25,6 @@
 namespace dali {
 
 
-	ResourceLoader<VertexShader> 	Effect::m_VertexShaderLoader;   
-	ResourceLoader<PixelShader> 	Effect::m_PixelShaderLoader;    
 	std::function< void (GLint) > 	Effect::m_StateFunctions[E_NUM_VARS];
 
 	Effect::Effect() :
@@ -41,7 +40,7 @@ namespace dali {
 		}
 	}
 
-	void Effect::Load( const std::string& filename ) {
+	void Effect::Load( ResourceLibrary& library, const char* filename ) {
 		m_ShaderID = glCreateProgram();
 		std::ifstream inFile;
 		inFile.open(filename);
@@ -52,8 +51,8 @@ namespace dali {
 		inFile >> vertexShaderName;
 		inFile >> pixelShaderName;
 
-		PixelShader* pixelShader= m_PixelShaderLoader.Load(pixelShaderName.c_str());
-		VertexShader* vertexShader= m_VertexShaderLoader.Load(vertexShaderName.c_str());
+		VertexShader* vertexShader= library.LoadVS(vertexShaderName.c_str());
+		PixelShader* pixelShader= library.LoadPS(pixelShaderName.c_str());
 
 		glAttachShader(m_ShaderID,vertexShader->m_ShaderID);
 		glAttachShader(m_ShaderID,pixelShader->m_ShaderID);

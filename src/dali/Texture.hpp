@@ -15,18 +15,18 @@
 #define TEXTURE_H
 
 #include <GL/glew.h>
-#include <string>
 
 namespace dali {
-
+    class ResourceLibrary;
     class Texture {
 	    friend class Renderer;
         public:
             ~Texture();
 
             /** @brief Loads a texture
+             *  @param library The resource library used to load other resources.
              *  @param filename The name of the texture.*/
-            void Load( const std::string& filename );
+            void Load( ResourceLibrary& library, const char* filename );
 
         private:
             template<class T> friend class ResourceLoader;

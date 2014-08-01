@@ -14,6 +14,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
 #include "Config.hpp"
 #include <fstream>
+#include <iostream>
 #include <sstream>
 
 namespace sacman {
@@ -24,6 +25,7 @@ namespace sacman {
     Config::~Config() {
     }
 
+#define PRINT_OPTION(a,b) std::cout << "Parsed option " << a << " with " << b << " value. " <<  std::endl; 
 
     bool Load( Config& config, const std::string& filename ) {
         std::ifstream inFile;
@@ -31,28 +33,32 @@ namespace sacman {
         std::string option;
         std::string value;
         while( inFile >> option ) {
-            if( inFile == "ViewportWidth" ) {
+            if( option == "ViewportWidth" ) {
                 inFile >> value; 
                 std::stringstream ss(value);
                 ss >> config.m_RendererConfig.m_ViewportWidth;
+                PRINT_OPTION(option, config.m_RendererConfig.m_ViewportWidth)
                 continue;
             }
 
-            if( inFile == "ViewportHeight" ) {
+            if( option == "ViewportHeight" ) {
                 inFile >> value; 
                 std::stringstream ss(value);
                 ss >> config.m_RendererConfig.m_ViewportHeight;
+                PRINT_OPTION(option, config.m_RendererConfig.m_ViewportHeight);
                 continue;
             }
 
-            if( inFile == "FullScreen" ) {
+            if( option == "FullScreen" ) {
                 inFile >> value; 
                 std::stringstream ss(value);
                 ss >> config.m_FullScreen;
+                PRINT_OPTION(option, config.m_FullScreen);
                 continue;
             }
         }
         inFile.close();
         return true;
     }
+#undef PRINT_OPTION
 }

@@ -16,12 +16,14 @@
 
 #include "Effect.hpp"
 #include "RendererConfig.hpp"
-#include "ResourceLoader.hpp"
-#include "SpriteBatch.hpp"
+#include "ResourceLibrary.hpp"
+#include "Texture.hpp"
+#include "Types.hpp"
 #include <GL/glew.h>
 #include <vector>
 
 namespace dali {
+
 	class Renderer {
 
 		struct DrawingInfo {
@@ -29,12 +31,16 @@ namespace dali {
 			GLuint m_TexCoords;
 			GLuint m_Indices;
 			GLuint m_Texture;
-			short  m_NumQuads;
+            int    m_NumVertices;
+            int    m_NumTexCoords;
+            int    m_NumIndices;
+            Vector2f m_Translate;
+            Vector2f m_Scale;
 		};
 
 		public:
 
-		Renderer();
+		Renderer( ResourceLibrary& library );
 		~Renderer();
 
 		/** @brief Starts up the renderer.
@@ -50,9 +56,17 @@ namespace dali {
 		/** @brief Ends the current frame.*/
 		void            	EndFrame();
 
+
 		/** @brief Draws a sprite batch.
-		 *  @param spriteBatch The sprite batch to draw.*/
-		void                DrawSpriteBach( const SpriteBatch& spriteBatch );
+		 *  @param spriteBatch The sprite batch to draw.
+         *  @param translate The translation to apply to the drawn sprite.
+         *  @param scale The translation to apply to the drawn sprite.*/
+		void                Draw( const Vector2fBuffer& vertices, 
+                                  const Vector2fBuffer& texCoords,
+                                  const IndexBuffer& indices,
+                                  const Texture& texture,
+                                  const Vector2f& translate = {0.0f, 0.0f}, 
+                                  const Vector2f& scale = {2.0f, 2.0f} );
 
 		private:
 		/**	@brief Initializes OpenGL.*/
@@ -77,9 +91,9 @@ namespace dali {
 		RendererConfig  m_Config;
 
 		/** Resources. */
-		ResourceLoader<Effect>	m_EffectLoader;
-		Effect*			m_Textured;
-
+		Effect*			        m_Textured;         /**< @brief The effect used to render textured quads.*/
+        GLuint                  m_Quad;             /**< @brief The buffer id of a buffer containing a quad.*/
+        ResourceLibrary&        m_ResourceLibrary;  /**< @brief The resource library used to load resources.*/
 
 		/** Shader satate functions */
 		void ShaderSetProjectionMatrix( GLint pos );
