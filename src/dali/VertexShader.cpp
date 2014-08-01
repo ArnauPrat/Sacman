@@ -13,7 +13,6 @@
 */
 
 #include "GLSL.hpp"
-#include "ResourceLibrary.hpp"
 #include "VertexShader.hpp"
 #include <fstream>
 #include <iostream>
@@ -32,7 +31,7 @@ namespace dali {
         }
     }
 
-    void VertexShader::Load( ResourceLibrary& library, const char* filename ) {
+    void VertexShader::Load( const char* filename ) {
 
 			std::ifstream inFile;
 			inFile.open(filename);

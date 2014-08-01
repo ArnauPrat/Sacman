@@ -15,7 +15,7 @@
 #define LEVEL_H
 
 #include "EventManager.hpp"
-#include "dali/Sprite.hpp"
+#include "objects/Sprite.hpp"
 
 namespace sacman {
     class Renderer;
@@ -34,15 +34,18 @@ namespace sacman {
             void ProcessEvents();
 
             /** @brief Draws the level.**/
-            void Draw();
+            void Draw( double elapsedTime );
 
         private:
             Level( const Level& );
 
             /** Event Handling **/
             EventManager    m_EventManager;
-            
+
             /** Character **/
+            dali::Vector2f   m_Position;
+            dali::Vector2f   m_Scale;
+            dali::Vector2f   m_Velocity;
             dali::Sprite*    m_Character;
 
     };

@@ -14,28 +14,28 @@
 #ifndef SPRITE_H
 #define SPRITE_H
 
-#include "Types.hpp"
-#include "Buffer.hpp"
+#include "dali/Types.hpp"
+#include "dali/Buffer.hpp"
+#include "dali/Texture.hpp"
 
 namespace dali {
-    class ResourceLibrary;
-    class Texture;
     class Renderer;
     class Sprite {
         public:
             Sprite();
             ~Sprite();
 
-            void Load( ResourceLibrary& library, const char* fileName );
+            void Load( const char* fileName );
 
-            void Draw( Renderer& renderer, const Vector2f& position = {0.0f, 0.0f}, 
+            void Draw( Renderer& renderer, 
+                       const Vector2f& position = {0.0f, 0.0f}, 
                        const Vector2f& scale = {2.0f, 2.0f} );
 
         private:
             Vector2fBuffer    m_Vertices;
             Vector2fBuffer    m_TexCoords;
             IndexBuffer       m_Indices;
-            Texture*          m_Texture;
+            Texture           m_Texture;
     };
 }
 

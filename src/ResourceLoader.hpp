@@ -20,7 +20,6 @@
 #include <map>
 
 namespace dali {
-    class ResourceLibrary;
     template <class T> class ResourceLoader {
         public:
             ResourceLoader() {
@@ -35,14 +34,14 @@ namespace dali {
             /** @brief Loads a resource.
              *  @param filename The path to the resource.
              *  @return A pointer to the resource.*/
-            T* Load( ResourceLibrary& library, const char* filename ) {
+            T* Load( const char* filename ) {
                assert(filename != NULL);
                auto it = m_Resources.find( filename ); 
                if( it != m_Resources.end() ) {
                    return (*it).second;
                }
                T* resource = new T();
-               resource->Load( library, filename );
+               resource->Load( filename );
                m_Resources.insert( std::pair< std::string, T*>( filename, resource ) );
                std::cout << "Loaded resource: " << filename << std::endl; 
                return resource;

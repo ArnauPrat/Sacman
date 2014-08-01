@@ -18,20 +18,19 @@
 #include "GL/glew.h"
 #include "GLSL.hpp"
 #include "PixelShader.hpp"
-#include "ResourceLoader.hpp"
 #include "VertexShader.hpp"
 #include <functional>
 #include <map>
 
 namespace dali {
-    class ResourceLibrary;
     class Effect {
         public:
+            Effect();
             ~Effect();
 
             /** @brief Loads an effect 
              *  @param filename The name of the texture.*/
-            void Load( ResourceLibrary& library, const char* filename );
+            void Load( const char* filename );
 
             /** @brief Sets a state function to set the state of a shader variable.
              *  @param var The variable to set.
@@ -42,9 +41,6 @@ namespace dali {
             static void SetEffect( const Effect& effect );
 
         private:
-            template<class T> friend class ResourceLoader;
-            Effect();
-
             GLuint m_ShaderID;
             GLint m_ShaderVars[E_NUM_VARS];
 

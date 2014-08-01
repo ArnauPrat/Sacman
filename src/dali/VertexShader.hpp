@@ -17,24 +17,20 @@
 
 #include "GLSL.hpp"
 #include <GL/glew.h>
-#include <string>
 #include <vector>
 
 namespace dali {
-    class ResourceLibrary;
     class VertexShader {
+        friend class Effect;
         public:
+            VertexShader();
             ~VertexShader();
 
             /** @brief Loads a vertex shader 
              *  @param filename The name of the texture.*/
-            void Load( ResourceLibrary& library,  const char* filename );
+            void Load( const char* filename );
 
         private:
-            template<class T> friend class ResourceLoader;
-            friend class Effect;
-            VertexShader();
-
             GLuint  m_ShaderID;          /**< @brief The pixel shader identifier.*/
             std::vector<GlslVar> m_Vars; /**< @brief The variables found in the shader.*/
     };

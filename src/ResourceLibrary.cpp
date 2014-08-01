@@ -22,22 +22,22 @@ namespace dali {
     }
 
     Texture* ResourceLibrary::LoadTexture( const char* fileName ) {
-        return m_TextureLoader.Load( *this, fileName );
+        return m_TextureLoader.Load( fileName );
     }
 
     Effect*  ResourceLibrary::LoadEffect( const char* fileName ) {
-        return m_EffectLoader.Load( *this, fileName );
+        return m_EffectLoader.Load( fileName );
     }
 
     VertexShader* ResourceLibrary::LoadVS( const char* fileName ) {
-        return m_VSLoader.Load( *this, fileName );
+        return m_VSLoader.Load( fileName );
     }
 
     PixelShader*  ResourceLibrary::LoadPS( const char* fileName ) {
-        return m_PSLoader.Load( *this, fileName );
+        return m_PSLoader.Load( fileName );
     }
 
     Sprite* ResourceLibrary::LoadSprite( const char* fileName ) {
-        return m_SpriteLoader.Load( *this, fileName );
+        return m_SpriteLoader.Load( fileName );
     }
 }

@@ -16,7 +16,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
 namespace sacman {
 
-    Level::Level() {
+    Level::Level() 
+    {
+        m_Velocity = {0.0,0.0};
+        m_Position = {0.0, 0.0};
+        m_Scale = {2.0, 2.0};
     }
 
     Level::~Level() {
@@ -32,10 +36,10 @@ namespace sacman {
     }
 
     void Level::ProcessEvents() {
+        m_Velocity = {0.0f, 0.0f};
         SDL_Event event;
         /* Check for new events */
         while(SDL_PollEvent(&event)) {
-            /* If a quit event has been sent */
             EventType eType = NONE;
             switch(event.key.keysym.sym) {
                 case SDLK_ESCAPE:
@@ -43,23 +47,29 @@ namespace sacman {
                     Context::Exit();
                     break;
                 case SDLK_UP:
-                    eType = K_UP;
+            //        eType = K_UP;
+                    m_Velocity.m_Y = 1.0f; 
                     break;
                 case SDLK_DOWN:
-                    eType = K_DOWN;
+             //       eType = K_DOWN;
+                    m_Velocity.m_Y = -1.0f; 
                     break;
                 case SDLK_LEFT:
-                    eType = K_LEFT;
+              //      eType = K_LEFT;
+                    m_Velocity.m_X = -1.0f; 
                     break;
                 case SDLK_RIGHT:
-                    eType = K_RIGHT;
+               //     eType = K_RIGHT;
+                    m_Velocity.m_X = 1.0f; 
                     break;
             }
             if( eType != NONE ) m_EventManager.LaunchEvent( eType, NULL );
         }
     }
 
-    void Level::Draw() {
-        m_Character->Draw( Context::m_Renderer );
+    void Level::Draw( double elapsedTime ) {
+        m_Position.m_X = m_Position.m_X + m_Velocity.m_X*elapsedTime;
+        m_Position.m_Y = m_Position.m_Y + m_Velocity.m_Y*elapsedTime;
+        m_Character->Draw( Context::m_Renderer, m_Position, m_Scale );
     }
 }

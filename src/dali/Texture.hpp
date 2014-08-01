@@ -17,20 +17,18 @@
 #include <GL/glew.h>
 
 namespace dali {
-    class ResourceLibrary;
     class Texture {
 	    friend class Renderer;
         public:
+            Texture();
             ~Texture();
 
             /** @brief Loads a texture
              *  @param library The resource library used to load other resources.
              *  @param filename The name of the texture.*/
-            void Load( ResourceLibrary& library, const char* filename );
+            void Load( const char* filename );
 
         private:
-            template<class T> friend class ResourceLoader;
-            Texture();
             GLuint m_TextureID; /**< @brief The texture identifier*/
     };
 
