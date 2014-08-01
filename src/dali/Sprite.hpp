@@ -11,41 +11,32 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
-#ifndef LEVEL_H
-#define LEVEL_H
+#ifndef SPRITE_H
+#define SPRITE_H
 
-#include "EventManager.hpp"
-#include "dali/Sprite.hpp"
+#include "Types.hpp"
+#include "Buffer.hpp"
 
-namespace sacman {
+namespace dali {
+    class ResourceLibrary;
+    class Texture;
     class Renderer;
-    class Level {
+    class Sprite {
         public:
-            Level();
-            ~Level();
+            Sprite();
+            ~Sprite();
 
-            /** @brief Initializes a level.*/
-            void StartUp();
+            void Load( ResourceLibrary& library, const char* fileName );
 
-            /** @brief Frees a level.*/
-            void ShutDown();
-
-            /** @brief Provess the level events.**/
-            void ProcessEvents();
-
-            /** @brief Draws the level.**/
-            void Draw();
+            void Draw( Renderer& renderer, const Vector2f& position = {0.0f, 0.0f}, 
+                       const Vector2f& scale = {2.0f, 2.0f} );
 
         private:
-            Level( const Level& );
-
-            /** Event Handling **/
-            EventManager    m_EventManager;
-            
-            /** Character **/
-            dali::Sprite*    m_Character;
-
+            Vector2fBuffer    m_Vertices;
+            Vector2fBuffer    m_TexCoords;
+            IndexBuffer       m_Indices;
+            Texture*          m_Texture;
     };
 }
-#endif
 
+#endif

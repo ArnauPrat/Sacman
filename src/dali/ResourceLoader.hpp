@@ -15,10 +15,12 @@
 #ifndef RESOURCE_LOADER_H
 #define RESOURCE_LOADER_H
 
+#include <cassert>
 #include <iostream>
 #include <map>
 
 namespace dali {
+    class ResourceLibrary;
     template <class T> class ResourceLoader {
         public:
             ResourceLoader() {
@@ -33,13 +35,14 @@ namespace dali {
             /** @brief Loads a resource.
              *  @param filename The path to the resource.
              *  @return A pointer to the resource.*/
-            T* Load( const std::string& filename ) {
+            T* Load( ResourceLibrary& library, const char* filename ) {
+               assert(filename != NULL);
                auto it = m_Resources.find( filename ); 
                if( it != m_Resources.end() ) {
                    return (*it).second;
                }
                T* resource = new T();
-               resource->Load( filename );
+               resource->Load( library, filename );
                m_Resources.insert( std::pair< std::string, T*>( filename, resource ) );
                std::cout << "Loaded resource: " << filename << std::endl; 
                return resource;

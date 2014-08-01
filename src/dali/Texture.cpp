@@ -11,6 +11,7 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
+#include "ResourceLibrary.hpp"
 #include "Texture.hpp"
 #include <SOIL.h>
 #include <iostream>
@@ -27,10 +28,9 @@ namespace dali {
         }
     }
 
-    void Texture::Load( const std::string& filename ) {
-
+    void Texture::Load( ResourceLibrary& library, const char* filename ) {
 			int width, height, channels;
-			unsigned char* image = SOIL_load_image( filename.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO );
+			unsigned char* image = SOIL_load_image( filename, &width, &height, &channels, SOIL_LOAD_AUTO );
 			for( int j = 0; j*2 < height; ++j ) {
 				int index1 = j * width * channels;
 				int index2 = (height - 1 - j) * width * channels;

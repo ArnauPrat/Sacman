@@ -16,7 +16,7 @@
 
 #include "Effect.hpp"
 #include "RendererConfig.hpp"
-#include "ResourceLoader.hpp"
+#include "ResourceLibrary.hpp"
 #include "Texture.hpp"
 #include "Types.hpp"
 #include <GL/glew.h>
@@ -40,7 +40,7 @@ namespace dali {
 
 		public:
 
-		Renderer();
+		Renderer( ResourceLibrary& library );
 		~Renderer();
 
 		/** @brief Starts up the renderer.
@@ -91,9 +91,9 @@ namespace dali {
 		RendererConfig  m_Config;
 
 		/** Resources. */
-		ResourceLoader<Effect>	m_EffectLoader; /**< @brief The effect resource loader.*/
-		Effect*			        m_Textured;     /**< @brief The effect used to render textured quads.*/
-        GLuint                  m_Quad;         /**< @brief The buffer id of a buffer containing a quad.*/
+		Effect*			        m_Textured;         /**< @brief The effect used to render textured quads.*/
+        GLuint                  m_Quad;             /**< @brief The buffer id of a buffer containing a quad.*/
+        ResourceLibrary&        m_ResourceLibrary;  /**< @brief The resource library used to load resources.*/
 
 		/** Shader satate functions */
 		void ShaderSetProjectionMatrix( GLint pos );
