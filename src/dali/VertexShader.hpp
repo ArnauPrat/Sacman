@@ -21,13 +21,15 @@
 #include <vector>
 
 namespace dali {
+    class ResourceLibrary;
     class VertexShader {
         public:
             ~VertexShader();
 
             /** @brief Loads a vertex shader 
              *  @param filename The name of the texture.*/
-            void Load( const std::string& filename );
+            void Load( ResourceLibrary& library,  const char* filename );
+
         private:
             template<class T> friend class ResourceLoader;
             friend class Effect;

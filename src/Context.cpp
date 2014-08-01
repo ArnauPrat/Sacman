@@ -11,9 +11,9 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
-#include "Events.hpp"
 #include "Context.hpp"
-#include "dali/dali.hpp"
+#include "Events.hpp"
+#include "dali/Sprite.hpp"
 #include <iostream>
 
 namespace sacman {
@@ -22,8 +22,9 @@ namespace sacman {
     SDL_Window*     Context::m_Window = NULL;
     Config          Context::m_Config;
     bool            Context::m_Run;
-    dali::Renderer  Context::m_Renderer;
-    EventManager    Context::m_EventManager;
+    Level           Context::m_CurrentLevel;
+    dali::ResourceLibrary Context::m_ResourceLibrary;
+    dali::Renderer  Context::m_Renderer(Context::m_ResourceLibrary);
 
     void Context::SDLStartUp() {
         if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
@@ -48,31 +49,6 @@ namespace sacman {
     }
 
     void Context::ProcessEvents() {
-        SDL_Event event;
-        /* Check for new events */
-        while(SDL_PollEvent(&event)) {
-            /* If a quit event has been sent */
-            EventType eType = NONE;
-            switch(event.key.keysym.sym) {
-                case SDLK_ESCAPE:
-                    eType = K_ESC;
-                    m_Run = false;
-                    break;
-                case SDLK_UP:
-                    eType = K_UP;
-                    break;
-                case SDLK_DOWN:
-                    eType = K_DOWN;
-                    break;
-                case SDLK_LEFT:
-                    eType = K_LEFT;
-                    break;
-                case SDLK_RIGHT:
-                    eType = K_RIGHT;
-                    break;
-            }
-            if( eType != NONE ) m_EventManager.LaunchEvent( eType, NULL );
-        }
     }
 
     void Context::StartUp( const Config& config ) {
@@ -80,44 +56,26 @@ namespace sacman {
         m_Run = true;
         SDLStartUp();
         m_Renderer.StartUp( m_Config.m_RendererConfig );
+        m_CurrentLevel.StartUp();
     }
 
     void Context::ShutDown() {
+        m_CurrentLevel.ShutDown();
         m_Renderer.ShutDown();
         SDLShutDown();
     }
 
     void Context::StartGameLoop() {
-        dali::ResourceLoader<dali::Texture> textureLoader;
-        dali::Texture* texture = textureLoader.Load( "./textures/ball.png");
-        dali::Vector2fBuffer vertices;
-        dali::Vector2fBuffer texCoords;
-        dali::Vector2f data[4];
-        data[0].m_X = 0.0f;
-        data[0].m_Y = 0.0f;
-        data[1].m_X = 1.0f;
-        data[1].m_Y = 0.0f;
-        data[2].m_X = 1.0f;
-        data[2].m_Y = 1.0f;
-        data[3].m_X = 0.0f;
-        data[3].m_Y = 1.0f;
-        vertices.AddData( data, 4 );
-        texCoords.AddData( data, 4 );
-        dali::IndexBuffer indices;
-        unsigned short indexData[6];
-        indexData[0] = 0;
-        indexData[1] = 1;
-        indexData[2] = 3;
-        indexData[3] = 1;
-        indexData[4] = 2;
-        indexData[5] = 3;
-        indices.AddData( indexData, 6 );
         while (m_Run) {
-            ProcessEvents();
+            m_CurrentLevel.ProcessEvents();
             m_Renderer.BeginFrame();
-            m_Renderer.Draw( vertices, texCoords, indices, *texture, {2.0f, 2.0f} );
+            m_CurrentLevel.Draw();
             m_Renderer.EndFrame();
             SDL_GL_SwapWindow(m_Window);
         }
+    }
+
+    void Context::Exit() {
+        m_Run = false;
     }
 }

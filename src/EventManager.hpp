@@ -31,7 +31,7 @@ namespace sacman {
             /** @brief Registers an event to listen to an event type.
              *  @param eventType the event type.
              *  @param listener the listener of the event.*/ 
-            void RegisterListener( const std::string& eventType, void (*)(void*)); 
+            void RegisterListener( const char* eventType, void (*)(void*)); 
 
             /** @brief Unregisters an event to listen to an event type.
              *  @param eventType the event type.
@@ -41,7 +41,7 @@ namespace sacman {
             /** @brief Unregisters an event to listen to an event type.
              *  @param eventType the event type.
              *  @param listener the listener of the event.*/ 
-            void UnregisterListener( const std::string& eventType, void (*)(void*)); 
+            void UnregisterListener( const char* eventType, void (*)(void*)); 
 
             /** @brief Launchs an event.
              *  @param eventType the event type.
@@ -52,9 +52,10 @@ namespace sacman {
             /** @brief Launchs an event.
              *  @param eventType the event type.
              *  @param data data associated with the event.*/
-            void LaunchEvent( const std::string& eventType, void* data );
+            void LaunchEvent( const char* eventType, void* data );
 
         private:
+            EventManager( const EventManager& eventManager );
             std::map<EventType, std::list<void (*)(void*)> >     m_EventTypeListeners; 
             std::map<std::string, std::list<void (*)(void*)> >   m_StringListeners; 
     };

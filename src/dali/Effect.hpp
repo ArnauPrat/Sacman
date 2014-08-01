@@ -24,21 +24,22 @@
 #include <map>
 
 namespace dali {
+    class ResourceLibrary;
     class Effect {
         public:
             ~Effect();
 
             /** @brief Loads an effect 
              *  @param filename The name of the texture.*/
-            void Load( const std::string& filename );
+            void Load( ResourceLibrary& library, const char* filename );
 
-	    /** @brief Sets a state function to set the state of a shader variable.
-	     *  @param var The variable to set.
-	     *  @param fp The pointer to the state function.*/
-	    static void SetStateFunction( const GlslVar var, std::function< void (GLuint) > );
+            /** @brief Sets a state function to set the state of a shader variable.
+             *  @param var The variable to set.
+             *  @param fp The pointer to the state function.*/
+            static void SetStateFunction( const GlslVar var, std::function< void (GLuint) > );
 
-	    /** @brief Sets the state of an effect*/ 
-	    static void SetEffect( const Effect& effect );
+            /** @brief Sets the state of an effect*/ 
+            static void SetEffect( const Effect& effect );
 
         private:
             template<class T> friend class ResourceLoader;
@@ -47,9 +48,7 @@ namespace dali {
             GLuint m_ShaderID;
             GLint m_ShaderVars[E_NUM_VARS];
 
-            static ResourceLoader<VertexShader> 	m_VertexShaderLoader;   /**< @brief The loader of pixel shaders.*/
-            static ResourceLoader<PixelShader> 		m_PixelShaderLoader;     /**< @brief The loader of vertex shaders.*/
-	    static std::function< void (GLint) > 	m_StateFunctions[E_NUM_VARS];	/**< @brief Functions used to feed shaders' variables with values.*/
+            static std::function< void (GLint) > 	m_StateFunctions[E_NUM_VARS];	/**< @brief Functions used to feed shaders' variables with values.*/
 
     };
 }

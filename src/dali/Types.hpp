@@ -14,8 +14,6 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-#include "Buffer.hpp"
-
 namespace dali {
 	struct Vector2f {
 		float m_X;
@@ -28,10 +26,6 @@ namespace dali {
 		Vector2f m_TexMin;
 		Vector2f m_TexMax;
 	};
-
-typedef Buffer<Vector2f, GL_ARRAY_BUFFER> Vector2fBuffer;
-typedef Buffer<unsigned short, GL_ELEMENT_ARRAY_BUFFER> IndexBuffer;
-
 }
 
 #endif

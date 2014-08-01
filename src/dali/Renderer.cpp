@@ -35,9 +35,10 @@ namespace dali {
 		matrix[2][2] = 1.0f;
 	}
 
-	Renderer::Renderer() :
+	Renderer::Renderer( ResourceLibrary& library) :
 		m_Textured(NULL),
-        m_Quad( GL_INVALID_VALUE )
+        m_Quad( GL_INVALID_VALUE ),
+        m_ResourceLibrary( library ) 
 	{
 	}
 
@@ -76,7 +77,7 @@ namespace dali {
 		Effect::SetStateFunction( E_MODEL_MATRIX, std::bind(&Renderer::ShaderSetModelMatrix, this, std::placeholders::_1 ));
 		Effect::SetStateFunction( E_TEX_DIFFUSE, std::bind(&Renderer::ShaderSetTexDiffuse, this, std::placeholders::_1 ));
 
-		m_Textured = m_EffectLoader.Load("./effects/E_Sprite.sha");
+		m_Textured = m_ResourceLibrary.LoadEffect("./effects/E_Sprite.sha");
 
         /** Creating Quad buffer. **/
         glGenBuffers(1, &m_Quad);
@@ -149,11 +150,11 @@ namespace dali {
         info.m_Scale = scale;
         m_FrameDrawingInfo.push_back( info );
     }
+   
 
 	void Renderer::InitOpenGL() {
 		GLuint err = glewInit();
-		if (GLEW_OK != err)
-		{
+		if (GLEW_OK != err) {
 			/* Problem: glewInit failed, something is seriously wrong. */
 			std::cout << "ERROR Loading glew" << std::endl;
 		}

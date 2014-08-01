@@ -25,7 +25,7 @@ namespace sacman {
         m_EventTypeListeners[eventType].push_back(listener);
     }
 
-    void EventManager::RegisterListener( const std::string& eventType, void (*listener)(void*)) {
+    void EventManager::RegisterListener( const char* eventType, void (*listener)(void*)) {
         m_StringListeners[eventType].push_back(listener);
     }
 
@@ -42,7 +42,7 @@ namespace sacman {
         }
     }
 
-    void EventManager::UnregisterListener( const std::string& eventType, void (*listener)(void*)) {
+    void EventManager::UnregisterListener( const char* eventType, void (*listener)(void*)) {
         auto it = m_StringListeners.find(eventType);
         if( it != m_StringListeners.end() ) {
            std::list< void (*)(void*) >& listeners = (*it).second;
@@ -65,7 +65,7 @@ namespace sacman {
         }
     }
 
-    void EventManager::LaunchEvent( const std::string& eventType, void* data ) {
+    void EventManager::LaunchEvent( const char* eventType, void* data ) {
         auto it = m_StringListeners.find(eventType);
         if( it != m_StringListeners.end() ) {
            std::list< void (*)(void*) >& listeners = (*it).second;

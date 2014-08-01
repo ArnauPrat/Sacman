@@ -13,8 +13,6 @@
 
 
 #include "Types.hpp"
-#include "Effect.hpp"
 #include "Renderer.hpp"
 #include "RendererConfig.hpp"
-#include "SpriteBatch.hpp"
-#include "Texture.hpp"
+#include "ResourceLibrary.hpp"
