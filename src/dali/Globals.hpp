@@ -11,8 +11,18 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
+#ifndef DALI_GLOBALS_H
+#define DALI_GLOBALS_H
 
-#include "Types.hpp"
-#include "Renderer.hpp"
-#include "RendererConfig.hpp"
-#include "ResourceLibrary.hpp"
+#include "ResourceLoader.hpp"
+#include "Texture.hpp"
+#include "Sprite.hpp"
+
+namespace dali {
+   typedef ResourceLoader<Texture> TextureLoader; 
+   typedef ResourceLoader<Sprite> SpriteLoader; 
+   extern TextureLoader textureLoader;
+   extern SpriteLoader spriteLoader;
+}
+
+#endif

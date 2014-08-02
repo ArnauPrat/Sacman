@@ -11,32 +11,25 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
-#ifndef SPRITE_H
-#define SPRITE_H
+#ifndef PATHFINDER_H
+#define PATHFINDER_H
 
-#include "dali/Types.hpp"
-#include "dali/Buffer.hpp"
-#include "dali/Texture.hpp"
+#include <vector>
 
-namespace dali {
-    class Renderer;
-    class Sprite {
+namespace sacman {
+    class PathFinder {
         public:
-            Sprite();
-            ~Sprite();
-
-            void Load( const char* fileName );
-
-            void Draw( Renderer& renderer, 
-                       const Vector2f& position = {0.0f, 0.0f}, 
-                       const Vector2f& scale = {2.0f, 2.0f} );
+            static void AddDirectory( const char* directory );
+            static const char* FindDirectory( const char* fileName );
 
         private:
-            Vector2fBuffer    m_Vertices;
-            Vector2fBuffer    m_TexCoords;
-            IndexBuffer       m_Indices;
-            Texture           m_Texture;
+            PathFinder();
+            ~PathFinder();
+
+            static std::vector<const char*> m_Directories;
     };
 }
 
 #endif
+
+

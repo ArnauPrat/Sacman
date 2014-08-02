@@ -14,9 +14,9 @@
 #ifndef BUFFER_H
 #define BUFFER_H
 
-#include "Types.hpp"
 #include <GL/glew.h>
 #include <cassert>
+#include <math/Types.hpp>
 
 namespace dali {
     template <class T, GLenum BufferType >
@@ -49,7 +49,7 @@ namespace dali {
             int    m_NumElements;
     }; 
 
-    typedef Buffer<Vector2f, GL_ARRAY_BUFFER> Vector2fBuffer;
+    typedef Buffer<math::Vector2f, GL_ARRAY_BUFFER> Vector2fBuffer;
     typedef Buffer<unsigned short, GL_ELEMENT_ARRAY_BUFFER> IndexBuffer;
 }
 #endif

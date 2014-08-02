@@ -11,41 +11,36 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
-#ifndef LEVEL_H
-#define LEVEL_H
+#ifndef BACKGROUND_HPP 
+#define BACKGROUND_HPP 
 
-#include "EventManager.hpp"
-#include "objects/Character.hpp"
+#include "dali/Buffer.hpp"
+#include "dali/Texture.hpp"
+#include <vector>
 
 namespace sacman {
-    class Renderer;
-    class Level {
+    struct TiledLevel;
+    class Background {
+
+        struct Chunk {
+            dali::Vector2fBuffer m_Vertices;
+            dali::Vector2fBuffer m_TexCoords;
+            dali::IndexBuffer    m_Indices;
+            dali::Texture*       m_Texture;
+        };
+
         public:
-            Level();
-            ~Level();
+            Background();
+            ~Background();
+            
+            void Load( const TiledLevel& tiledLevel );
 
-            /** @brief Initializes a level.*/
-            void StartUp();
-
-            /** @brief Frees a level.*/
-            void ShutDown();
-
-            /** @brief Provess the level events.**/
-            void ProcessEvents();
-
-            /** @brief Draws the level.**/
             void Draw( double elapsedTime );
 
         private:
-            Level( const Level& );
+            std::vector<Chunk> m_Chunks;
 
-            /** Event Handling **/
-            EventManager    m_EventManager;
-
-            /** Character **/
-            math::Vector2i   m_Velocity;
-            Character        m_Character;
     };
 }
-#endif
 
+#endif

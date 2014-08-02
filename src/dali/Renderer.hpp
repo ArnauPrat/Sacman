@@ -18,7 +18,7 @@
 #include "Effect.hpp"
 #include "RendererConfig.hpp"
 #include "Texture.hpp"
-#include "Types.hpp"
+#include <math/Types.hpp>
 #include <GL/glew.h>
 #include <vector>
 
@@ -34,8 +34,9 @@ namespace dali {
             int    m_NumVertices;
             int    m_NumTexCoords;
             int    m_NumIndices;
-            Vector2f m_Translate;
-            Vector2f m_Scale;
+            void*    m_TexOffset;
+            math::Vector2f m_Translate;
+            math::Vector2f m_Scale;
 		};
 
 		public:
@@ -65,8 +66,9 @@ namespace dali {
                                   const Vector2fBuffer& texCoords,
                                   const IndexBuffer& indices,
                                   const Texture& texture,
-                                  const Vector2f& translate = {0.0f, 0.0f}, 
-                                  const Vector2f& scale = {2.0f, 2.0f} );
+                                  const void* texOffset,
+                                  const math::Vector2f& translate = {0.0f, 0.0f}, 
+                                  const math::Vector2f& scale = {1.0f, 1.0f} );
 
 		private:
 		/**	@brief Initializes OpenGL.*/
