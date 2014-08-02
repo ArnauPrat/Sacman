@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
 #include "Config.hpp"
 #include "Level.hpp"
-#include "dali/dali.hpp"
+#include "dali/Dali.hpp"
 #include <GL/glew.h>
 #include <SDL.h>
 
@@ -37,9 +37,6 @@ namespace sacman {
 
             /** @brief Exits the game loop.*/
             static void Exit();
-
-            /** Resource Loading **/
-            static dali::ResourceLibrary m_ResourceLibrary;
 
             /** Rendering **/
             static dali::Renderer m_Renderer;

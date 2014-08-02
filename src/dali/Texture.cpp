@@ -12,6 +12,7 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
 #include "Texture.hpp"
+#include <cassert>
 #include <SOIL.h>
 #include <iostream>
 
@@ -30,6 +31,7 @@ namespace dali {
     void Texture::Load( const char* filename ) {
 			int width, height, channels;
 			unsigned char* image = SOIL_load_image( filename, &width, &height, &channels, SOIL_LOAD_AUTO );
+            assert( image != NULL );
 			for( int j = 0; j*2 < height; ++j ) {
 				int index1 = j * width * channels;
 				int index2 = (height - 1 - j) * width * channels;

@@ -13,7 +13,7 @@
 
 #include "Context.hpp"
 #include "Events.hpp"
-#include "objects/Sprite.hpp"
+#include "dali/Sprite.hpp"
 #include <iostream>
 
 namespace sacman {
@@ -23,7 +23,6 @@ namespace sacman {
     Config          Context::m_Config;
     bool            Context::m_Run;
     Level           Context::m_CurrentLevel;
-    dali::ResourceLibrary Context::m_ResourceLibrary;
     dali::Renderer  Context::m_Renderer;
 
     void Context::SDLStartUp() {

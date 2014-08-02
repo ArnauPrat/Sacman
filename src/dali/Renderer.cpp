@@ -116,7 +116,7 @@ namespace dali {
 
             glEnableClientState(GL_TEXTURE_COORD_ARRAY);
             glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_TexCoords);
-            glTexCoordPointer(2,GL_FLOAT,0,0);
+            glTexCoordPointer(2,GL_FLOAT,0,static_cast<const GLvoid*>(m_CurrentInfo->m_TexOffset));
 
             glEnableClientState(GL_INDEX_ARRAY);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_CurrentInfo->m_Indices);
@@ -133,8 +133,9 @@ namespace dali {
             const Vector2fBuffer& texCoords,
             const IndexBuffer& indices,
             const Texture& texture,
-            const Vector2f& translate, 
-            const Vector2f& scale) {
+            const void* texOffset,
+            const math::Vector2f& translate, 
+            const math::Vector2f& scale) {
 
         DrawingInfo info;
         info.m_Vertices = vertices.m_Data;
@@ -144,6 +145,7 @@ namespace dali {
         info.m_NumVertices = vertices.m_NumElements;
         info.m_NumTexCoords = texCoords.m_NumElements;
         info.m_NumIndices = indices.m_NumElements;
+        info.m_TexOffset = const_cast<void*>(texOffset);
         info.m_Translate = translate;
         info.m_Scale = scale;
         m_FrameDrawingInfo.push_back( info );
@@ -159,6 +161,9 @@ namespace dali {
 		std::cout << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
 		glViewport( 0, 0, m_Config.m_ViewportWidth, m_Config.m_ViewportHeight );
 		glClearColor(0.0f, 0.0f, 1.0f,1.0f);                   
+        glEnable(GL_BLEND);
+        glBlendEquation(GL_FUNC_ADD);
+        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST); 
 		glDisable(GL_STENCIL_TEST); 
