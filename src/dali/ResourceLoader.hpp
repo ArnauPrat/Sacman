@@ -15,11 +15,13 @@
 #ifndef RESOURCE_LOADER_H
 #define RESOURCE_LOADER_H
 
+#include "PathFinder.hpp"
 #include <cassert>
 #include <iostream>
 #include <map>
 
 namespace dali {
+    extern PathFinder pathFinder;
     template <class T> class ResourceLoader {
         public:
             ResourceLoader() {
@@ -41,9 +43,10 @@ namespace dali {
                    return (*it).second;
                }
                T* resource = new T();
-               resource->Load( filename );
+               const char* path = pathFinder.FindPath(filename);
+               resource->Load( path );
                m_Resources.insert( std::pair< std::string, T*>( filename, resource ) );
-               std::cout << "Loaded resource: " << filename << std::endl; 
+               std::cout << "Loaded resource: " << path << std::endl; 
                return resource;
             }
 

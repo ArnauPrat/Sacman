@@ -13,6 +13,7 @@
   */
 
 #include "Effect.hpp"
+#include "Globals.hpp"
 #include <GL/glew.h>
 #include <cstring>
 #include <fstream>
@@ -50,13 +51,11 @@ namespace dali {
 		inFile >> vertexShaderName;
 		inFile >> pixelShaderName;
 
-		VertexShader vertexShader;
-        vertexShader.Load(vertexShaderName.c_str()); 
-		PixelShader pixelShader;
-        pixelShader.Load(pixelShaderName.c_str());
+		VertexShader* vertexShader = dali::vertexShaderLoader.Load(vertexShaderName.c_str());
+		PixelShader* pixelShader = dali::pixelShaderLoader.Load(pixelShaderName.c_str());
 
-		glAttachShader(m_ShaderID,vertexShader.m_ShaderID);
-		glAttachShader(m_ShaderID,pixelShader.m_ShaderID);
+		glAttachShader(m_ShaderID,vertexShader->m_ShaderID);
+		glAttachShader(m_ShaderID,pixelShader->m_ShaderID);
 		glLinkProgram(m_ShaderID);
 
 		GLint result;
@@ -72,12 +71,12 @@ namespace dali {
 
 		inFile.close();
 
-		for( unsigned i = 0; i < vertexShader.m_Vars.size(); i++ ) {
-			m_ShaderVars[vertexShader.m_Vars[i]] = glGetUniformLocation(m_ShaderID,glslVarNames[vertexShader.m_Vars[i]]);
+		for( unsigned i = 0; i < vertexShader->m_Vars.size(); i++ ) {
+			m_ShaderVars[vertexShader->m_Vars[i]] = glGetUniformLocation(m_ShaderID,glslVarNames[vertexShader->m_Vars[i]]);
 		}
 
-		for( unsigned i = 0; i < pixelShader.m_Vars.size(); i++ ) {
-			m_ShaderVars[pixelShader.m_Vars[i]] = glGetUniformLocation(m_ShaderID,glslVarNames[pixelShader.m_Vars[i]]);
+		for( unsigned i = 0; i < pixelShader->m_Vars.size(); i++ ) {
+			m_ShaderVars[pixelShader->m_Vars[i]] = glGetUniformLocation(m_ShaderID,glslVarNames[pixelShader->m_Vars[i]]);
 		}
 	}
 

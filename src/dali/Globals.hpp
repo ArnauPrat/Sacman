@@ -17,12 +17,23 @@
 #include "ResourceLoader.hpp"
 #include "Texture.hpp"
 #include "Sprite.hpp"
+#include "PathFinder.hpp"
+#include "Effect.hpp"
+#include "VertexShader.hpp"
+#include "PixelShader.hpp"
 
 namespace dali {
    typedef ResourceLoader<Texture> TextureLoader; 
    typedef ResourceLoader<Sprite> SpriteLoader; 
+   typedef ResourceLoader<Effect> EffectLoader;
+   typedef ResourceLoader<PixelShader> PixelShaderLoader;
+   typedef ResourceLoader<VertexShader> VertexShaderLoader;
    extern TextureLoader textureLoader;
    extern SpriteLoader spriteLoader;
+   extern EffectLoader effectLoader;
+   extern VertexShaderLoader vertexShaderLoader;
+   extern PixelShaderLoader pixelShaderLoader;
+   extern PathFinder   pathFinder;
 }
 
 #endif

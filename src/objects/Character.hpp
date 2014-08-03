@@ -17,12 +17,14 @@
 #include "dali/SpriteRenderer.hpp"
 #include "math/Types.hpp"
 #include "dali/Dali.hpp"
+#include <Box2D/Box2D.h>
 
 
 namespace sacman {
+    class Level;
     class Character {
         public:
-            Character();
+            Character( Level& level );
             ~Character();
 
             /** @brief Loads a character using a given sprite.
@@ -31,12 +33,12 @@ namespace sacman {
 
             /** @brief Draws the sprite.
              *  @param elapsedTime The elapsed time since the last call to draw.*/
-            void Draw( double elapsedTime );
+            void Draw( const double elapsedTime, const int depth ) const ;
 
             /** @brief Launches an animation.
              *  @param name The name of the animation.
              *  @param loop True if we want to loop.*/
-            void LaunchAnimation( const char* name, double totalTime, bool loop  );
+            void LaunchAnimation( const char* name, const double totalTime, const bool loop  );
 
             /** @brief Stops the current animation.*/
             void StopAnimation();
@@ -49,7 +51,9 @@ namespace sacman {
             math::Vector2f        m_Scale;
 
         private:
-            dali::SpriteRenderer* m_SpriteRenderer;
+            dali::SpriteRenderer*   m_SpriteRenderer;
+            Level&                  m_Level;
+            b2Body*                 m_Body;
     };
 }
 

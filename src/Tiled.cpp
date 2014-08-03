@@ -40,29 +40,58 @@ namespace sacman {
         level->m_Width = root["width"].asInt();
         level->m_Height = root["height"].asInt();
         const Json::Value layers = root["layers"];
-        level->m_NumLayers = layers.size();
-        level->m_Layers = new TiledLayer[level->m_NumLayers]; 
+        level->m_Layers = new TiledLayer[layers.size()]; 
         int i = 0;
-        for( Json::Value::iterator it = layers.begin(); it != layers.end(); ++it, ++i) {
-            const Json::Value data = (*it)["data"];
-            int numFull = 0;
-            for( Json::Value::iterator it2 = data.begin(); it2 != data.end(); ++it2) {
-                if( (*it2) != 0 ) {
-                    numFull++;
+        for( Json::Value::iterator it = layers.begin(); it != layers.end(); ++it) {
+            const char* type = (*it)["type"].asCString();
+            if( std::strcmp(type,"tilelayer") == 0 ) {
+                level->m_Layers[i].m_Type = TILE_LAYER;
+                const Json::Value data = (*it)["data"];
+                int numFull = 0;
+                for( Json::Value::iterator it2 = data.begin(); it2 != data.end(); ++it2) {
+                    if( (*it2) != 0 ) {
+                        numFull++;
+                    }
                 }
-            }
-            level->m_Layers[i].m_NumCells = numFull;
-            level->m_Layers[i].m_Data = new TiledCell[ level->m_Layers[i].m_NumCells ];
-            int j = 0;
-            for( Json::Value::iterator it2 = data.begin(); it2 != data.end(); ++it2) {
-                if( (*it2) != 0 ) {
-                    level->m_Layers[i].m_Data[j].m_X = j / level->m_Width;
-                    level->m_Layers[i].m_Data[j].m_Y = j % level->m_Width;
-                    level->m_Layers[i].m_Data[j].m_Tile = (*it2).asInt();
-                    j++;
+                level->m_Layers[i].m_TileLayer.m_NumCells = numFull;
+                level->m_Layers[i].m_TileLayer.m_Cells = new TiledCell[ level->m_Layers[i].m_TileLayer.m_NumCells ];
+                int j = 0;
+                int k = 0;
+                for( Json::Value::iterator it2 = data.begin(); it2 != data.end(); ++it2, ++j) {
+                    if( (*it2) != 0 ) {
+                        level->m_Layers[i].m_TileLayer.m_Cells[k].m_X = j % level->m_Width;
+                        level->m_Layers[i].m_TileLayer.m_Cells[k].m_Y = j / level->m_Width;
+                        level->m_Layers[i].m_TileLayer.m_Cells[k].m_Tile = (*it2).asInt();
+                        k++;
+                    }
                 }
+                i++;
+            } else if( std::strcmp( type, "objectgroup" ) == 0 ) {
+                level->m_Layers[i].m_Type = OBJECT_GROUP;
+                const Json::Value objects = (*it)["objects"];
+                level->m_Layers[i].m_ObjectGroup.m_Objects = new TiledObject[objects.size()];
+                int j = 0;
+                for( Json::Value::iterator it2 = objects.begin(); it2 != objects.end(); ++it2) {
+                    if( (*it2).isMember("gid") ) {
+                        level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_TileId = (*it2)["gid"].asInt();
+                        const char* name = (*it2)["name"].asCString();
+                        assert(std::strlen(name) < OBJECT_NAME_LENGTH);
+                        std::strcpy(level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_Name, name);
+                        const char* type = (*it2)["type"].asCString();
+                        assert(std::strlen(type) < OBJECT_TYPE_NAME_LENGTH);
+                        std::strcpy(level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_Type, type);
+                        level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_X = (*it2)["x"].asInt();
+                        level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_Y = (*it2)["y"].asInt();
+                        ++j;
+                    }
+                }
+                level->m_Layers[i].m_ObjectGroup.m_NumObjects = j;
+                i++;
+            } else {
+                assert(false);
             }
         }
+        level->m_NumLayers = i;
 
         const Json::Value tileSets = root["tilesets"];
         level->m_NumTileSets = tileSets.size();
@@ -76,18 +105,32 @@ namespace sacman {
             std::strcpy(level->m_TileSets[i].m_ImageName, lastSlash);
             level->m_TileSets[i].m_ImageWidth = (*it)["imagewidth"].asInt();
             level->m_TileSets[i].m_ImageHeight = (*it)["imageheight"].asInt();
-            level->m_TileSets[i].m_Spacing = (*it)["spacint"].asInt();
+            level->m_TileSets[i].m_TileHeight = (*it)["tileheight"].asInt();
+            level->m_TileSets[i].m_TileWidth = (*it)["tilewidth"].asInt();
+            level->m_TileSets[i].m_Spacing = (*it)["spacing"].asInt();
         }
         return level;
     }
 
     void DeleteTiledLevel( TiledLevel* tiledLevel ) {
         for( int i = 0; i < tiledLevel->m_NumLayers; ++i ) {
-            delete tiledLevel->m_Layers[i].m_Data;
+            if( tiledLevel->m_Layers[i].m_Type == TILE_LAYER ) {
+                delete tiledLevel->m_Layers[i].m_TileLayer.m_Cells;
+            } else {
+                delete tiledLevel->m_Layers[i].m_ObjectGroup.m_Objects;
+            }
         }
         delete tiledLevel->m_Layers;
         delete tiledLevel->m_TileSets;
         delete tiledLevel;
     }
 
+    int FindTileSet( const TiledLevel& tiledLevel, int id ) {
+        for( int i = 0; i < tiledLevel.m_NumTileSets - 1; ++i ) {
+            if( tiledLevel.m_TileSets[i].m_FirstId <= id && id < tiledLevel.m_TileSets[i+1].m_FirstId ) {
+                return i;
+            }
+        } 
+        return tiledLevel.m_NumTileSets - 1;
+    }
 }

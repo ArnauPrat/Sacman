@@ -13,6 +13,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
 
 #include "Config.hpp"
+#include "dali/Globals.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -56,6 +57,14 @@ namespace sacman {
                 PRINT_OPTION(option, config.m_FullScreen);
                 continue;
             }
+
+            if( option == "Directory" ) {
+                inFile >> value; 
+                dali::pathFinder.AddDirectory( value.c_str() );
+                PRINT_OPTION(option, value);
+                continue;
+            }
+
         }
         inFile.close();
         return true;

@@ -11,21 +11,17 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
-#ifndef TYPES_H
-#define TYPES_H
+#ifndef DALI_TYPES_H
+#define DALI_TYPES_H
 
 namespace dali {
-	struct Vector2f {
-		float m_X;
-		float m_Y;
-	};
-
-	struct TexQuad {
-		Vector2f m_Min;
-		Vector2f m_Max;
-		Vector2f m_TexMin;
-		Vector2f m_TexMax;
-	};
-}
+    struct RGBAColor {
+        float m_R;
+        float m_G;
+        float m_B;
+        float m_A;
+    };
+};
 
 #endif
+

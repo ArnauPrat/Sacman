@@ -16,4 +16,8 @@
 namespace dali {
     TextureLoader textureLoader;
     SpriteLoader spriteLoader;
+    PathFinder   pathFinder;
+    EffectLoader       effectLoader;
+    VertexShaderLoader vertexShaderLoader;
+    PixelShaderLoader pixelShaderLoader;
 }
