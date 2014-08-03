@@ -16,6 +16,8 @@
 
 #include "EventManager.hpp"
 #include "objects/Character.hpp"
+#include "objects/Background.hpp"
+#include <Box2D/Box2D.h>
 
 namespace sacman {
     class Renderer;
@@ -34,7 +36,11 @@ namespace sacman {
             void ProcessEvents();
 
             /** @brief Draws the level.**/
-            void Draw( double elapsedTime );
+            void Draw( const double elapsedTime );
+
+            void SimulatePhysics( const double elapsedTime );
+
+            b2World&  B2World();
 
         private:
             Level( const Level& );
@@ -43,8 +49,19 @@ namespace sacman {
             EventManager    m_EventManager;
 
             /** Character **/
-            math::Vector2i   m_Velocity;
-            Character        m_Character;
+            math::Vector2i  m_Velocity;    /** @brief The current velocity vector of the main character.*/
+            float           m_Speed;       /** @brief The speed of the main character.*/
+            Character       m_Character;   /** @brief The main character.*/
+
+            /** Scene **/
+            Background      m_Background;
+
+            /** Physics **/
+            b2Vec2          m_Gravity;      /** @brief The physics of the scene.*/
+            b2World         m_B2World;      /** @brief The physics world.*/
+            double          m_PhysicsTime;  /** @brief The physics time.*/
+            double          m_TimeStep;     /** @brief The physics time step.*/
+
     };
 }
 #endif

@@ -25,6 +25,7 @@
                 GLSLVARMACRO(E_VIEW_MATRIX,"ViewMatrix") \
                 GLSLVARMACRO(E_MODEL_MATRIX,"ModelMatrix") \
                 GLSLVARMACRO(E_TEX_DIFFUSE,"TexDiffuse") \
+                GLSLVARMACRO(E_COLOR_DIFFUSE,"ColorDiffuse") \
                 GLSLVARMACRO(E_NUM_VARS,"Error") 
 
                 enum GlslVar 

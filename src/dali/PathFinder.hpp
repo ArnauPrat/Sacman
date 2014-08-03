@@ -1,9 +1,9 @@
-/*Sacman is free software: you can redistribute it and/or modify
+/*Dali is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
 
-  Sacman is distributed in the hope that it will be useful,
+  Dali is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
   GNU General Public License for more details.
@@ -16,17 +16,17 @@
 
 #include <vector>
 
-namespace sacman {
+namespace dali {
     class PathFinder {
         public:
-            static void AddDirectory( const char* directory );
-            static const char* FindDirectory( const char* fileName );
-
-        private:
             PathFinder();
             ~PathFinder();
+            void AddDirectory( const char* directory );
+            const char* FindPath( const char* fileName );
 
-            static std::vector<const char*> m_Directories;
+        private:
+            char                     m_Buffer[2048];
+            std::vector<const char*> m_Directories;
     };
 }
 

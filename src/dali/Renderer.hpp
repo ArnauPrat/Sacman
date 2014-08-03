@@ -14,6 +14,7 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include "Types.hpp"
 #include "Buffer.hpp"
 #include "Effect.hpp"
 #include "RendererConfig.hpp"
@@ -34,9 +35,11 @@ namespace dali {
             int    m_NumVertices;
             int    m_NumTexCoords;
             int    m_NumIndices;
+            int    m_Depth;
             void*    m_TexOffset;
             math::Vector2f m_Translate;
             math::Vector2f m_Scale;
+            dali::RGBAColor m_ColorDiffuse;
 		};
 
 		public:
@@ -66,11 +69,21 @@ namespace dali {
                                   const Vector2fBuffer& texCoords,
                                   const IndexBuffer& indices,
                                   const Texture& texture,
+                                  const int depth,
                                   const void* texOffset,
                                   const math::Vector2f& translate = {0.0f, 0.0f}, 
                                   const math::Vector2f& scale = {1.0f, 1.0f} );
 
+        void                DrawBox( const math::Vector2f& min, 
+                                     const math::Vector2f& extent,
+                                     const RGBAColor& color );
+
+
 		private:
+
+        /** @brief Used to sort drawing info structs.*/
+        static bool SortByDepth( const Renderer::DrawingInfo& a, const Renderer::DrawingInfo& b );
+
 		/**	@brief Initializes OpenGL.*/
 		void InitOpenGL();
 
@@ -88,19 +101,22 @@ namespace dali {
 		/** Current rendering data */
 		DrawingInfo*	m_CurrentInfo;	    /**< @brief The current texture to use for rendering.*/
 		std::vector<DrawingInfo> m_FrameDrawingInfo;	/** @brief The drawing info objects to render this frame.*/
+		std::vector<DrawingInfo> m_Boxes;	/** @brief The drawing info objects to render this frame.*/
 
 		/** Configuration. */
 		RendererConfig  m_Config;
 
 		/** Resources. */
-		Effect			        m_Textured;         /**< @brief The effect used to render textured quads.*/
-        GLuint                  m_Quad;             /**< @brief The buffer id of a buffer containing a quad.*/
+		Effect*			        m_Textured;         /**< @brief The effect used to render textured quads.*/
+        Effect*                 m_Flat;             /**< @brief The effect used to print shapes with flat color such as boxes.*/
+        Vector2fBuffer          m_Quad;             /**< @brief The buffer id of a buffer containing a quad.*/
 
 		/** Shader satate functions */
 		void ShaderSetProjectionMatrix( GLint pos );
 		void ShaderSetViewMatrix( GLint pos );
 		void ShaderSetModelMatrix( GLint pos );
 		void ShaderSetTexDiffuse( GLint pos );
+        void ShaderSetColorDiffuse( GLint pos);
 	};
 }
 #endif

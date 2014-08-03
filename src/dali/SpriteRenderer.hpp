@@ -29,7 +29,8 @@ namespace dali {
              *  @param position The position to write the sprite to.
              *  @param scale The scale of the sprite.*/
             void Draw( dali::Renderer& renderer, 
-                       double elapsedTime,
+                       const double elapsedTime,
+                       const int depth,
                        const math::Vector2f& position = {0.0f, 0.0f}, 
                        const math::Vector2f& scale = {2.0f, 2.0f} );
             

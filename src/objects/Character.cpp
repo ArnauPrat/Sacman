@@ -16,9 +16,10 @@
 #include "Context.hpp"
 
 namespace sacman {
-    Character::Character() :
-     m_SpriteRenderer( NULL ) {
-         m_Position = {0.0f, 0.0f};
+    Character::Character( Level& level ) :
+     m_SpriteRenderer( NULL ),  
+     m_Level( level ) {
+         m_Position = {8.0f, 8.0f};
          m_Scale = {2.0f, 2.0f};
     }
 
@@ -31,12 +32,28 @@ namespace sacman {
     void Character::Load( const char* spriteName ) {
         dali::Sprite* sprite = dali::spriteLoader.Load( spriteName );
         m_SpriteRenderer = new dali::SpriteRenderer( *sprite );
+
+        /** Physics Stuff **/
+        b2BodyDef bodyDef;
+        bodyDef.type = b2_dynamicBody;
+        bodyDef.fixedRotation = true;
+        bodyDef.position.Set( m_Position.m_X + 0.5f*m_Scale.m_X, m_Position.m_Y + 0.5f*m_Scale.m_Y);
+        m_Body = m_Level.B2World().CreateBody(&bodyDef);
+        b2PolygonShape dynamicBox;
+        dynamicBox.SetAsBox(0.5f*m_Scale.m_X, 0.5f*m_Scale.m_Y);
+        b2FixtureDef fixtureDef;
+        fixtureDef.shape = &dynamicBox;
+        fixtureDef.density = 1.0f;
+        fixtureDef.friction = 0.3f;
+        m_Body->CreateFixture(&fixtureDef);
     }
 
-    void Character::Draw( double elapsedTime ) {
-        m_SpriteRenderer->Draw( Context::m_Renderer, elapsedTime, m_Position, m_Scale );
+    void Character::Draw( const double elapsedTime, const int depth ) const {
+        b2Vec2 position = m_Body->GetPosition();
+        math::Vector2f drawPosition = { position.x - 0.5f*m_Scale.m_X, position.y - 0.5f*m_Scale.m_Y};
+        m_SpriteRenderer->Draw( Context::m_Renderer, elapsedTime, depth, drawPosition, m_Scale );
     }
-    void Character::LaunchAnimation( const char* name, double totalTime, bool loop  ) {
+    void Character::LaunchAnimation( const char* name, const double totalTime, const bool loop  ) {
         m_SpriteRenderer->LaunchAnimation( name, totalTime, loop );
     }
 

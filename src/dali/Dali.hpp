@@ -14,6 +14,7 @@
 #ifndef DALI_H
 #define DALI_H
 
+#include "Types.hpp"
 #include "Globals.hpp"
 #include "Renderer.hpp"
 #include "RendererConfig.hpp"

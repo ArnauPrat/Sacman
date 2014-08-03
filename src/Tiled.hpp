@@ -16,6 +16,13 @@
 
 namespace sacman {
 
+#define OBJECT_NAME_LENGTH 32
+#define OBJECT_TYPE_NAME_LENGTH 32
+
+    enum LayerType {
+        OBJECT_GROUP,
+        TILE_LAYER
+    };
 
     struct TiledCell {
         int m_X;
@@ -23,9 +30,26 @@ namespace sacman {
         int m_Tile;
     };
 
+    struct TiledObject {
+        int m_TileId;
+        char m_Name[OBJECT_NAME_LENGTH];
+        int m_X;
+        int m_Y;
+        char m_Type[OBJECT_TYPE_NAME_LENGTH];
+    };
+
     struct TiledLayer {
-        int        m_NumCells;
-        TiledCell* m_Data;
+        LayerType  m_Type;
+        union {
+            struct {
+                int        m_NumCells;
+                TiledCell* m_Cells;
+            } m_TileLayer;
+            struct {
+                int        m_NumObjects;
+                TiledObject* m_Objects;
+            } m_ObjectGroup;
+        };
     };
 
     struct TiledTileSet {
@@ -51,7 +75,7 @@ namespace sacman {
 
     TiledLevel* LoadTiledLevel( const char* fileName );
     void DeleteTiledLevel( TiledLevel* tiledLevel );
-
+    int FindTileSet( const TiledLevel& tiledLevel, int id );
 }
 
 #endif

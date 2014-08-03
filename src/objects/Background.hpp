@@ -27,6 +27,7 @@ namespace sacman {
             dali::Vector2fBuffer m_TexCoords;
             dali::IndexBuffer    m_Indices;
             dali::Texture*       m_Texture;
+            int                  m_Depth;
         };
 
         public:
@@ -38,7 +39,7 @@ namespace sacman {
             void Draw( double elapsedTime );
 
         private:
-            std::vector<Chunk> m_Chunks;
+            std::vector<Chunk*> m_Chunks;
 
     };
 }
