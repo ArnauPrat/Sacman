@@ -89,6 +89,15 @@ namespace dali {
         data[3].m_Y = 1.0f;
         m_Quad.AddData( data, 4 );
 
+        unsigned short indices[6];
+        indices[0] = 0;
+        indices[1] = 1;
+        indices[2] = 3;
+        indices[3] = 1;
+        indices[4] = 2;
+        indices[5] = 3;
+        m_Indices.AddData( indices, 6 );
+
     }
 
     void Renderer::ShutDown() {
@@ -162,6 +171,26 @@ namespace dali {
         info.m_NumIndices = indices.m_NumElements;
         info.m_Depth = depth;
         info.m_TexOffset = const_cast<void*>(texOffset);
+        info.m_Translate = translate;
+        info.m_Scale = scale;
+        m_FrameDrawingInfo.push_back( info );
+    }
+
+    void    Renderer::Draw( const Vector2fBuffer& texCoords,
+            const Texture& texture,
+            const int depth,
+            const math::Vector2f& translate, 
+            const math::Vector2f& scale) {
+        DrawingInfo info;
+        info.m_Vertices = m_Quad.m_Data;
+        info.m_TexCoords = texCoords.m_Data;
+        info.m_Indices = m_Indices.m_Data;
+        info.m_Texture = texture.m_TextureID;
+        info.m_NumVertices = m_Quad.m_NumElements;
+        info.m_NumTexCoords = texCoords.m_NumElements;
+        info.m_NumIndices = m_Indices.m_NumElements;
+        info.m_Depth = depth;
+        info.m_TexOffset = static_cast<void*>(0);
         info.m_Translate = translate;
         info.m_Scale = scale;
         m_FrameDrawingInfo.push_back( info );
