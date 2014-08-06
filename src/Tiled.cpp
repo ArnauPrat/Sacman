@@ -74,16 +74,20 @@ namespace sacman {
                 for( Json::Value::iterator it2 = objects.begin(); it2 != objects.end(); ++it2) {
                     if( (*it2).isMember("gid") ) {
                         level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_TileId = (*it2)["gid"].asInt();
-                        const char* name = (*it2)["name"].asCString();
-                        assert(std::strlen(name) < OBJECT_NAME_LENGTH);
-                        std::strcpy(level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_Name, name);
-                        const char* type = (*it2)["type"].asCString();
-                        assert(std::strlen(type) < OBJECT_TYPE_NAME_LENGTH);
-                        std::strcpy(level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_Type, type);
-                        level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_X = (*it2)["x"].asInt();
-                        level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_Y = (*it2)["y"].asInt();
-                        ++j;
+                    } else {
+                        level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_TileId = 0;
                     }
+                    const char* name = (*it2)["name"].asCString();
+                    assert(std::strlen(name) < OBJECT_NAME_LENGTH);
+                    std::strcpy(level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_Name, name);
+                    const char* type = (*it2)["type"].asCString();
+                    assert(std::strlen(type) < OBJECT_TYPE_NAME_LENGTH);
+                    std::strcpy(level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_Type, type);
+                    level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_X = (*it2)["x"].asInt();
+                    level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_Y = (*it2)["y"].asInt();
+                    level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_Width = (*it2)["width"].asInt();
+                    level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_Height = (*it2)["height"].asInt();
+                    ++j;
                 }
                 level->m_Layers[i].m_ObjectGroup.m_NumObjects = j;
                 i++;
@@ -132,5 +136,31 @@ namespace sacman {
             }
         } 
         return tiledLevel.m_NumTileSets - 1;
+    }
+
+    math::Vector2f MinTexCoord( const TiledTileSet& tileSet, int id ) {
+        int tilesX = tileSet.m_ImageWidth / (tileSet.m_TileWidth + tileSet.m_Spacing);
+        int tilesY = tileSet.m_ImageHeight / (tileSet.m_TileHeight + tileSet.m_Spacing); 
+        int x = (id - 1) % (tilesX);
+        int y = (id - 1) / (tilesX);
+        int pixelX = x*(tileSet.m_TileWidth+tileSet.m_Spacing);
+        int pixelY = (tilesY-(y))*(tileSet.m_TileHeight+tileSet.m_Spacing) - tileSet.m_TileHeight;
+        return { pixelX / (float)tileSet.m_ImageWidth, pixelY / (float)tileSet.m_ImageHeight };
+    };
+
+    math::Vector2f MaxTexCoord( const TiledTileSet& tileSet, int id ) {
+        int tilesX = tileSet.m_ImageWidth / (tileSet.m_TileWidth + tileSet.m_Spacing);
+        int tilesY = tileSet.m_ImageHeight / (tileSet.m_TileHeight + tileSet.m_Spacing); 
+        int x = (id - 1) % (tilesX);
+        int y = (id - 1) / (tilesX);
+        int pixelX = x*(tileSet.m_TileWidth+tileSet.m_Spacing)+tileSet.m_TileWidth;
+        int pixelY = (tilesY - y)*(tileSet.m_TileHeight+tileSet.m_Spacing);
+        return { pixelX / (float)tileSet.m_ImageWidth, pixelY / (float)tileSet.m_ImageHeight };
+    };
+
+    math::Vector2f TransformPosition( const TiledLevel& level, int x, int y ) {
+        std::cout << "ENTRA: " << x << " " << y << std::endl;
+        math::Vector2f position = { x / static_cast<float>(level.m_TileWidth), (level.m_Height*level.m_TileHeight-y) / static_cast<float>(level.m_TileHeight) };
+        return position;
     }
 }

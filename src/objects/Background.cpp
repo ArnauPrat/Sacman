@@ -34,29 +34,7 @@ namespace sacman {
         std::vector<TiledCell> m_Cells;
     };
 
-
-    static math::Vector2f MinTexCoord( const TiledTileSet& tileSet, int id ) {
-        int tilesX = tileSet.m_ImageWidth / (tileSet.m_TileWidth + tileSet.m_Spacing);
-        int tilesY = tileSet.m_ImageHeight / (tileSet.m_TileHeight + tileSet.m_Spacing); 
-        int x = (id - 1) % (tilesX);
-        int y = (id - 1) / (tilesX);
-        int pixelX = x*(tileSet.m_TileWidth+tileSet.m_Spacing);
-        int pixelY = (tilesY-(y))*(tileSet.m_TileHeight+tileSet.m_Spacing) - tileSet.m_TileHeight;
-        return { pixelX / (float)tileSet.m_ImageWidth, pixelY / (float)tileSet.m_ImageHeight };
-    };
-
-    static math::Vector2f MaxTexCoord( const TiledTileSet& tileSet, int id ) {
-        int tilesX = tileSet.m_ImageWidth / (tileSet.m_TileWidth + tileSet.m_Spacing);
-        int tilesY = tileSet.m_ImageHeight / (tileSet.m_TileHeight + tileSet.m_Spacing); 
-        int x = (id - 1) % (tilesX);
-        int y = (id - 1) / (tilesX);
-        int pixelX = x*(tileSet.m_TileWidth+tileSet.m_Spacing)+tileSet.m_TileWidth;
-        int pixelY = (tilesY - y)*(tileSet.m_TileHeight+tileSet.m_Spacing);
-        return { pixelX / (float)tileSet.m_ImageWidth, pixelY / (float)tileSet.m_ImageHeight };
-    };
-
     void Background::Load( const TiledLevel& tiledLevel ) {
-
         for( int i = 0; i < tiledLevel.m_NumLayers; ++i ) {
             if( tiledLevel.m_Layers[i].m_Type == TILE_LAYER ) {
                 Bucket buckets[tiledLevel.m_NumTileSets];
