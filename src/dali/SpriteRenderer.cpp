@@ -50,7 +50,7 @@ namespace dali {
             const Sprite::Animation& animation = m_Sprite.m_Animations[m_AnimationIndex];
             frame = reinterpret_cast<void*>(animation.m_Frames[static_cast<int>((m_ElapsedTime / (double)m_TotalTime)*animation.m_NumFrames)]*sizeof(math::Vector2f)*4);
         }
-        renderer.Draw( m_Sprite.m_Vertices, m_Sprite.m_TexCoords, m_Sprite.m_Indices, *m_Sprite.m_Texture, depth, frame, position, scale );
+        renderer.Draw( &m_Sprite.m_Vertices, &m_Sprite.m_TexCoords, &m_Sprite.m_Indices, m_Sprite.m_Texture, depth, frame, position, scale );
     }
 
     void SpriteRenderer::LaunchAnimation( const char* name, double totalTime, bool loop ) {

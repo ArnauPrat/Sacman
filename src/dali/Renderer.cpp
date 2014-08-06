@@ -106,7 +106,6 @@ namespace dali {
     void Renderer::BeginFrame() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         m_FrameDrawingInfo.clear();
-        m_Boxes.clear();
     }
 
     bool Renderer::SortByDepth( const Renderer::DrawingInfo& a, const Renderer::DrawingInfo& b ) {
@@ -118,94 +117,79 @@ namespace dali {
         int size = m_FrameDrawingInfo.size();
         for( int i = 0; i < size; ++i ) {
             m_CurrentInfo = &m_FrameDrawingInfo[i];
-            // Set Effect
-            Effect::SetEffect(*m_Textured);
-            // Draw
+            glPolygonMode(GL_FRONT, m_CurrentInfo->m_PolygonMode );
+            Effect::SetEffect(*m_CurrentInfo->m_Effect);
             glEnableClientState(GL_VERTEX_ARRAY);
-            glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_Vertices);
+            glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_Vertices->m_Data);
             glVertexPointer(2,GL_FLOAT,0,0);
 
-            glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-            glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_TexCoords);
-            glTexCoordPointer(2,GL_FLOAT,0,static_cast<const GLvoid*>(m_CurrentInfo->m_TexOffset));
-
             glEnableClientState(GL_INDEX_ARRAY);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_CurrentInfo->m_Indices);
-            glDrawElements(GL_TRIANGLES,m_CurrentInfo->m_NumIndices,GL_UNSIGNED_SHORT,0);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_CurrentInfo->m_Indices->m_Data);
+            glDrawElements(GL_TRIANGLES,m_CurrentInfo->m_Indices->m_NumElements,GL_UNSIGNED_SHORT,0);
 
             glDisableClientState(GL_INDEX_ARRAY);
             glDisableClientState(GL_VERTEX_ARRAY);
             glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         }
-
-        size = m_Boxes.size();
-        for( int i = 0; i < size; ++i ) {
-            m_CurrentInfo = &m_Boxes[i];
-            // Set Effect
-            Effect::SetEffect(*m_Flat);
-            // Draw
-            glEnableClientState(GL_VERTEX_ARRAY);
-            glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_Vertices);
-            glVertexPointer(2,GL_FLOAT,0,0);
-            glDrawArrays(GL_LINE_STRIP,0,m_CurrentInfo->m_NumVertices*2);
-            glDisableClientState(GL_VERTEX_ARRAY);
-        }
     }
 
-    void    Renderer::Draw( const Vector2fBuffer& vertices, 
-            const Vector2fBuffer& texCoords,
-            const IndexBuffer& indices,
-            const Texture& texture,
+    void    Renderer::Draw( const Vector2fBuffer* vertices, 
+            const Vector2fBuffer* texCoords,
+            const IndexBuffer* indices,
+            const Texture* texture,
             const int depth,
             const void* texOffset,
             const math::Vector2f& translate, 
             const math::Vector2f& scale) {
 
         DrawingInfo info;
-        info.m_Vertices = vertices.m_Data;
-        info.m_TexCoords = texCoords.m_Data;
-        info.m_Indices = indices.m_Data;
-        info.m_Texture = texture.m_TextureID;
-        info.m_NumVertices = vertices.m_NumElements;
-        info.m_NumTexCoords = texCoords.m_NumElements;
-        info.m_NumIndices = indices.m_NumElements;
+        info.m_Vertices = const_cast<Vector2fBuffer*>(vertices);
+        info.m_TexCoords = const_cast<Vector2fBuffer*>(texCoords);
+        info.m_Indices = const_cast<IndexBuffer*>(indices);
+        info.m_Texture = const_cast<Texture*>(texture);
+        info.m_Effect = m_Textured;
         info.m_Depth = depth;
         info.m_TexOffset = const_cast<void*>(texOffset);
         info.m_Translate = translate;
         info.m_Scale = scale;
+        info.m_PolygonMode = GL_FILL;
         m_FrameDrawingInfo.push_back( info );
     }
 
-    void    Renderer::Draw( const Vector2fBuffer& texCoords,
-            const Texture& texture,
+    void    Renderer::Draw( const Vector2fBuffer* texCoords,
+            const Texture* texture,
             const int depth,
             const math::Vector2f& translate, 
             const math::Vector2f& scale) {
         DrawingInfo info;
-        info.m_Vertices = m_Quad.m_Data;
-        info.m_TexCoords = texCoords.m_Data;
-        info.m_Indices = m_Indices.m_Data;
-        info.m_Texture = texture.m_TextureID;
-        info.m_NumVertices = m_Quad.m_NumElements;
-        info.m_NumTexCoords = texCoords.m_NumElements;
-        info.m_NumIndices = m_Indices.m_NumElements;
+        info.m_Vertices = &m_Quad;
+        info.m_TexCoords = const_cast<Vector2fBuffer*>(texCoords);
+        info.m_Indices = &m_Indices;
+        info.m_Texture = const_cast<Texture*>(texture);
+        info.m_Effect = m_Textured;
         info.m_Depth = depth;
         info.m_TexOffset = static_cast<void*>(0);
         info.m_Translate = translate;
         info.m_Scale = scale;
+        info.m_PolygonMode = GL_FILL;
         m_FrameDrawingInfo.push_back( info );
     }
 
     void    Renderer::DrawBox( const math::Vector2f& min, 
                                const math::Vector2f& extent,
-                               const RGBAColor& color ) {
+                               const RGBAColor& color,
+                               const int depth ) {
         DrawingInfo info;
-        info.m_Vertices = m_Quad.m_Data;
-        info.m_NumVertices = m_Quad.m_NumElements;
+        info.m_Vertices = &m_Quad;
+        info.m_Indices = &m_Indices;
         info.m_ColorDiffuse = color;
+        info.m_Effect = m_Flat;
         info.m_Translate = min;
         info.m_Scale = extent;
-        m_Boxes.push_back( info );
+        info.m_TexOffset = static_cast<void*>(0);
+        info.m_Depth = depth;
+        info.m_PolygonMode = GL_LINE;
+        m_FrameDrawingInfo.push_back(info);
     }
 
 
@@ -283,8 +267,11 @@ namespace dali {
     }
 
     void Renderer::ShaderSetTexDiffuse( GLint pos ) {
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_TexCoords->m_Data);
+        glTexCoordPointer(2,GL_FLOAT,0,static_cast<const GLvoid*>(m_CurrentInfo->m_TexOffset));
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, m_CurrentInfo->m_Texture);
+        glBindTexture(GL_TEXTURE_2D, m_CurrentInfo->m_Texture->m_TextureID);
         glUniform1i(pos, 0);
     }
 
