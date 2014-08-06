@@ -14,7 +14,7 @@
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="32" height="32">
-  <object gid="49" x="980" y="1750"/>
-  <object gid="1" x="1120" y="1890"/>
+  <object x="0" y="2030" width="2240" height="210"/>
+  <object x="1610" y="1750" width="350" height="70"/>
  </objectgroup>
 </map>

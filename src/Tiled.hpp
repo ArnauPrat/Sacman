@@ -14,6 +14,8 @@
 #ifndef TILED_H
 #define TILED_H
 
+#include "math/Types.hpp"
+
 namespace sacman {
 
 #define OBJECT_NAME_LENGTH 32
@@ -35,6 +37,8 @@ namespace sacman {
         char m_Name[OBJECT_NAME_LENGTH];
         int m_X;
         int m_Y;
+        int m_Width;
+        int m_Height;
         char m_Type[OBJECT_TYPE_NAME_LENGTH];
     };
 
@@ -76,6 +80,9 @@ namespace sacman {
     TiledLevel* LoadTiledLevel( const char* fileName );
     void DeleteTiledLevel( TiledLevel* tiledLevel );
     int FindTileSet( const TiledLevel& tiledLevel, int id );
+    math::Vector2f MinTexCoord( const TiledTileSet& tileSet, int id );
+    math::Vector2f MaxTexCoord( const TiledTileSet& tileSet, int id );
+    math::Vector2f TransformPosition( const TiledLevel& level, int x, int y );
 }
 
 #endif

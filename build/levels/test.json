@@ -27,8 +27,7 @@
          "name":"Object Layer 1",
          "objects":[
                 {
-                 "gid":49,
-                 "height":0,
+                 "height":210,
                  "name":"",
                  "properties":
                     {
@@ -36,13 +35,12 @@
                     },
                  "type":"",
                  "visible":true,
-                 "width":0,
-                 "x":980,
-                 "y":1750
+                 "width":2240,
+                 "x":0,
+                 "y":2030
                 }, 
                 {
-                 "gid":1,
-                 "height":0,
+                 "height":70,
                  "name":"",
                  "properties":
                     {
@@ -50,9 +48,9 @@
                     },
                  "type":"",
                  "visible":true,
-                 "width":0,
-                 "x":1120,
-                 "y":1890
+                 "width":350,
+                 "x":1610,
+                 "y":1750
                 }],
          "opacity":1,
          "type":"objectgroup",
