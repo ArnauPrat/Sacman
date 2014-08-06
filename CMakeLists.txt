@@ -31,6 +31,9 @@ SET( SOURCE_FILES ${SOURCE_FILES} "src/Tiled.cpp" )
 SET( SOURCE_FILES ${SOURCE_FILES} "src/main.cpp" )
 SET( SOURCE_FILES ${SOURCE_FILES} "src/objects/Background.cpp" )
 SET( SOURCE_FILES ${SOURCE_FILES} "src/objects/Character.cpp" )
+SET( SOURCE_FILES ${SOURCE_FILES} "src/objects/TexturedBox.cpp" )
+SET( SOURCE_FILES ${SOURCE_FILES} "src/objects/Entity.cpp" )
+
 
 LINK_DIRECTORIES(${LIB_DIR}/Box2D)
 

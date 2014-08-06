@@ -17,6 +17,8 @@
 #include "EventManager.hpp"
 #include "objects/Character.hpp"
 #include "objects/Background.hpp"
+#include "objects/Entity.hpp"
+#include "objects/TexturedBox.hpp"
 #include <Box2D/Box2D.h>
 
 namespace sacman {
@@ -45,23 +47,27 @@ namespace sacman {
         private:
             Level( const Level& );
 
+            /** @brief Loads a level from a file.
+             *  @param fileName The level's file name .*/
+            void LoadLevel( const char* fileName );
+
             /** Event Handling **/
             EventManager    m_EventManager;
 
             /** Character **/
-            math::Vector2i  m_Velocity;    /** @brief The current velocity vector of the main character.*/
-            float           m_Speed;       /** @brief The speed of the main character.*/
-            Character       m_Character;   /** @brief The main character.*/
+            math::Vector2i  m_Velocity;    /**< @brief The current velocity vector of the main character.*/
+            float           m_Speed;       /**< @brief The speed of the main character.*/
+            Character*      m_Character;   /**< @brief The main character.*/
 
             /** Scene **/
             Background      m_Background;
+            std::vector<Entity*>    m_Entities;
 
             /** Physics **/
-            b2Vec2          m_Gravity;      /** @brief The physics of the scene.*/
-            b2World         m_B2World;      /** @brief The physics world.*/
-            double          m_PhysicsTime;  /** @brief The physics time.*/
-            double          m_TimeStep;     /** @brief The physics time step.*/
-
+            b2Vec2          m_Gravity;      /**< @brief The physics of the scene.*/
+            b2World*        m_B2World;      /**< @brief The physics world.*/
+            double          m_PhysicsTime;  /**< @brief The physics time.*/
+            double          m_TimeStep;     /**< @brief The physics time step.*/
     };
 }
 #endif

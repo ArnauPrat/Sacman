@@ -35,6 +35,8 @@ namespace sacman {
              *  @param elapsedTime The elapsed time since the last call to draw.*/
             void Draw( const double elapsedTime, const int depth ) const ;
 
+            void DrawShape() const;
+
             /** @brief Launches an animation.
              *  @param name The name of the animation.
              *  @param loop True if we want to loop.*/
@@ -47,6 +49,7 @@ namespace sacman {
              *  @return True if it is running. False otherwise.*/
             bool IsAnimationRunning( const char* name );
 
+
             math::Vector2f        m_Position;
             math::Vector2f        m_Scale;
 
@@ -54,6 +57,7 @@ namespace sacman {
             dali::SpriteRenderer*   m_SpriteRenderer;
             Level&                  m_Level;
             b2Body*                 m_Body;
+            b2Fixture*              m_Fixture;
     };
 }
 

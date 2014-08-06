@@ -61,16 +61,18 @@ namespace dali {
 		void            	EndFrame();
 
 
-		/** @brief Draws a sprite batch.
-		 *  @param spriteBatch The sprite batch to draw.
-         *  @param translate The translation to apply to the drawn sprite.
-         *  @param scale The translation to apply to the drawn sprite.*/
 		void                Draw( const Vector2fBuffer& vertices, 
                                   const Vector2fBuffer& texCoords,
                                   const IndexBuffer& indices,
                                   const Texture& texture,
                                   const int depth,
                                   const void* texOffset,
+                                  const math::Vector2f& translate = {0.0f, 0.0f}, 
+                                  const math::Vector2f& scale = {1.0f, 1.0f} );
+
+		void                Draw( const Vector2fBuffer& texCoords,
+                                  const Texture& texture,
+                                  const int depth,
                                   const math::Vector2f& translate = {0.0f, 0.0f}, 
                                   const math::Vector2f& scale = {1.0f, 1.0f} );
 
@@ -110,6 +112,7 @@ namespace dali {
 		Effect*			        m_Textured;         /**< @brief The effect used to render textured quads.*/
         Effect*                 m_Flat;             /**< @brief The effect used to print shapes with flat color such as boxes.*/
         Vector2fBuffer          m_Quad;             /**< @brief The buffer id of a buffer containing a quad.*/
+        IndexBuffer             m_Indices;          /**< @brief The buffer id of a buffer containing indices.*/
 
 		/** Shader satate functions */
 		void ShaderSetProjectionMatrix( GLint pos );
