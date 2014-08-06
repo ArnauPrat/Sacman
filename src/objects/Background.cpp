@@ -100,7 +100,7 @@ namespace sacman {
     void Background::Draw( double elapsedTime ) {
         for( unsigned int i = 0; i < m_Chunks.size(); ++i ) {
             const Chunk* chunk = m_Chunks[i];
-            Context::m_Renderer.Draw( chunk->m_Vertices, chunk->m_TexCoords, chunk->m_Indices, *chunk->m_Texture, chunk->m_Depth, static_cast<void*>(0), {0.0f, 0.0f}, {1.0f, 1.0f} );
+            Context::m_Renderer.Draw( &chunk->m_Vertices, &chunk->m_TexCoords, &chunk->m_Indices, chunk->m_Texture, chunk->m_Depth, static_cast<void*>(0), {0.0f, 0.0f}, {1.0f, 1.0f} );
         }
     }
 }

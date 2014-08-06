@@ -27,8 +27,6 @@ namespace sacman {
         m_Texture( NULL ),
         m_Body( NULL ),
         m_Fixture( NULL ) {
-            std::cout << position.m_X << " " << position.m_Y << std::endl;
-            std::cout << scale.m_X << " " << scale.m_Y << std::endl;
 
         }
 
@@ -46,7 +44,7 @@ namespace sacman {
 
     void TexturedBox::Draw( const double elapsedTime, const int depth ) const {
         if( m_Texture ) {
-            Context::m_Renderer.Draw( m_TexCoords, *m_Texture, depth, m_Position, m_Scale );
+            Context::m_Renderer.Draw( &m_TexCoords, m_Texture, depth, m_Position, m_Scale );
         }
 
     }
@@ -56,7 +54,7 @@ namespace sacman {
             const b2AABB& aabb = m_Fixture->GetAABB(0);
             b2Vec2 center = aabb.GetCenter();
             b2Vec2 extents = aabb.GetExtents();
-            Context::m_Renderer.DrawBox( { center.x - extents.x, center.y - extents.y }, { extents.x*2.0f, extents.y*2.0f } , {1.0f, 0.0f, 0.0f, 1.0f} );
+            Context::m_Renderer.DrawBox( { center.x - extents.x, center.y - extents.y }, { extents.x*2.0f, extents.y*2.0f } , {1.0f, 0.0f, 0.0f, 1.0f}, 256 );
         }
     }
 

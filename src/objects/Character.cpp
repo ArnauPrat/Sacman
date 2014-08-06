@@ -71,7 +71,7 @@ namespace sacman {
             const b2AABB& aabb = m_Fixture->GetAABB(0);
             b2Vec2 center = aabb.GetCenter();
             b2Vec2 extents = aabb.GetExtents();
-            Context::m_Renderer.DrawBox( { center.x - extents.x, center.y - extents.y }, { extents.x*2.0f, extents.y*2.0f } , {1.0f, 0.0f, 0.0f, 1.0f} );
+            Context::m_Renderer.DrawBox( { center.x - extents.x, center.y - extents.y }, { extents.x*2.0f, extents.y*2.0f } , {1.0f, 0.0f, 0.0f, 1.0f}, 256 );
         }
     }
 

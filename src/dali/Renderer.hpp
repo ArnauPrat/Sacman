@@ -28,18 +28,17 @@ namespace dali {
 	class Renderer {
 
 		struct DrawingInfo {
-			GLuint m_Vertices;
-			GLuint m_TexCoords;
-			GLuint m_Indices;
-			GLuint m_Texture;
-            int    m_NumVertices;
-            int    m_NumTexCoords;
-            int    m_NumIndices;
-            int    m_Depth;
-            void*    m_TexOffset;
-            math::Vector2f m_Translate;
-            math::Vector2f m_Scale;
+			Vector2fBuffer* m_Vertices;
+			Vector2fBuffer* m_TexCoords;
+			IndexBuffer*    m_Indices;
+			Texture*        m_Texture;
+            void*           m_TexOffset;
+            Effect*         m_Effect;
+            int             m_Depth;
+            math::Vector2f  m_Translate;
+            math::Vector2f  m_Scale;
             dali::RGBAColor m_ColorDiffuse;
+            GLenum          m_PolygonMode; 
 		};
 
 		public:
@@ -61,24 +60,25 @@ namespace dali {
 		void            	EndFrame();
 
 
-		void                Draw( const Vector2fBuffer& vertices, 
-                                  const Vector2fBuffer& texCoords,
-                                  const IndexBuffer& indices,
-                                  const Texture& texture,
+		void                Draw( const Vector2fBuffer* vertices, 
+                                  const Vector2fBuffer* texCoords,
+                                  const IndexBuffer* indices,
+                                  const Texture* texture,
                                   const int depth,
                                   const void* texOffset,
                                   const math::Vector2f& translate = {0.0f, 0.0f}, 
                                   const math::Vector2f& scale = {1.0f, 1.0f} );
 
-		void                Draw( const Vector2fBuffer& texCoords,
-                                  const Texture& texture,
+		void                Draw( const Vector2fBuffer* texCoords,
+                                  const Texture* texture,
                                   const int depth,
                                   const math::Vector2f& translate = {0.0f, 0.0f}, 
                                   const math::Vector2f& scale = {1.0f, 1.0f} );
 
         void                DrawBox( const math::Vector2f& min, 
                                      const math::Vector2f& extent,
-                                     const RGBAColor& color );
+                                     const RGBAColor& color,
+                                     const int depth );
 
 
 		private:
@@ -103,7 +103,6 @@ namespace dali {
 		/** Current rendering data */
 		DrawingInfo*	m_CurrentInfo;	    /**< @brief The current texture to use for rendering.*/
 		std::vector<DrawingInfo> m_FrameDrawingInfo;	/** @brief The drawing info objects to render this frame.*/
-		std::vector<DrawingInfo> m_Boxes;	/** @brief The drawing info objects to render this frame.*/
 
 		/** Configuration. */
 		RendererConfig  m_Config;

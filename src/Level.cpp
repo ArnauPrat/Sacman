@@ -82,8 +82,6 @@ namespace sacman {
     }
 
     void Level::Draw( const double elapsedTime ) {
-        //        m_Character.m_Position.m_X = m_Character.m_Position.m_X + m_Speed*m_Velocity.m_X*elapsedTime;
-        //       m_Character.m_Position.m_Y = m_Character.m_Position.m_Y + m_Speed*m_Velocity.m_Y*elapsedTime;
         m_Character->Draw( elapsedTime, 2 );
         m_Background.Draw( elapsedTime );
         m_Character->DrawShape();
@@ -92,15 +90,6 @@ namespace sacman {
             e->Draw( elapsedTime, 0);
             e->DrawShape( elapsedTime, 10);
         }
-        /*        for( b2Body* body = m_B2World.GetBodyList(); body; body = body->GetNext()) {
-                  for( b2Fixture* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext() ) {
-                  const b2AABB& aabb = fixture->GetAABB(0);
-                  b2Vec2 center = aabb.GetCenter();
-                  b2Vec2 extents = aabb.GetExtents();
-                  Context::m_Renderer.DrawBox( { center.x - extents.x, center.y - extents.y }, { extents.x*2.0f, extents.y*2.0f } , {1.0f, 0.0f, 0.0f, 1.0f} );
-                  }
-                  }
-                  */
     }
 
     void Level::SimulatePhysics( const double elapsedTime ) {
