@@ -15,12 +15,25 @@
 #define EVENTS_H
 namespace sacman {
     enum EventType {
+        KEYBOARD
+    };
+
+    enum KeyCode {
         K_UP,
         K_DOWN,
-        K_RIGHT,
         K_LEFT,
-        K_ESC,
-        NONE
+        K_RIGHT,
+        K_ESC
+    };
+
+    enum KeyEventType {
+        K_PRESSED,
+        K_RELEASED
+    };
+
+    struct KeyEvent {
+        KeyCode         m_KCode;
+        KeyEventType    m_KEType;
     };
 }
 #endif

@@ -71,7 +71,7 @@ namespace sacman {
             double elapsedTime = (newTime - currentTime);
             currentTime += elapsedTime;
             m_CurrentLevel.ProcessEvents();
-            m_CurrentLevel.SimulatePhysics( elapsedTime / 1000.0f );
+            m_CurrentLevel.Update( elapsedTime / 1000.0f );
             m_Renderer.BeginFrame();
             m_CurrentLevel.Draw( elapsedTime / 1000.0 );
             m_Renderer.EndFrame();

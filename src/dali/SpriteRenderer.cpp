@@ -13,6 +13,7 @@
 
 #include "SpriteRenderer.hpp"
 #include <cstring>
+#include <iostream>
 
 namespace dali {
 

@@ -14,50 +14,52 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
+#include "Box2D/Box2D.h"
+#include "dali/Dali.hpp"
 #include "dali/SpriteRenderer.hpp"
 #include "math/Types.hpp"
-#include "dali/Dali.hpp"
-#include <Box2D/Box2D.h>
+#include "objects/Entity.hpp"
+#include <memory>
 
 
 namespace sacman {
     class Level;
-    class Character {
+    enum MovementState {
+        E_RIGHT,
+        E_LEFT,
+        E_STAND
+    };
+    class Character : public Entity {
         public:
-            Character( Level& level );
+            Character( const char* name, Level& level, const char* spriteName, const math::Vector2f& position, const math::Vector2f& extent );
             ~Character();
 
-            /** @brief Loads a character using a given sprite.
-             *  @param spriteName The name of the sprite.*/
-            void Load( const char* spriteName );
-
-            /** @brief Draws the sprite.
-             *  @param elapsedTime The elapsed time since the last call to draw.*/
             void Draw( const double elapsedTime, const int depth ) const ;
 
-            void DrawShape() const;
+            void DrawShape( const double elapsedTime, const int depth ) const;
 
-            /** @brief Launches an animation.
-             *  @param name The name of the animation.
-             *  @param loop True if we want to loop.*/
-            void LaunchAnimation( const char* name, const double totalTime, const bool loop  );
+            void Update( const double elapsedTime );
 
-            /** @brief Stops the current animation.*/
-            void StopAnimation();
+            void ListenKeyboard( std::shared_ptr<void> data );
 
-            /** @brief Tells if the whe given animation is running.
-             *  @return True if it is running. False otherwise.*/
-            bool IsAnimationRunning( const char* name );
+            void MoveRight( float speed );
+            void MoveLeft( float speed );
+            void Stop();
 
-
-            math::Vector2f        m_Position;
-            math::Vector2f        m_Scale;
+            virtual math::Vector2f Position() const;
+            virtual void SetPosition( const math::Vector2f& position );
+            virtual math::Vector2f Extent() const;
+            virtual void SetExtent( const math::Vector2f& extent );
 
         private:
+            math::Vector2f          m_Position;
+            math::Vector2f          m_Scale;
             dali::SpriteRenderer*   m_SpriteRenderer;
             Level&                  m_Level;
             b2Body*                 m_Body;
             b2Fixture*              m_Fixture;
+            MovementState           m_CurrentState;
+            MovementState           m_PreviousState;
     };
 }
 

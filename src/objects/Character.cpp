@@ -16,74 +16,139 @@
 #include "Context.hpp"
 
 namespace sacman {
-    Character::Character( Level& level ) :
-     m_SpriteRenderer( NULL ),  
-     m_Level( level ),
-     m_Body( NULL ),
-     m_Fixture( NULL ) {
-         m_Position = {8.0f, 8.0f};
-         m_Scale = {2.0f, 2.0f};
+    Character::Character( const char* name, Level& level, const char* spriteName, const math::Vector2f& position, const math::Vector2f& extent ) :
+        Entity( name, level ),
+        m_Position( position ),
+        m_Scale( extent ),
+        m_SpriteRenderer( NULL ),  
+        m_Level( level ),
+        m_Body( NULL ),
+        m_Fixture( NULL ),
+        m_CurrentState(E_STAND),
+        m_PreviousState(E_RIGHT) {
+            dali::Sprite* sprite = dali::spriteLoader.Load( spriteName );
+            m_SpriteRenderer = new dali::SpriteRenderer( *sprite );
+
+            /** Physics Stuff **/
+            b2BodyDef bodyDef;
+            bodyDef.type = b2_dynamicBody;
+            bodyDef.fixedRotation = true;
+            bodyDef.position.Set( m_Position.m_X + 0.5f*m_Scale.m_X, m_Position.m_Y + 0.5f*m_Scale.m_Y);
+            m_Body = m_Level.B2World().CreateBody(&bodyDef);
+            b2PolygonShape dynamicBox;
+            dynamicBox.SetAsBox(0.5f*m_Scale.m_X, 0.5f*m_Scale.m_Y);
+            b2FixtureDef fixtureDef;
+            fixtureDef.shape = &dynamicBox;
+            fixtureDef.density = 1.0f;
+            fixtureDef.friction = 0.3f;
+            m_Fixture = m_Body->CreateFixture(&fixtureDef);
     }
 
     Character::~Character() {
-        if( m_SpriteRenderer != NULL ) {
             delete m_SpriteRenderer;
-        }
-
-        if( m_Fixture ) {
             m_Body->DestroyFixture( m_Fixture );
-        }
-
-        if( m_Body ) {
             m_Level.B2World().DestroyBody(m_Body);
-        }
-    }
-
-    void Character::Load( const char* spriteName ) {
-        dali::Sprite* sprite = dali::spriteLoader.Load( spriteName );
-        m_SpriteRenderer = new dali::SpriteRenderer( *sprite );
-
-        /** Physics Stuff **/
-        b2BodyDef bodyDef;
-        bodyDef.type = b2_dynamicBody;
-        bodyDef.fixedRotation = true;
-        bodyDef.position.Set( m_Position.m_X + 0.5f*m_Scale.m_X, m_Position.m_Y + 0.5f*m_Scale.m_Y);
-        m_Body = m_Level.B2World().CreateBody(&bodyDef);
-        b2PolygonShape dynamicBox;
-        dynamicBox.SetAsBox(0.5f*m_Scale.m_X, 0.5f*m_Scale.m_Y);
-        b2FixtureDef fixtureDef;
-        fixtureDef.shape = &dynamicBox;
-        fixtureDef.density = 1.0f;
-        fixtureDef.friction = 0.3f;
-        m_Fixture = m_Body->CreateFixture(&fixtureDef);
     }
 
     void Character::Draw( const double elapsedTime, const int depth ) const {
-        if( m_SpriteRenderer ) {
             b2Vec2 position = m_Body->GetPosition();
             math::Vector2f drawPosition = { position.x - 0.5f*m_Scale.m_X, position.y - 0.5f*m_Scale.m_Y};
             m_SpriteRenderer->Draw( Context::m_Renderer, elapsedTime, depth, drawPosition, m_Scale );
-        }
     }
 
-    void Character::DrawShape() const  {
-        if( m_Fixture ) {
+    void Character::DrawShape( const double elapsedTime, const int depth ) const {
             const b2AABB& aabb = m_Fixture->GetAABB(0);
             b2Vec2 center = aabb.GetCenter();
             b2Vec2 extents = aabb.GetExtents();
             Context::m_Renderer.DrawBox( { center.x - extents.x, center.y - extents.y }, { extents.x*2.0f, extents.y*2.0f } , {1.0f, 0.0f, 0.0f, 1.0f}, 256 );
+    }
+
+    
+    void Character::MoveRight( float speed ) {
+        b2Vec2 vel = m_Body->GetLinearVelocity();
+        float velChange = speed - vel.x;
+        float impulse = m_Body->GetMass() * velChange;
+        m_Body->ApplyLinearImpulse( b2Vec2(impulse,0), m_Body->GetWorldCenter(), true );
+    }
+
+    void Character::Stop() {
+        b2Vec2 vel = m_Body->GetLinearVelocity();
+        float velChange = 0.0f - vel.x;
+        float impulse = m_Body->GetMass() * velChange;
+        m_Body->ApplyLinearImpulse( b2Vec2(impulse,0), m_Body->GetWorldCenter(), true );
+    }
+
+    void Character::MoveLeft( float speed ) {
+        b2Vec2 vel = m_Body->GetLinearVelocity();
+        float velChange = -speed - vel.x;
+        float impulse = m_Body->GetMass() * velChange;
+        m_Body->ApplyLinearImpulse( b2Vec2(impulse,0), m_Body->GetWorldCenter(), true );
+    }
+
+    math::Vector2f Character::Position() const {
+        assert(false);
+    }
+
+    void Character::SetPosition( const math::Vector2f& position ) {
+        assert(false);
+    }
+
+    math::Vector2f Character::Extent() const {
+        assert(false);
+    }
+
+    void Character::SetExtent( const math::Vector2f& extent ) {
+        assert(false);
+    }
+
+    void Character::Update( const double elapsedTime ) {
+        switch(m_CurrentState) {
+            case E_RIGHT:
+                MoveRight( 1.0f );
+                if( m_PreviousState != E_RIGHT ) {
+                    m_SpriteRenderer->LaunchAnimation("WalkRight",1.0f,true);
+                    m_PreviousState = E_RIGHT;
+                }
+                break;
+            case E_LEFT:
+                MoveLeft( 1.0f );
+                if( m_PreviousState != E_LEFT ) {
+                    m_SpriteRenderer->LaunchAnimation("WalkLeft",1.0f,true);
+                    m_PreviousState = E_LEFT;
+                }
+                break;
+            case E_STAND:
+                Stop();
+                if( m_PreviousState == E_RIGHT ) {
+                    m_SpriteRenderer->LaunchAnimation("StandRight",1.0f,true);
+                    m_PreviousState = E_STAND;
+                } else if( m_PreviousState == E_LEFT ) {
+                    m_SpriteRenderer->LaunchAnimation("StandLeft",1.0f,true);
+                    m_PreviousState = E_STAND;
+                }
+                break;
+            default:
+                break;
         }
     }
 
-    void Character::LaunchAnimation( const char* name, const double totalTime, const bool loop  ) {
-        m_SpriteRenderer->LaunchAnimation( name, totalTime, loop );
+    void Character::ListenKeyboard( std::shared_ptr<void> data ) {
+        KeyEvent* event = static_cast<KeyEvent*>(data.get());
+        if( event->m_KEType == K_PRESSED ) {
+            switch( event->m_KCode ) {
+                case K_RIGHT:
+                    m_CurrentState = E_RIGHT;
+                    break;
+                case K_LEFT:
+                    m_CurrentState = E_LEFT;
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            m_PreviousState = m_CurrentState;
+            m_CurrentState = E_STAND;
+        }
     }
 
-    void Character::StopAnimation() {
-        m_SpriteRenderer->StopAnimation();
-    }
-
-    bool Character::IsAnimationRunning( const char* name ) {
-        return m_SpriteRenderer->IsAnimationRunning( name );
-    }
 }

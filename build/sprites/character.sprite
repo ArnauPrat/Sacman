@@ -31,7 +31,7 @@
 			                  {"Name" : "StandRight",
 						       "Frames" : [ 0 ]},
                               {"Name" : "StandLeft",
-						        "Frames" : [ 11 ]}
+						        "Frames" : [ 10 ]}
                             ]
 		}
 

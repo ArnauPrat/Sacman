@@ -35,6 +35,9 @@ namespace sacman {
     void Entity::DrawShape( const double elapsedTime, const int depth ) const {
     }
 
+    void Entity::Update( const double elapsedTime ) {
+    }
+
     const char* Entity::Name() const {
         return m_Name;
     }
