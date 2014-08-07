@@ -30,6 +30,7 @@ namespace sacman {
 
             virtual void Draw( const double elapsedTime, const int depth ) const;
             virtual void DrawShape( const double elapsedTime, const int depth ) const;
+            virtual void Update( const double elapsedTime );
             virtual math::Vector2f Position() const = 0;
             virtual void SetPosition( const math::Vector2f& position ) = 0;
             virtual math::Vector2f Extent() const = 0;

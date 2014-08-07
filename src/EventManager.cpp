@@ -21,20 +21,21 @@ namespace sacman {
     EventManager::~EventManager() {
     }
 
-    void EventManager::RegisterListener( EventType eventType, void (*listener)(void*)) {
+    void EventManager::RegisterListener( EventType eventType, std::function<void( std::shared_ptr<void>)> listener ) {
         m_EventTypeListeners[eventType].push_back(listener);
     }
 
-    void EventManager::RegisterListener( const char* eventType, void (*listener)(void*)) {
+    void EventManager::RegisterListener( const char* eventType, std::function<void( std::shared_ptr<void>)> listener ) {
         m_StringListeners[eventType].push_back(listener);
     }
 
-    void EventManager::UnregisterListener( EventType eventType, void (*listener)(void*)) {
+    void EventManager::UnregisterListener( EventType eventType, std::function<void( std::shared_ptr<void>)> listener ) {
         auto it = m_EventTypeListeners.find(eventType);
         if( it != m_EventTypeListeners.end() ) {
-           std::list< void (*)(void*) >& listeners = (*it).second;
+           std::list<std::function<void(std::shared_ptr<void>)> >& listeners = (*it).second;
            for( auto it2 = listeners.begin(); it2 != listeners.end(); ++it2 ) {
-               if( (*it2) == listener ) {
+               if( (*it2).target< void(std::shared_ptr<void>)>() == 
+                    listener.target< void(std::shared_ptr<void>) >() ) {
                     (*it).second.erase( it2 );
                     return;
                }
@@ -42,12 +43,13 @@ namespace sacman {
         }
     }
 
-    void EventManager::UnregisterListener( const char* eventType, void (*listener)(void*)) {
+    void EventManager::UnregisterListener( const char* eventType, std::function<void( std::shared_ptr<void>)> listener ) {
         auto it = m_StringListeners.find(eventType);
         if( it != m_StringListeners.end() ) {
-           std::list< void (*)(void*) >& listeners = (*it).second;
+           std::list<std::function<void(std::shared_ptr<void>)> >& listeners = (*it).second;
            for( auto it2 = listeners.begin(); it2 != listeners.end(); ++it2 ) {
-               if( (*it2) == listener ) {
+               if( (*it2).target< void(std::shared_ptr<void>)>() == 
+                    listener.target< void(std::shared_ptr<void>) >() ) {
                     (*it).second.erase( it2 );
                     return;
                }
@@ -55,20 +57,20 @@ namespace sacman {
         }
     }
 
-    void EventManager::LaunchEvent( EventType eventType, void* data ) {
+    void EventManager::LaunchEvent( EventType eventType, std::shared_ptr<void> data ) {
         auto it = m_EventTypeListeners.find(eventType);
         if( it != m_EventTypeListeners.end() ) {
-           std::list< void (*)(void*) >& listeners = (*it).second;
+           std::list<std::function<void(std::shared_ptr<void>)> >& listeners = (*it).second;
             for( auto listener : listeners ) {
                 listener(data);
             }
         }
     }
 
-    void EventManager::LaunchEvent( const char* eventType, void* data ) {
+    void EventManager::LaunchEvent( const char* eventType, std::shared_ptr<void> data ) {
         auto it = m_StringListeners.find(eventType);
         if( it != m_StringListeners.end() ) {
-           std::list< void (*)(void*) >& listeners = (*it).second;
+           std::list<std::function<void(std::shared_ptr<void>)> >& listeners = (*it).second;
             for( auto listener : listeners ) {
                 listener(data);
             }

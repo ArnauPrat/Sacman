@@ -16,6 +16,7 @@
 #include "Tiled.hpp"
 #include "dali/Globals.hpp"
 #include "dali/PathFinder.hpp"
+#include <functional>
 
 namespace sacman {
 
@@ -35,13 +36,14 @@ namespace sacman {
     }
 
     void Level::StartUp() {
-        m_Character = new Character( *this );
+        m_Character = new Character("character", *this, "character.sprite", {8.0f, 8.0f}, {2.0f, 2.0f} );
+        m_EventManager.RegisterListener(KEYBOARD, std::bind(&Character::ListenKeyboard,m_Character,std::placeholders::_1) );
+        m_Entities.push_back(m_Character);
+
         LoadLevel("test.json");
     }
 
     void Level::ShutDown() {
-        if(m_Character)
-            delete m_Character;
         for( Entity* e : m_Entities ) {
             delete e;
         }
@@ -52,44 +54,40 @@ namespace sacman {
         SDL_Event event;
         /* Check for new events */
         while(SDL_PollEvent(&event)) {
-            EventType eType = NONE;
-            if( event.key.type == SDL_KEYDOWN ) { 
+            if( event.key.type == SDL_KEYDOWN || event.key.type == SDL_KEYUP ) { 
+                KeyEvent* kEvent =  new KeyEvent() ;
+                kEvent->m_KEType = event.key.type == SDL_KEYDOWN ? K_PRESSED : K_RELEASED;
                 switch(event.key.keysym.sym) {
                     case SDLK_ESCAPE:
-                        eType = K_ESC;
+                        kEvent->m_KCode = K_ESC;
                         Context::Exit();
                         break;
                     case SDLK_LEFT:
-                        //      eType = K_LEFT;
-                        m_Velocity.m_X = -1; 
-                        if( !m_Character->IsAnimationRunning( "WalkLeft" ) ) {
-                            m_Character->LaunchAnimation( "WalkLeft", 1.0f, false );
-                        }
+                        kEvent->m_KCode = K_LEFT;
                         break;
                     case SDLK_RIGHT:
-                        //     eType = K_RIGHT;
-                        m_Velocity.m_X = 1; 
-                        if( !m_Character->IsAnimationRunning( "WalkRight" ) ) {
-                            m_Character->LaunchAnimation( "WalkRight", 1.0f, false );
-                        }
+                        kEvent->m_KCode = K_RIGHT;
                         break;
                 }
-            } else if(event.key.type == SDL_KEYUP) {
-                m_Character->StopAnimation();
-            }
-            if( eType != NONE ) m_EventManager.LaunchEvent( eType, NULL );
+                m_EventManager.LaunchEvent( KEYBOARD, std::shared_ptr<void>(kEvent));
+            } 
         }
     }
 
     void Level::Draw( const double elapsedTime ) {
-        m_Character->Draw( elapsedTime, 2 );
         m_Background.Draw( elapsedTime );
-        m_Character->DrawShape();
 
         for( Entity* e : m_Entities ) {
             e->Draw( elapsedTime, 0);
             e->DrawShape( elapsedTime, 10);
         }
+    }
+
+    void Level::Update( const double elapsedTime ) {
+        for( Entity* e : m_Entities ) {
+            e->Update( elapsedTime );
+        }
+        SimulatePhysics( elapsedTime );
     }
 
     void Level::SimulatePhysics( const double elapsedTime ) {
@@ -105,9 +103,6 @@ namespace sacman {
     }
 
     void Level::LoadLevel( const char* fileName ) {
-        m_Character->Load("character.sprite");
-        m_Character->m_Position.m_X = 0;
-        m_Character->m_Position.m_Y = 3;
         TiledLevel* tiledLevel = LoadTiledLevel(dali::pathFinder.FindPath(fileName));
         m_Background.Load(*tiledLevel);
         for( int i = 0; i < tiledLevel->m_NumLayers; ++i ) {

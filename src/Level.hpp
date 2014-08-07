@@ -39,13 +39,15 @@ namespace sacman {
 
             /** @brief Draws the level.**/
             void Draw( const double elapsedTime );
-
-            void SimulatePhysics( const double elapsedTime );
+            
+            /** @brief Updates the entities of the level.*/
+            void Update( const double elapsedTime );
 
             b2World&  B2World();
 
         private:
             Level( const Level& );
+            void SimulatePhysics( const double elapsedTime );
 
             /** @brief Loads a level from a file.
              *  @param fileName The level's file name .*/
