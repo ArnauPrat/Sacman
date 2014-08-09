@@ -20,7 +20,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
 namespace sacman {
     Config::Config() : 
-        m_FullScreen( false ) {
+        m_FullScreen( false ),
+        m_DrawDebug(false) {
     }
 
     Config::~Config() {
@@ -55,6 +56,14 @@ namespace sacman {
                 std::stringstream ss(value);
                 ss >> config.m_FullScreen;
                 PRINT_OPTION(option, config.m_FullScreen);
+                continue;
+            }
+
+            if( option == "DrawDebug" ) {
+                inFile >> value; 
+                std::stringstream ss(value);
+                ss >> config.m_DrawDebug;
+                PRINT_OPTION(option, config.m_DrawDebug);
                 continue;
             }
 

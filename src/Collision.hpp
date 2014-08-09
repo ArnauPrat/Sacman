@@ -11,30 +11,23 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
-#ifndef EVENTS_H
-#define EVENTS_H
+#ifndef SACMAN_COLLISION_H
+#define SACMAN_COLLISION_H
+
 namespace sacman {
-    enum EventType {
-        KEYBOARD
+
+    class Entity;
+    enum CollisionType {
+        E_ENTER,
+        E_LEAVE,
+        E_STAY
     };
 
-    enum KeyCode {
-        K_UP,
-        K_DOWN,
-        K_LEFT,
-        K_RIGHT,
-        K_SPACE,
-        K_ESC
+    struct Collision {
+        Entity* m_Entity;
+        CollisionType m_Type;
     };
 
-    enum KeyEventType {
-        K_PRESSED,
-        K_RELEASED
-    };
-
-    struct KeyEvent {
-        KeyCode         m_KCode;
-        KeyEventType    m_KEType;
-    };
 }
+
 #endif

@@ -22,6 +22,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
 namespace sacman {
 
+#define LEVEL_NAME_LENGTH   32
+
     class Context {
         public:
 

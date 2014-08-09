@@ -29,22 +29,22 @@ namespace sacman {
             /** @brief Registers an event to listen to an event type.
              *  @param eventType the event type.
              *  @param listener the listener of the event.*/ 
-            void RegisterListener( EventType eventType, std::function<void( std::shared_ptr<void>)> listener ); 
+            void RegisterListener( EventType eventType, std::function<void( std::shared_ptr<void> )> listener ); 
 
             /** @brief Registers an event to listen to an event type.
              *  @param eventType the event type.
              *  @param listener the listener of the event.*/ 
-            void RegisterListener( const char* eventType,std::function<void( std::shared_ptr<void>)> listener  ); 
+            void RegisterListener( const char* eventType,std::function<void( std::shared_ptr<void> )> listener  ); 
 
             /** @brief Unregisters an event to listen to an event type.
              *  @param eventType the event type.
              *  @param listener the listener of the event.*/ 
-            void UnregisterListener( EventType eventType, std::function<void( std::shared_ptr<void>)> listener ); 
+            void UnregisterListener( EventType eventType, std::function<void( std::shared_ptr<void> )> listener ); 
 
             /** @brief Unregisters an event to listen to an event type.
              *  @param eventType the event type.
              *  @param listener the listener of the event.*/ 
-            void UnregisterListener( const char* eventType, std::function<void( std::shared_ptr<void>)> listener  ); 
+            void UnregisterListener( const char* eventType, std::function<void( std::shared_ptr<void> )> listener  ); 
 
             /** @brief Launchs an event.
              *  @param eventType the event type.
@@ -58,8 +58,8 @@ namespace sacman {
 
         private:
             EventManager( const EventManager& eventManager );
-            std::map<EventType, std::list<std::function<void( std::shared_ptr<void>)> > >     m_EventTypeListeners; 
-            std::map<std::string, std::list<std::function<void( std::shared_ptr<void>)> > >   m_StringListeners; 
+            std::map<EventType, std::list<std::function<void( std::shared_ptr<void> )> > >     m_EventTypeListeners; 
+            std::map<std::string, std::list<std::function<void( std::shared_ptr<void> )> > >   m_StringListeners; 
     };
 }
 #endif

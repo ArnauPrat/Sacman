@@ -11,54 +11,47 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
-#ifndef SACMAN_OBJECT_H
-#define SACMAN_OBJECT_H
+#ifndef SACMAN_PORTAL_H
+#define SACMAN_PORTAL_H
 
-#include "dali/SpriteRenderer.hpp"
-#include "dali/Texture.hpp"
+#include "Context.hpp"
 #include "dali/Buffer.hpp"
-#include "math/Types.hpp"
-#include "objects/Entity.hpp"
-#include <Box2D/Box2D.h>
+#include "dali/Texture.hpp"
+#include "Box.hpp"
 
 namespace sacman {
-    class Level;
-    class TexturedBox : public Entity {
+    class Portal : public Entity {
         public:
-            TexturedBox( const char* name, Level& level, const math::Vector2f& position, const math::Vector2f& scale );
-            virtual ~TexturedBox();
+            Portal( const char* name, 
+                    const char* targetLevel, 
+                    const math::Vector2f& targetPosition,
+                    const math::Vector2f& position, 
+                    const math::Vector2f& extent );
+            ~Portal();
 
             void Draw( const double elapsedTime, const int depth ) const ;
-
             void DrawShape( const double elapsedTime, const int depth ) const;
-
-            /** @brief Sets a box as a shape.*/
-            void SetBoxShape();
-
-            /** @brief Loads the texture of the object.
-             *  @param spriteName The name of the sprite.*/
+            void Update( const double elapsedTime );
             void LoadTexture( const char* textureName, const math::Vector2f texCoords[4] );
+            void Enter( Level* level );
+            void Leave( Level* level );
 
             virtual math::Vector2f Position() const;
             virtual void SetPosition( const math::Vector2f& position );
             virtual math::Vector2f Extent() const;
-            virtual void SetExtent( const math::Vector2f& extent );
+            virtual const char* Type() const; 
 
         private:
-            TexturedBox( const TexturedBox& o );
-            TexturedBox& operator=( const TexturedBox& o );
-
+            static const char*      m_Type;
             math::Vector2f          m_Position;
             math::Vector2f          m_Scale;
-
-            /** Rendering **/
-            dali::Vector2fBuffer    m_TexCoords;
             dali::Texture*          m_Texture;
+            dali::Vector2fBuffer    m_TexCoords;
+            char                    m_TargetLevel[LEVEL_NAME_LENGTH];
+            math::Vector2f          m_TargetPosition;
+            Box                     m_Box;
 
-            /** Physics **/
-            b2Body*                 m_Body;
-            b2Fixture*              m_Fixture;
     };
 }
-#endif
 
+#endif

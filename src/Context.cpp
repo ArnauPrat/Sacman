@@ -70,10 +70,11 @@ namespace sacman {
             unsigned int newTime = SDL_GetTicks();
             double elapsedTime = (newTime - currentTime);
             currentTime += elapsedTime;
-            m_CurrentLevel.ProcessEvents();
             m_CurrentLevel.Update( elapsedTime / 1000.0f );
             m_Renderer.BeginFrame();
             m_CurrentLevel.Draw( elapsedTime / 1000.0 );
+            if( m_Config.m_DrawDebug ) 
+                m_CurrentLevel.DrawDebug( elapsedTime / 1000.0 );
             m_Renderer.EndFrame();
             SDL_GL_SwapWindow(m_Window);
         }

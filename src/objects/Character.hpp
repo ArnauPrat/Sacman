@@ -19,6 +19,7 @@
 #include "dali/SpriteRenderer.hpp"
 #include "math/Types.hpp"
 #include "objects/Entity.hpp"
+#include "objects/Box.hpp"
 #include <memory>
 
 
@@ -31,16 +32,16 @@ namespace sacman {
     };
     class Character : public Entity {
         public:
-            Character( const char* name, Level& level, const char* spriteName, const math::Vector2f& position, const math::Vector2f& extent );
+            Character( const char* name, const char* spriteName, const math::Vector2f& position, const math::Vector2f& extent );
             ~Character();
 
             void Draw( const double elapsedTime, const int depth ) const ;
-
             void DrawShape( const double elapsedTime, const int depth ) const;
-
             void Update( const double elapsedTime );
+            void Collide( const Collision& collision );
+            void Enter( Level* level );
+            void Leave( Level* level );
 
-            void ListenKeyboard( std::shared_ptr<void> data );
 
             void MoveRight( float speed );
             void MoveLeft( float speed );
@@ -49,17 +50,16 @@ namespace sacman {
             virtual math::Vector2f Position() const;
             virtual void SetPosition( const math::Vector2f& position );
             virtual math::Vector2f Extent() const;
-            virtual void SetExtent( const math::Vector2f& extent );
+            virtual const char* Type() const;
 
         private:
-            math::Vector2f          m_Position;
-            math::Vector2f          m_Scale;
+            static const char* m_Type;
+            void ListenKeyboard( std::shared_ptr<void> data );
             dali::SpriteRenderer*   m_SpriteRenderer;
-            Level&                  m_Level;
-            b2Body*                 m_Body;
-            b2Fixture*              m_Fixture;
+            Box                     m_Box;
             MovementState           m_CurrentState;
             MovementState           m_PreviousState;
+            bool                    m_IsGrounded;
     };
 }
 
