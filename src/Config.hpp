@@ -22,8 +22,9 @@ namespace sacman {
         Config();
         ~Config();
 
-        dali::RendererConfig m_RendererConfig;    /**< @brief Configuration of the renderer.*/
+        dali::RendererConfig m_RendererConfig;      /**< @brief Configuration of the renderer.*/
         bool m_FullScreen;                          /**< @brief True to create the window fullscreen.*/
+        bool m_DrawDebug;                           /**< @brief True to draw boxes. False otherwise.*/
     };
 
     /** @brief Loads a configuration file.

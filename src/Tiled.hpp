@@ -15,11 +15,16 @@
 #define TILED_H
 
 #include "math/Types.hpp"
+#include <map>
+#include <string>
 
 namespace sacman {
 
 #define OBJECT_NAME_LENGTH 32
 #define OBJECT_TYPE_NAME_LENGTH 32
+#define OBJECT_PROPERTY_NAME_LENGTH 32
+#define OBJECT_PROPERTY_VALUE_LENGTH 32
+
 
     enum LayerType {
         OBJECT_GROUP,
@@ -32,6 +37,11 @@ namespace sacman {
         int m_Tile;
     };
 
+    struct ObjectProperty { 
+        char m_Name[OBJECT_PROPERTY_NAME_LENGTH];
+        char m_Value[OBJECT_PROPERTY_VALUE_LENGTH];
+    };
+
     struct TiledObject {
         int m_TileId;
         char m_Name[OBJECT_NAME_LENGTH];
@@ -40,6 +50,8 @@ namespace sacman {
         int m_Width;
         int m_Height;
         char m_Type[OBJECT_TYPE_NAME_LENGTH];
+        ObjectProperty* m_Properties; 
+        int m_NumProperties;
     };
 
     struct TiledLayer {
@@ -83,6 +95,7 @@ namespace sacman {
     math::Vector2f MinTexCoord( const TiledTileSet& tileSet, int id );
     math::Vector2f MaxTexCoord( const TiledTileSet& tileSet, int id );
     math::Vector2f TransformPosition( const TiledLevel& level, int x, int y );
+    const char* FindProperty( const TiledObject& object, const char* propertyName );
 }
 
 #endif

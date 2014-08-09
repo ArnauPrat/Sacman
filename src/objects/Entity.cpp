@@ -18,8 +18,9 @@
 namespace sacman {
 
     EntityId Entity::m_CurrentId = 0;
-    Entity::Entity( const char* name, Level& level ) :
-        m_Level( level )
+
+    Entity::Entity( const char* name ) :
+        m_Depth(0)
      {
         assert(std::strlen(name) < ENTITY_NAME_LENGTH);
         std::strcpy( m_Name, name );
@@ -38,12 +39,29 @@ namespace sacman {
     void Entity::Update( const double elapsedTime ) {
     }
 
+    void Entity::Collide( const Collision& collision ) {
+    }
+
+    void Entity::Enter( Level* level ) {
+    }
+
+    void Entity::Leave( Level* level ) {
+    }
+
     const char* Entity::Name() const {
         return m_Name;
     }
 
     EntityId Entity::Id() const {
         return m_Id;
+    }
+
+    int         Entity::Depth() const {
+        return m_Depth;
+    }
+
+    void        Entity::SetDepth( int depth ) {
+        m_Depth = depth;
     }
 }
 

@@ -39,14 +39,14 @@ namespace sacman {
         level->m_TileHeight = root["tileheight"].asInt();
         level->m_Width = root["width"].asInt();
         level->m_Height = root["height"].asInt();
-        const Json::Value layers = root["layers"];
+        const Json::Value& layers = root["layers"];
         level->m_Layers = new TiledLayer[layers.size()]; 
         int i = 0;
         for( Json::Value::iterator it = layers.begin(); it != layers.end(); ++it) {
             const char* type = (*it)["type"].asCString();
             if( std::strcmp(type,"tilelayer") == 0 ) {
                 level->m_Layers[i].m_Type = TILE_LAYER;
-                const Json::Value data = (*it)["data"];
+                const Json::Value& data = (*it)["data"];
                 int numFull = 0;
                 for( Json::Value::iterator it2 = data.begin(); it2 != data.end(); ++it2) {
                     if( (*it2) != 0 ) {
@@ -68,10 +68,11 @@ namespace sacman {
                 i++;
             } else if( std::strcmp( type, "objectgroup" ) == 0 ) {
                 level->m_Layers[i].m_Type = OBJECT_GROUP;
-                const Json::Value objects = (*it)["objects"];
+                const Json::Value& objects = (*it)["objects"];
                 level->m_Layers[i].m_ObjectGroup.m_Objects = new TiledObject[objects.size()];
                 int j = 0;
                 for( Json::Value::iterator it2 = objects.begin(); it2 != objects.end(); ++it2) {
+                    TiledObject& object = level->m_Layers[i].m_ObjectGroup.m_Objects[j];
                     if( (*it2).isMember("gid") ) {
                         level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_TileId = (*it2)["gid"].asInt();
                     } else {
@@ -83,10 +84,25 @@ namespace sacman {
                     const char* type = (*it2)["type"].asCString();
                     assert(std::strlen(type) < OBJECT_TYPE_NAME_LENGTH);
                     std::strcpy(level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_Type, type);
-                    level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_X = (*it2)["x"].asInt();
-                    level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_Y = (*it2)["y"].asInt();
-                    level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_Width = (*it2)["width"].asInt();
-                    level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_Height = (*it2)["height"].asInt();
+                    object.m_X = (*it2)["x"].asInt();
+                    object.m_Y = (*it2)["y"].asInt();
+                    object.m_Width = (*it2)["width"].asInt();
+                    object.m_Height = (*it2)["height"].asInt();
+                    // Reading object properties
+                    object.m_Properties = NULL;
+                    const Json::Value& properties = (*it2)["properties"];
+                    object.m_NumProperties = properties.size();
+                    const Json::Value::Members& names = properties.getMemberNames();
+                    if( object.m_NumProperties > 0 ) {
+                        object.m_Properties = new ObjectProperty[object.m_NumProperties];
+                    }
+                    int k = 0;
+                    for( auto itP = names.begin(); itP != names.end(); ++itP, ++k) {
+                        assert( std::strlen((*itP).c_str()) < OBJECT_PROPERTY_NAME_LENGTH );
+                        assert( std::strlen(properties[(*itP)].asCString()) < OBJECT_PROPERTY_VALUE_LENGTH );
+                        std::strcpy(object.m_Properties[k].m_Name, (*itP).c_str());
+                        std::strcpy(object.m_Properties[k].m_Value, properties[(*itP)].asCString());
+                    }
                     ++j;
                 }
                 level->m_Layers[i].m_ObjectGroup.m_NumObjects = j;
@@ -121,6 +137,10 @@ namespace sacman {
             if( tiledLevel->m_Layers[i].m_Type == TILE_LAYER ) {
                 delete tiledLevel->m_Layers[i].m_TileLayer.m_Cells;
             } else {
+                for( int j = 0; j < tiledLevel->m_Layers[i].m_ObjectGroup.m_NumObjects; ++j ) {
+                    if(tiledLevel->m_Layers[i].m_ObjectGroup.m_Objects[j].m_Properties)
+                        delete tiledLevel->m_Layers[i].m_ObjectGroup.m_Objects[j].m_Properties;
+                }
                 delete tiledLevel->m_Layers[i].m_ObjectGroup.m_Objects;
             }
         }
@@ -161,5 +181,13 @@ namespace sacman {
     math::Vector2f TransformPosition( const TiledLevel& level, int x, int y ) {
         math::Vector2f position = { x / static_cast<float>(level.m_TileWidth), (level.m_Height*level.m_TileHeight-y) / static_cast<float>(level.m_TileHeight) };
         return position;
+    }
+
+    const char* FindProperty( const TiledObject& object, const char* propertyName ) {
+        for( int i = 0; i < object.m_NumProperties; ++i ) {
+            if(std::strcmp(object.m_Properties[i].m_Name, propertyName) == 0)
+                   return object.m_Properties[i].m_Value;
+        }
+        return NULL;
     }
 }

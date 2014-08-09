@@ -5,16 +5,25 @@
  </tileset>
  <layer name="Tile Layer 1" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMApGwSgYBaNgFIyCoQ8agTgDCWcOrHNoDhQZEH7lJNMMTQrsFgXimVA8g4AbHKF0BpUwst3IbiCkD13PSMMAchc5cQ==
-  </data>
- </layer>
- <layer name="Tile Layer 2" width="32" height="32">
-  <data encoding="base64" compression="zlib">
-   eJztwQENAAAAwqD3T20PBxQAAADwbhAAAAE=
+   eJxjYBgFo2AUjIJRMApGwSgYBbQEbgNot+MA2dsIxBlIOHOA3DHSAHq4j4Y/dQGu8CUGj8YBBJAbftTCM0c4BgCmiD92
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="32" height="32">
-  <object x="0" y="2030" width="2240" height="210"/>
-  <object x="1610" y="1750" width="350" height="70"/>
+  <object type="box" x="0" y="2030" width="2240" height="210"/>
+  <object type="box" x="1050" y="1820" width="1120" height="70"/>
+  <object type="character" x="140" y="1960" width="70" height="70">
+   <properties>
+    <property name="prova" value="prova"/>
+   </properties>
+  </object>
+  <object type="portal" gid="82" x="1960" y="1400">
+   <properties>
+    <property name="target" value="test2.json"/>
+    <property name="target_x" value=""/>
+    <property name="target_y" value=""/>
+   </properties>
+  </object>
+  <object type="box" x="1610" y="1610" width="490" height="70"/>
+  <object type="box" x="1750" y="1400" width="350" height="70"/>
  </objectgroup>
 </map>

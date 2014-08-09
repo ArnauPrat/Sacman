@@ -15,15 +15,14 @@
 #define LEVEL_H
 
 #include "EventManager.hpp"
-#include "objects/Character.hpp"
 #include "objects/Background.hpp"
 #include "objects/Entity.hpp"
-#include "objects/TexturedBox.hpp"
 #include <Box2D/Box2D.h>
+#include "Tiled.hpp"
 
 namespace sacman {
     class Renderer;
-    class Level {
+    class Level : public b2ContactListener {
         public:
             Level();
             ~Level();
@@ -34,20 +33,43 @@ namespace sacman {
             /** @brief Frees a level.*/
             void ShutDown();
 
-            /** @brief Provess the level events.**/
-            void ProcessEvents();
-
             /** @brief Draws the level.**/
             void Draw( const double elapsedTime );
+
+            /** @brief Draws debug information.**/
+            void DrawDebug( const double elapsedTime );
             
             /** @brief Updates the entities of the level.*/
             void Update( const double elapsedTime );
 
+            void Insert( Entity* entity );
+            void Remove( Entity* entity );
+
+            /** Event managing functions. **/
+            void RegisterListener( EventType eventType, std::function<void( std::shared_ptr<void>)> listener ); 
+            void RegisterListener( const char* eventType,std::function<void( std::shared_ptr<void>)> listener  ); 
+            void UnregisterListener( EventType eventType, std::function<void( std::shared_ptr<void>)> listener ); 
+            void UnregisterListener( const char* eventType, std::function<void( std::shared_ptr<void>)> listener  ); 
+            void LaunchEvent( EventType eventType, std::shared_ptr<void> data );
+            void LaunchEvent( const char* eventType, std::shared_ptr<void> data );
+
             b2World&  B2World();
+            void BeginContact(b2Contact* contact);
+            void EndContact(b2Contact* contact);
+            void PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
+            void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
+
 
         private:
             Level( const Level& );
             void SimulatePhysics( const double elapsedTime );
+
+            /** @brief Processes the level events.**/
+            void ProcessEvents();
+
+            void LoadCharacter( const TiledLevel& level, const TiledObject& object );
+            void LoadPortal( const TiledLevel& level, const TiledObject& object );
+            void LoadBox( const TiledLevel& level, const TiledObject& object );
 
             /** @brief Loads a level from a file.
              *  @param fileName The level's file name .*/
@@ -59,7 +81,6 @@ namespace sacman {
             /** Character **/
             math::Vector2i  m_Velocity;    /**< @brief The current velocity vector of the main character.*/
             float           m_Speed;       /**< @brief The speed of the main character.*/
-            Character*      m_Character;   /**< @brief The main character.*/
 
             /** Scene **/
             Background      m_Background;
