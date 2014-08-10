@@ -17,7 +17,7 @@
 #include "Context.hpp"
 #include "dali/Buffer.hpp"
 #include "dali/Texture.hpp"
-#include "Box.hpp"
+#include "Body.hpp"
 
 namespace sacman {
     class Portal : public Entity {
@@ -49,7 +49,7 @@ namespace sacman {
             dali::Vector2fBuffer    m_TexCoords;
             char                    m_TargetLevel[LEVEL_NAME_LENGTH];
             math::Vector2f          m_TargetPosition;
-            Box                     m_Box;
+            Body                    m_Body;
 
     };
 }

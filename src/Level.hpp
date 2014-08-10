@@ -42,8 +42,14 @@ namespace sacman {
             /** @brief Updates the entities of the level.*/
             void Update( const double elapsedTime );
 
+            /** @brief Inserts an entity into the level. */
             void Insert( Entity* entity );
+
+            /** @brief Removes an entity from the level. */
             void Remove( Entity* entity );
+
+            /** @brief Gets an entity. */
+            Entity* GetEntity( const char* name );
 
             /** Event managing functions. **/
             void RegisterListener( EventType eventType, std::function<void( std::shared_ptr<void>)> listener ); 

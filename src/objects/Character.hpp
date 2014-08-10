@@ -19,16 +19,17 @@
 #include "dali/SpriteRenderer.hpp"
 #include "math/Types.hpp"
 #include "objects/Entity.hpp"
-#include "objects/Box.hpp"
+#include "objects/Body.hpp"
 #include <memory>
 
 
 namespace sacman {
     class Level;
     enum MovementState {
-        E_RIGHT,
-        E_LEFT,
-        E_STAND
+        E_RIGHT = 0x1,
+        E_LEFT  = 0x2,
+        E_JUMP  = 0x4,
+        E_STAND = 0x8,
     };
     class Character : public Entity {
         public:
@@ -56,10 +57,11 @@ namespace sacman {
             static const char* m_Type;
             void ListenKeyboard( std::shared_ptr<void> data );
             dali::SpriteRenderer*   m_SpriteRenderer;
-            Box                     m_Box;
-            MovementState           m_CurrentState;
-            MovementState           m_PreviousState;
+            Body                    m_Body;
+            int                     m_CurrentState;
+            int                     m_PreviousState;
             bool                    m_IsGrounded;
+            math::Vector2f          m_Extent;
     };
 }
 

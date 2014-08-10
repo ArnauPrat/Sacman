@@ -80,6 +80,8 @@ namespace dali {
                                      const RGBAColor& color,
                                      const int depth );
 
+        void                SetCameraPosition( const math::Vector2f& position );
+
 
 		private:
 

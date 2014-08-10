@@ -20,13 +20,17 @@ namespace sacman {
 
     const char* Character::m_Type = "character";
 
-    Character::Character( const char* name, const char* spriteName, const math::Vector2f& position, const math::Vector2f& extent ) :
+    Character::Character( const char* name, 
+                          const char* spriteName, 
+                          const math::Vector2f& position, 
+                          const math::Vector2f& extent ) :
         Entity( name ),
         m_SpriteRenderer( NULL ),  
-        m_Box( "", E_DYNAMIC, E_SOLID, position, extent, this ), 
+        m_Body( "", E_DYNAMIC, {position.m_X, position.m_Y} ), 
         m_CurrentState(E_STAND),
         m_PreviousState(E_RIGHT),
-        m_IsGrounded(true)  {
+        m_IsGrounded(true),
+        m_Extent( extent )  {
             dali::Sprite* sprite = dali::spriteLoader.Load( spriteName );
             m_SpriteRenderer = new dali::SpriteRenderer( *sprite );
 
@@ -37,73 +41,62 @@ namespace sacman {
     }
 
     void Character::Draw( const double elapsedTime, const int depth ) const {
-        math::Vector2f position = m_Box.Position();
-        math::Vector2f extent = m_Box.Extent();
+        math::Vector2f position = m_Body.Position();
+        math::Vector2f extent = m_Body.Extent();
+        position.m_X -= extent.m_X;
+        position.m_Y -= extent.m_Y;
+        extent.m_X *=2.0f;
+        extent.m_Y *=2.0f;
         m_SpriteRenderer->Draw( Context::m_Renderer, elapsedTime, depth, position, extent );
     }
 
     void Character::DrawShape( const double elapsedTime, const int depth ) const {
-        m_Box.DrawShape(elapsedTime, depth);
+        m_Body.DrawShape(elapsedTime, depth);
     }
 
     void Character::Update( const double elapsedTime ) {
-        switch(m_CurrentState) {
-            case E_RIGHT:
-                m_Box.Move( 3.0f );
-                if( m_PreviousState != E_RIGHT ) {
-                    m_SpriteRenderer->LaunchAnimation("WalkRight",0.5f,true);
-                    m_PreviousState = E_RIGHT;
-                }
-                break;
-            case E_LEFT:
-                m_Box.Move( -3.0f );
-                if( m_PreviousState != E_LEFT ) {
-                    m_SpriteRenderer->LaunchAnimation("WalkLeft",0.5f,true);
-                    m_PreviousState = E_LEFT;
-                }
-                break;
-            case E_STAND:
-                m_Box.Move( 0.0f ); 
-                if( m_PreviousState == E_RIGHT ) {
-                    m_SpriteRenderer->LaunchAnimation("StandRight",0.5f,true);
-                    m_PreviousState = E_STAND;
-                } else if( m_PreviousState == E_LEFT ) {
-                    m_SpriteRenderer->LaunchAnimation("StandLeft",0.5f,true);
-                    m_PreviousState = E_STAND;
-                }
-                break;
-            default:
-                break;
+        if( (m_CurrentState & E_RIGHT) != 0) {
+                m_Body.Move( 3.0f );
+        }
+
+        if( (m_CurrentState & E_LEFT) != 0) {
+                m_Body.Move( -3.0f );
+        }
+        if( (m_CurrentState & E_STAND) != 0) {
+                m_Body.Move( 0.0f ); 
         }
     }
 
     void Character::Collide( const Collision& collision ) {
-        if( std::strcmp(collision.m_Entity->Type(), "box" ) == 0 )  {
+        if( std::strcmp(collision.m_Entity->Type(), "body" ) == 0 )  {
             m_IsGrounded = collision.m_Type == E_ENTER ? true : false;
-            //std::cout << "IS GROUNDED: " << m_IsGrounded << std::endl;
+            if( m_IsGrounded ) m_CurrentState &= ~E_JUMP;
+//            std::cout << "IS GROUNDED: " << m_IsGrounded << std::endl;
         }
     }
 
     void Character::Enter( Level* level ) {
-        m_Box.Enter( level );
+        m_Body.Enter( level );
+        m_Body.AddBox( {0.0f, 0.0f}, m_Extent, E_SOLID );  
+        m_Body.AddBox( {0.0f, -m_Extent.m_Y}, { 0.1f, 0.1f }, E_SENSOR, this );  
         level->RegisterListener(KEYBOARD, std::bind(&Character::ListenKeyboard,this,std::placeholders::_1) );
     }
 
     void Character::Leave( Level* level ) {
         level->UnregisterListener(KEYBOARD, std::bind(&Character::ListenKeyboard,this,std::placeholders::_1) );
-        m_Box.Leave( level );
+        m_Body.Leave( level );
     }
 
     math::Vector2f Character::Position() const {
-        return m_Box.Position();
+        return m_Body.Position();
     }
 
     void Character::SetPosition( const math::Vector2f& position ) {
-        m_Box.SetPosition( position );
+        m_Body.SetPosition( position );
     }
 
     math::Vector2f Character::Extent() const {
-        return m_Box.Extent();
+        return m_Body.Extent();
     }
 
     const char* Character::Type() const {
@@ -116,13 +109,26 @@ namespace sacman {
         if( event->m_KEType == K_PRESSED ) {
             switch( event->m_KCode ) {
                 case K_RIGHT:
-                    m_CurrentState = E_RIGHT;
+                    if( (m_CurrentState & E_RIGHT) == 0 ) {
+                        m_SpriteRenderer->LaunchAnimation("WalkRight",0.5f,true);
+                    }
+                    m_CurrentState |= E_RIGHT;
+                    m_CurrentState &= ~E_LEFT;
+                    m_CurrentState &= ~E_STAND;
                     break;
                 case K_LEFT:
-                    m_CurrentState = E_LEFT;
+                    if( (m_CurrentState & E_LEFT) == 0 ) {
+                        m_SpriteRenderer->LaunchAnimation("WalkLeft",0.5f,true);
+                    }
+                    m_CurrentState |= E_LEFT;
+                    m_CurrentState &= ~E_RIGHT;
+                    m_CurrentState &= ~E_STAND;
                     break;
                 case K_SPACE:
-                    if(m_IsGrounded) m_Box.ApplyForce({0.0f,8.0f});
+                    if(m_IsGrounded && ((m_CurrentState & E_JUMP) == 0 )) {
+                        m_Body.ApplyForce({0.0f,8.0f});
+                        m_CurrentState |= E_JUMP;
+                    }
                     break;
                 default:
                     break;
@@ -130,7 +136,16 @@ namespace sacman {
         } else {
             if( event->m_KCode == K_RIGHT || event->m_KCode == K_LEFT ) {
                 m_PreviousState = m_CurrentState;
-                m_CurrentState = E_STAND;
+
+                if( (m_PreviousState & E_RIGHT) != 0 )
+                    m_SpriteRenderer->LaunchAnimation("StandRight",0.5f,true);
+
+                if( (m_PreviousState & E_LEFT) != 0 ) 
+                    m_SpriteRenderer->LaunchAnimation("StandLeft",0.5f,true);
+
+                m_CurrentState &= ~E_RIGHT;
+                m_CurrentState &= ~E_LEFT;
+                m_CurrentState |= E_STAND;
             }
         }
     }
