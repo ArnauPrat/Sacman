@@ -29,7 +29,7 @@ namespace sacman {
         m_Scale( extent ),
         m_Texture( NULL ),
         m_TargetPosition( targetPosition ),
-        m_Box("",E_STATIC,E_SENSOR,position,extent, this )
+        m_Body("",E_STATIC, position )
     {
         if( targetLevel ) {
             assert(std::strlen(targetLevel) < LEVEL_NAME_LENGTH); 
@@ -45,23 +45,30 @@ namespace sacman {
 
     void Portal::Draw( const double elapsedTime, const int depth ) const {
         if(m_Texture) {
-            Context::m_Renderer.Draw( &m_TexCoords, m_Texture, depth, m_Position, m_Scale );
+            math::Vector2f position = m_Body.Position();
+            math::Vector2f extent = m_Body.Extent();
+            position.m_X -= extent.m_X;
+            position.m_Y -= extent.m_Y;
+            extent.m_X *=2.0f;
+            extent.m_Y *=2.0f;
+            Context::m_Renderer.Draw( &m_TexCoords, m_Texture, depth, position, extent );
         }
     }
 
     void Portal::DrawShape( const double elapsedTime, const int depth ) const {
-        m_Box.DrawShape(elapsedTime,depth);
+        m_Body.DrawShape(elapsedTime,depth);
     }
 
     void Portal::Update( const double elapsedTime ) {
     }
 
     void Portal::Enter( Level* level ) {
-        m_Box.Enter( level );
+        m_Body.Enter( level );
+        m_Body.AddBox({0.0f, 0.0f}, m_Scale, E_SENSOR);
     }
 
     void Portal::Leave( Level* level ) {
-        m_Box.Leave( level );
+        m_Body.Leave( level );
     }
 
     void Portal::LoadTexture( const char* textureName, const math::Vector2f texCoords[4] ) {
@@ -70,15 +77,15 @@ namespace sacman {
     }
 
     math::Vector2f Portal::Position() const {
-        return m_Box.Position();
+        return m_Body.Position();
     }
 
     void Portal::SetPosition( const math::Vector2f& position ) {
-        m_Box.SetPosition(position);
+        m_Body.SetPosition(position);
     }
 
     math::Vector2f Portal::Extent() const {
-        return m_Box.Extent();
+        return m_Body.Extent();
     }
 
     const char* Portal::Type() const {

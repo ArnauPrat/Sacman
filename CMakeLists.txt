@@ -38,7 +38,8 @@ SET( SOURCE_FILES ${SOURCE_FILES} "src/objects/Background.cpp" )
 SET( SOURCE_FILES ${SOURCE_FILES} "src/objects/Character.cpp" )
 SET( SOURCE_FILES ${SOURCE_FILES} "src/objects/Entity.cpp" )
 SET( SOURCE_FILES ${SOURCE_FILES} "src/objects/Portal.cpp" )
-SET( SOURCE_FILES ${SOURCE_FILES} "src/objects/Box.cpp" )
+##SET( SOURCE_FILES ${SOURCE_FILES} "src/objects/Box.cpp" )
+SET( SOURCE_FILES ${SOURCE_FILES} "src/objects/Body.cpp" )
 
 
 LINK_DIRECTORIES(${LIB_DIR}/Box2D)

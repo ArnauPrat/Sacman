@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="32" height="32" tilewidth="70" tileheight="70">
+<map version="1.0" orientation="orthogonal" width="96" height="32" tilewidth="70" tileheight="70">
  <tileset firstgid="1" name="elements" tilewidth="70" tileheight="70" spacing="2">
   <image source="../textures/elements.png" width="914" height="936"/>
  </tileset>
- <layer name="Tile Layer 1" width="32" height="32">
+ <layer name="Tile Layer 1" width="96" height="32">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMApGwSgYBbQEbgNot+MA2dsIxBlIOHOA3DHSAHq4j4Y/dQGu8CUGj8YBBJAbftTCM0c4BgCmiD92
+   eJzt1LENgCAURVFWs3EWHcMx3BYLCwpNlPAlkXOS2+prPikBAAAAAAAAtebeAwY29R4wsO1oOVs7bwH+r3xzylq8P1HfjtwMtHN3q096c89R//lqP3Ct9v7Upl0auAz5ILim
   </data>
  </layer>
- <objectgroup name="Object Layer 1" width="32" height="32">
-  <object type="box" x="0" y="2030" width="2240" height="210"/>
+ <objectgroup name="Object Layer 1" width="96" height="32">
+  <object type="box" x="0" y="2030" width="6720" height="210"/>
   <object type="box" x="1050" y="1820" width="1120" height="70"/>
-  <object type="character" x="140" y="1960" width="70" height="70">
+  <object name="character" type="character" x="140" y="1960" width="70" height="70">
    <properties>
     <property name="prova" value="prova"/>
    </properties>
@@ -24,6 +24,10 @@
    </properties>
   </object>
   <object type="box" x="1610" y="1610" width="490" height="70"/>
-  <object type="box" x="1750" y="1400" width="350" height="70"/>
+  <object type="box" x="1820" y="1400" width="280" height="70"/>
+  <object type="box" x="3220" y="1610" width="490" height="70"/>
+  <object type="box" x="2870" y="1820" width="1120" height="70"/>
+  <object type="box" x="4410" y="1820" width="1120" height="70"/>
+  <object type="box" x="4760" y="1610" width="490" height="70"/>
  </objectgroup>
 </map>

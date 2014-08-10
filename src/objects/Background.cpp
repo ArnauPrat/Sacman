@@ -17,11 +17,17 @@
 #include "dali/Globals.hpp"
 #include "math/Types.hpp"
 #include <cassert>
+#include <cfloat>
 #include <vector>
 
 namespace sacman {
 
-    Background::Background() {
+    const char* Background::m_Type="background";
+
+    Background::Background( const char* name ) :
+    Entity( name ) {
+        m_Min = {FLT_MAX, FLT_MAX};
+        m_Max = {FLT_MIN, FLT_MIN};
     }
 
     Background::~Background() {
@@ -45,6 +51,8 @@ namespace sacman {
                 }
                 for( int j = 0; j < tiledLevel.m_NumTileSets; ++j ) {
                     std::vector<TiledCell>& cells = buckets[j].m_Cells; 
+                    math::Vector2f min = {FLT_MAX, FLT_MAX};
+                    math::Vector2f max = {FLT_MIN, FLT_MIN};
                     if( cells.size() > 0 ) {
                         math::Vector2f vertices[cells.size()*4];
                         math::Vector2f texCoords[cells.size()*4];
@@ -52,18 +60,17 @@ namespace sacman {
                         for( unsigned int k = 0; k < cells.size(); ++k ) {
                             vertices[k*4].m_X = cells[k].m_X; 
                             vertices[k*4].m_Y = tiledLevel.m_Height - (cells[k].m_Y+1); 
+                            min.m_X = min.m_X > vertices[k*4].m_X ? vertices[k*4].m_X : min.m_X;
+                            min.m_X = min.m_Y > vertices[k*4].m_Y ? vertices[k*4].m_Y : min.m_Y;
                             vertices[k*4+1].m_X = cells[k].m_X+1; 
                             vertices[k*4+1].m_Y = tiledLevel.m_Height - (cells[k].m_Y+1); 
                             vertices[k*4+2].m_X = cells[k].m_X+1; 
                             vertices[k*4+2].m_Y = tiledLevel.m_Height - cells[k].m_Y; 
+                            min.m_X = max.m_X < vertices[k*4].m_X ? vertices[k*4].m_X : max.m_X;
+                            min.m_X = max.m_Y < vertices[k*4].m_Y ? vertices[k*4].m_Y : max.m_Y;
                             vertices[k*4+3].m_X = cells[k].m_X; 
                             vertices[k*4+3].m_Y = tiledLevel.m_Height - cells[k].m_Y; 
 
-                            /*std::cout << vertices[k*4].m_X << " " << vertices[k*4].m_Y << std::endl;
-                              std::cout << vertices[k*4+1].m_X << " " << vertices[k*4+1].m_Y << std::endl;
-                              std::cout << vertices[k*4+2].m_X << " " << vertices[k*4+2].m_Y << std::endl;
-                              std::cout << vertices[k*4+3].m_X << " " << vertices[k*4+3].m_Y << std::endl;
-                              */
 
                             math::Vector2f min = MinTexCoord( tiledLevel.m_TileSets[j], cells[k].m_Tile ); 
                             math::Vector2f max = MaxTexCoord( tiledLevel.m_TileSets[j], cells[k].m_Tile ); 
@@ -90,17 +97,39 @@ namespace sacman {
                         chunk->m_Indices.AddData(indices,cells.size()*6);
                         chunk->m_Texture = dali::textureLoader.Load(tiledLevel.m_TileSets[j].m_ImageName);
                         chunk->m_Depth = i;
+                        chunk->m_Min = min;
+                        chunk->m_Max = max;
                         m_Chunks.push_back(chunk);
+                        m_Min.m_X = min.m_X > min.m_X ? min.m_X : m_Min.m_X;
+                        m_Min.m_Y = min.m_Y > min.m_Y ? min.m_Y : m_Min.m_Y;
+                        m_Max.m_X = max.m_X > max.m_X ? max.m_X : m_Max.m_X;
+                        m_Max.m_Y = max.m_Y > max.m_Y ? max.m_Y : m_Max.m_Y;
                     }
                 }
             }
         }
     }
 
-    void Background::Draw( double elapsedTime ) {
+    void Background::Draw( const double elapsedTime, const int depth ) {
         for( unsigned int i = 0; i < m_Chunks.size(); ++i ) {
             const Chunk* chunk = m_Chunks[i];
             Context::m_Renderer.Draw( &chunk->m_Vertices, &chunk->m_TexCoords, &chunk->m_Indices, chunk->m_Texture, chunk->m_Depth, static_cast<void*>(0), {0.0f, 0.0f}, {1.0f, 1.0f} );
         }
     }
+
+    math::Vector2f Background::Position() const {
+        return {(m_Max.m_X - m_Min.m_X) / 2.0f + m_Min.m_X, (m_Max.m_Y - m_Min.m_Y) / 2.0f + m_Min.m_Y};
+    }
+
+    void Background::SetPosition( const math::Vector2f& position ) {
+    }
+
+    math::Vector2f Background::Extent() const {
+        return {(m_Max.m_X - m_Min.m_X) / 2.0f, (m_Max.m_Y - m_Min.m_Y) / 2.0f};
+    }
+
+    const char* Background::Type() const {
+        return m_Type;
+    }
+
 }

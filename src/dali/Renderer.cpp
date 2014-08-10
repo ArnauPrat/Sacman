@@ -192,6 +192,20 @@ namespace dali {
         m_FrameDrawingInfo.push_back(info);
     }
 
+    void    Renderer::SetCameraPosition( const math::Vector2f& position ) {
+        m_ViewMatrix[0][0] = 1.0f;
+        m_ViewMatrix[0][1] = 0.0f;
+        m_ViewMatrix[0][2] = 0.0f;
+
+        m_ViewMatrix[1][0] = 0.0f;
+        m_ViewMatrix[1][1] = 1.0f;
+        m_ViewMatrix[1][2] = 0.0f;
+
+        m_ViewMatrix[2][0] = -position.m_X;
+        m_ViewMatrix[2][1] = -position.m_Y;
+        m_ViewMatrix[2][2] = 0.0f;
+    }
+
 
     void Renderer::InitOpenGL() {
         GLuint err = glewInit();

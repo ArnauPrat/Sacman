@@ -17,10 +17,11 @@
 #include "dali/Buffer.hpp"
 #include "dali/Texture.hpp"
 #include <vector>
+#include "Entity.hpp"
 
 namespace sacman {
     struct TiledLevel;
-    class Background {
+    class Background : public Entity {
 
         struct Chunk {
             dali::Vector2fBuffer m_Vertices;
@@ -28,19 +29,28 @@ namespace sacman {
             dali::IndexBuffer    m_Indices;
             dali::Texture*       m_Texture;
             int                  m_Depth;
+            math::Vector2f       m_Min;
+            math::Vector2f       m_Max;
         };
 
         public:
-            Background();
+            Background( const char* name );
             ~Background();
             
             void Load( const TiledLevel& tiledLevel );
 
-            void Draw( double elapsedTime );
+            void Draw( const double elapsedTime, const int depth );
+
+            math::Vector2f Position() const;
+            void SetPosition( const math::Vector2f& position );
+            math::Vector2f Extent() const;
+            const char* Type() const;
 
         private:
+            static const char* m_Type;
             std::vector<Chunk*> m_Chunks;
-
+            math::Vector2f      m_Min;
+            math::Vector2f      m_Max;
     };
 }
 

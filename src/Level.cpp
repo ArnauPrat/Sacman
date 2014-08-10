@@ -18,6 +18,7 @@
 #include "dali/PathFinder.hpp"
 #include "objects/Character.hpp"
 #include "objects/Portal.hpp"
+#include "objects/Body.hpp"
 #include <cstring>
 #include <functional>
 
@@ -25,6 +26,7 @@
 namespace sacman {
 
     Level::Level() :
+        m_Background("background"),
         m_Gravity( 0.0f, -10.0f ),
         m_PhysicsTime( 0.0f ),
         m_TimeStep( 1 / 60.0f )
@@ -79,8 +81,8 @@ namespace sacman {
     }
 
     void Level::BeginContact(b2Contact* contact) {
-        Entity*  entityA = static_cast<Entity*>(contact->GetFixtureA()->GetBody()->GetUserData());
-        Entity*  entityB = static_cast<Entity*>(contact->GetFixtureB()->GetBody()->GetUserData());
+        Entity*  entityA = static_cast<Entity*>(contact->GetFixtureA()->GetUserData());
+        Entity*  entityB = static_cast<Entity*>(contact->GetFixtureB()->GetUserData());
         if( entityA != NULL && entityB != NULL ) {
             Collision collisionA;
             collisionA.m_Type = E_ENTER; 
@@ -95,8 +97,8 @@ namespace sacman {
     }
 
     void Level::EndContact(b2Contact* contact) {
-        Entity*  entityA = static_cast<Entity*>(contact->GetFixtureA()->GetBody()->GetUserData());
-        Entity*  entityB = static_cast<Entity*>(contact->GetFixtureB()->GetBody()->GetUserData());
+        Entity*  entityA = static_cast<Entity*>(contact->GetFixtureA()->GetUserData());
+        Entity*  entityB = static_cast<Entity*>(contact->GetFixtureB()->GetUserData());
         if( entityA != NULL && entityB != NULL ) {
             Collision collisionA;
             collisionA.m_Type = E_LEAVE; 
@@ -117,8 +119,12 @@ namespace sacman {
     }
 
     void Level::Draw( const double elapsedTime ) {
-        m_Background.Draw( elapsedTime );
+        Entity* character = GetEntity("character");
+        if( character ) {
+            Context::m_Renderer.SetCameraPosition( character->Position() );
+        }
 
+        m_Background.Draw( elapsedTime, 0 );
         for( Entity* e : m_Entities ) {
             e->Draw( elapsedTime, e->Depth() );
         }
@@ -136,6 +142,7 @@ namespace sacman {
             e->Update( elapsedTime );
         }
         SimulatePhysics( elapsedTime );
+
     }
 
     void Level::Insert( Entity* entity ) {
@@ -145,6 +152,15 @@ namespace sacman {
 
     void Level::Remove( Entity* entity ) {
 
+    }
+
+    Entity* Level::GetEntity( const char* name ) {
+        for( Entity* e : m_Entities ) {
+            if( std::strcmp( e->Name(), name ) == 0 ) {
+                return e;
+            }
+        }
+        return NULL;
     }
 
     void Level::SimulatePhysics( const double elapsedTime ) {
@@ -163,11 +179,12 @@ namespace sacman {
         math::Vector2f position = TransformPosition( tiledLevel, object.m_X, object.m_Y+object.m_Height);
         math::Vector2f extent;
         if( object.m_TileId ) {
-            extent = {1.0f, 1.0f};
+            extent = {0.5f, 0.5f};
         } else  {
-            extent = {object.m_Width / static_cast<float>(tiledLevel.m_TileWidth), object.m_Height / static_cast<float>(tiledLevel.m_TileHeight)};
+            extent = {0.5f*object.m_Width / static_cast<float>(tiledLevel.m_TileWidth), 0.5f*object.m_Height / static_cast<float>(tiledLevel.m_TileHeight)};
         }
-
+        position.m_X+=extent.m_X;
+        position.m_Y+=extent.m_Y;
         Character* character = new Character(object.m_Name, "character.sprite", position, extent );
         character->SetDepth(2);
         Insert(character);
@@ -177,10 +194,12 @@ namespace sacman {
         math::Vector2f position = TransformPosition( tiledLevel, object.m_X, object.m_Y+object.m_Height);
         math::Vector2f extent;
         if( object.m_TileId ) {
-            extent = {1.0f, 1.0f};
+            extent = {0.5f, 0.5f};
         } else  {
-            extent = {object.m_Width / static_cast<float>(tiledLevel.m_TileWidth), object.m_Height / static_cast<float>(tiledLevel.m_TileHeight)};
+            extent = {0.5f*object.m_Width / static_cast<float>(tiledLevel.m_TileWidth), 0.5f*object.m_Height / static_cast<float>(tiledLevel.m_TileHeight)};
         }
+        position.m_X+=extent.m_X;
+        position.m_Y+=extent.m_Y;
         const char* targetLevel = FindProperty(object, "target");
         const char* x = FindProperty(object,"target_x");
         const char* y = FindProperty(object,"target_y");
@@ -210,12 +229,15 @@ namespace sacman {
         math::Vector2f position = TransformPosition( tiledLevel, object.m_X, object.m_Y+object.m_Height);
         math::Vector2f extent;
         if( object.m_TileId ) {
-            extent = {1.0f, 1.0f};
+            extent = {0.5f, 0.5f};
         } else  {
-            extent = {object.m_Width / static_cast<float>(tiledLevel.m_TileWidth), object.m_Height / static_cast<float>(tiledLevel.m_TileHeight)};
+            extent = {0.5f*object.m_Width / static_cast<float>(tiledLevel.m_TileWidth), 0.5f*object.m_Height / static_cast<float>(tiledLevel.m_TileHeight)};
         }
-        Box* box = new Box( object.m_Name, E_STATIC, E_SOLID, position, extent, NULL );
-        Insert(box);
+        position.m_X+=extent.m_X;
+        position.m_Y+=extent.m_Y;
+        Body* body = new Body( object.m_Name, E_STATIC, {position.m_X, position.m_Y} );
+        Insert(body);
+        body->AddBox({0.0f, 0.0f}, extent, E_SOLID);
     }
 
     void Level::LoadLevel( const char* fileName ) {

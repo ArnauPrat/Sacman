@@ -179,7 +179,7 @@ namespace sacman {
     };
 
     math::Vector2f TransformPosition( const TiledLevel& level, int x, int y ) {
-        math::Vector2f position = { x / static_cast<float>(level.m_TileWidth), (level.m_Height*level.m_TileHeight-y) / static_cast<float>(level.m_TileHeight) };
+        math::Vector2f position = { x/ static_cast<float>(level.m_TileWidth), (level.m_Height*level.m_TileHeight-y) / static_cast<float>(level.m_TileHeight) };
         return position;
     }
 
