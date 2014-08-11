@@ -26,6 +26,9 @@ ADD_SUBDIRECTORY( ./src/dali )
 INCLUDE_DIRECTORIES( ./src )
 INCLUDE_DIRECTORIES( ./lib/jsoncpp )
 
+
+INCLUDE_DIRECTORIES(${LIB_DIR}/glew/src/glew/include )
+
 #FILE( GLOB_RECURSE SOURCE_FILES "src/*" )
 SET( SOURCE_FILES ${SOURCE_FILES} "lib/jsoncpp/jsoncpp.cpp" )
 SET( SOURCE_FILES ${SOURCE_FILES} "src/Config.cpp" )
