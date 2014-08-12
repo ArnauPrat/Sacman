@@ -12,16 +12,6 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-#INCLUDE(FindPkgConfig)
-#PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
-
-
-#ADD_SUBDIRECTORY( ./lib/Box2D )
-#INCLUDE_DIRECTORIES(./lib/Box2D )
-
-##ADD_SUBDIRECTORY( ./lib/SDL2 )
-#INCLUDE_DIRECTORIES(./lib/SDL2/include )
-
 INCLUDE(ExternalProject)
 ExternalProject_Add( SDL2 
     PREFIX ${LIB_DIR}/SDL2
@@ -45,14 +35,14 @@ INCLUDE_DIRECTORIES(${LIB_DIR}/Box2D/src/Box2D/Box2D/ )
 ADD_SUBDIRECTORY( ./src/dali )
 INCLUDE_DIRECTORIES( ./src )
 
-ExternalProject_Add( jsoncpp 
-    PREFIX ${LIB_DIR}/jsoncpp
-    GIT_REPOSITORY  https://github.com/open-source-parsers/jsoncpp.git
-    CONFIGURE_COMMAND cmake . 
-    BUILD_IN_SOURCE 1
-    BUILD_COMMAND make 
-    INSTALL_COMMAND ""
-    )
+#ExternalProject_Add( jsoncpp 
+#    PREFIX ${LIB_DIR}/jsoncpp
+#    GIT_REPOSITORY  https://github.com/open-source-parsers/jsoncpp.git
+#    CONFIGURE_COMMAND cmake . 
+#    BUILD_IN_SOURCE 1
+#    BUILD_COMMAND make 
+#    INSTALL_COMMAND ""
+#    )
 INCLUDE_DIRECTORIES( ${LIB_DIR}/jsoncpp/src/jsoncpp/include )
 
 INCLUDE_DIRECTORIES(${LIB_DIR}/glew/src/glew/include )
@@ -68,11 +58,10 @@ SET( SOURCE_FILES ${SOURCE_FILES} "src/objects/Background.cpp" )
 SET( SOURCE_FILES ${SOURCE_FILES} "src/objects/Character.cpp" )
 SET( SOURCE_FILES ${SOURCE_FILES} "src/objects/Entity.cpp" )
 SET( SOURCE_FILES ${SOURCE_FILES} "src/objects/Portal.cpp" )
-##SET( SOURCE_FILES ${SOURCE_FILES} "src/objects/Box.cpp" )
 SET( SOURCE_FILES ${SOURCE_FILES} "src/objects/Body.cpp" )
 
 
 LINK_DIRECTORIES(${LIB_DIR}/Box2D)
 
 ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCE_FILES})	
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} dali ${LIB_DIR}/SDL2/src/libSDL2.a ${LIB_DIR}/SDL2/src/libSDL2main.a ${LIB_DIR}/Box2D/src/Box2D/Box2D/libBox2D.a ${LIB_DIR}/jsoncpp/src/jsoncpp/lib/libjsoncpp.a  )
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} dali ${LIB_DIR}/SDL2/src/libSDL2.a ${LIB_DIR}/SDL2/src/libSDL2main.a ${LIB_DIR}/Box2D/src/Box2D/Box2D/libBox2D.a  )

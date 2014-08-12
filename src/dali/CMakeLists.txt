@@ -33,8 +33,17 @@ ExternalProject_Add( freeimage
     )
 INCLUDE_DIRECTORIES(${LIB_DIR}/freeimage/src/freeimage/Source )
 
+ExternalProject_Add( jsoncpp 
+    PREFIX ${LIB_DIR}/jsoncpp
+    GIT_REPOSITORY  https://github.com/open-source-parsers/jsoncpp.git
+    CONFIGURE_COMMAND cmake . 
+    BUILD_IN_SOURCE 1
+    BUILD_COMMAND make 
+    INSTALL_COMMAND ""
+    )
+INCLUDE_DIRECTORIES( ${LIB_DIR}/jsoncpp/src/jsoncpp/include )
+
 FILE( GLOB_RECURSE SOURCE_FILES "./*" )
 ADD_LIBRARY( ${PROJECT_NAME} ${SOURCE_FILES} )
 add_dependencies( dali glew freeimage )
-SET( SOIL_LIBRARY ${LIB_DIR}/soil/lib/libSOIL.a)
-TARGET_LINK_LIBRARIES( ${PROJECT_NAME} ${SOIL_LIBRARY} ${OPENGL_LIBRARIES} ${LIB_DIR}/glew/src/glew/lib/libGLEW.a ${LIB_DIR}/freeimage/src/freeimage/Dist/libfreeimage.a )
+TARGET_LINK_LIBRARIES( ${PROJECT_NAME} ${OPENGL_LIBRARIES} ${LIB_DIR}/glew/src/glew/lib/libGLEW.a ${LIB_DIR}/freeimage/src/freeimage/Dist/libfreeimage.a ${LIB_DIR}/jsoncpp/src/jsoncpp/lib/libjsoncpp.a )
