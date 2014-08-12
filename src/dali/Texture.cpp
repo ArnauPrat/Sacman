@@ -14,7 +14,6 @@
 #include "Texture.hpp"
 #include <FreeImage.h>
 #include <cassert>
-//#include <SOIL.h>
 #include <iostream>
 
 namespace dali {
@@ -30,33 +29,6 @@ namespace dali {
     }
 
     void Texture::Load( const char* filename ) {
-/*			int width, height, channels;
-			unsigned char* image = SOIL_load_image( filename, &width, &height, &channels, SOIL_LOAD_AUTO );
-            assert( image != NULL );
-			for( int j = 0; j*2 < height; ++j ) {
-				int index1 = j * width * channels;
-				int index2 = (height - 1 - j) * width * channels;
-				for( int i = width * channels; i > 0; --i ) {
-					unsigned char temp = image[index1];
-					image[index1] = image[index2];
-					image[index2] = temp;
-					++index1;
-					++index2;
-				}
-			}
-
-			glGenTextures(1,&m_TextureID);
-            if( m_TextureID != GL_INVALID_VALUE ) {
-                glBindTexture(GL_TEXTURE_2D, m_TextureID);
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-            } else {
-                std::cout << "DALI: Error loading texture " << filename << std::endl;
-            }
-            */
         FREE_IMAGE_FORMAT format = FreeImage_GetFileType(filename,0);//Automatocally detects the format(from over 20 formats!)
         FIBITMAP* image = FreeImage_Load(format, filename);
 
