@@ -111,8 +111,9 @@ namespace sacman {
         box.SetAsBox(extent.m_X, extent.m_Y, b2Vec2(position.m_X, position.m_Y), 0.0f);
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &box;
-        fixtureDef.density = 1.0f;
+        fixtureDef.density = 10.0f;
         fixtureDef.friction = 0.03f;
+        fixtureDef.restitution = 0.0f;
         fixtureDef.userData = userData == NULL? this : userData;
 
         switch(boxType) {

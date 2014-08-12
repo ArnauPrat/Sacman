@@ -27,7 +27,7 @@ namespace sacman {
     Background::Background( const char* name ) :
     Entity( name ) {
         m_Min = {FLT_MAX, FLT_MAX};
-        m_Max = {FLT_MIN, FLT_MIN};
+        m_Max = {-FLT_MAX, -FLT_MAX};
     }
 
     Background::~Background() {
@@ -51,9 +51,9 @@ namespace sacman {
                 }
                 for( int j = 0; j < tiledLevel.m_NumTileSets; ++j ) {
                     std::vector<TiledCell>& cells = buckets[j].m_Cells; 
-                    math::Vector2f min = {FLT_MAX, FLT_MAX};
-                    math::Vector2f max = {FLT_MIN, FLT_MIN};
                     if( cells.size() > 0 ) {
+                        math::Vector2f min = {FLT_MAX, FLT_MAX};
+                        math::Vector2f max = {-FLT_MAX, -FLT_MAX};
                         math::Vector2f vertices[cells.size()*4];
                         math::Vector2f texCoords[cells.size()*4];
                         unsigned short indices[cells.size()*6];
@@ -61,13 +61,13 @@ namespace sacman {
                             vertices[k*4].m_X = cells[k].m_X; 
                             vertices[k*4].m_Y = tiledLevel.m_Height - (cells[k].m_Y+1); 
                             min.m_X = min.m_X > vertices[k*4].m_X ? vertices[k*4].m_X : min.m_X;
-                            min.m_X = min.m_Y > vertices[k*4].m_Y ? vertices[k*4].m_Y : min.m_Y;
+                            min.m_Y = min.m_Y > vertices[k*4].m_Y ? vertices[k*4].m_Y : min.m_Y;
                             vertices[k*4+1].m_X = cells[k].m_X+1; 
                             vertices[k*4+1].m_Y = tiledLevel.m_Height - (cells[k].m_Y+1); 
                             vertices[k*4+2].m_X = cells[k].m_X+1; 
                             vertices[k*4+2].m_Y = tiledLevel.m_Height - cells[k].m_Y; 
-                            min.m_X = max.m_X < vertices[k*4].m_X ? vertices[k*4].m_X : max.m_X;
-                            min.m_X = max.m_Y < vertices[k*4].m_Y ? vertices[k*4].m_Y : max.m_Y;
+                            max.m_X = max.m_X < vertices[k*4].m_X ? vertices[k*4].m_X : max.m_X;
+                            max.m_Y = max.m_Y < vertices[k*4].m_Y ? vertices[k*4].m_Y : max.m_Y;
                             vertices[k*4+3].m_X = cells[k].m_X; 
                             vertices[k*4+3].m_Y = tiledLevel.m_Height - cells[k].m_Y; 
 
@@ -100,10 +100,10 @@ namespace sacman {
                         chunk->m_Min = min;
                         chunk->m_Max = max;
                         m_Chunks.push_back(chunk);
-                        m_Min.m_X = min.m_X > min.m_X ? min.m_X : m_Min.m_X;
-                        m_Min.m_Y = min.m_Y > min.m_Y ? min.m_Y : m_Min.m_Y;
-                        m_Max.m_X = max.m_X > max.m_X ? max.m_X : m_Max.m_X;
-                        m_Max.m_Y = max.m_Y > max.m_Y ? max.m_Y : m_Max.m_Y;
+                        m_Min.m_X = m_Min.m_X > min.m_X ? min.m_X : m_Min.m_X;
+                        m_Min.m_Y = m_Min.m_Y > min.m_Y ? min.m_Y : m_Min.m_Y;
+                        m_Max.m_X = m_Max.m_X < max.m_X ? max.m_X : m_Max.m_X;
+                        m_Max.m_Y = m_Max.m_Y < max.m_Y ? max.m_Y : m_Max.m_Y;
                     }
                 }
             }

@@ -78,5 +78,6 @@ namespace sacman {
         inFile.close();
         return true;
     }
+
 #undef PRINT_OPTION
 }

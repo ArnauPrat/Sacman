@@ -43,6 +43,8 @@ namespace sacman {
             /** Rendering **/
             static dali::Renderer m_Renderer;
 
+            static Config GetConfig();
+
 
         private:
             /** @brief Starts SDL stuff.*/

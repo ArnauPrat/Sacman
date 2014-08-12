@@ -83,4 +83,8 @@ namespace sacman {
     void Context::Exit() {
         m_Run = false;
     }
+
+    Config Context::GetConfig() {
+        return m_Config;
+    }
 }

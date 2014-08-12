@@ -121,7 +121,38 @@ namespace sacman {
     void Level::Draw( const double elapsedTime ) {
         Entity* character = GetEntity("character");
         if( character ) {
-            Context::m_Renderer.SetCameraPosition( character->Position() );
+//            std::cout << levelCenter.m_X << " " << levelCenter.m_Y << std::endl;
+ //           std::cout << levelExtent.m_X << " " << levelExtent.m_Y << std::endl;
+            Config config = Context::GetConfig();
+            math::Vector2f frustrumExtent;
+            if( config.m_RendererConfig.m_RenderingMode == dali::PIXEL_ALIGNED ) {
+                frustrumExtent.m_X = config.m_RendererConfig.m_ViewportWidth / (2.0f*static_cast<float>(config.m_RendererConfig.m_CellWidth));
+                frustrumExtent.m_Y = config.m_RendererConfig.m_ViewportHeight / (2.0f*static_cast<float>(config.m_RendererConfig.m_CellHeight));
+            } else {
+                frustrumExtent.m_X = config.m_RendererConfig.m_GridWidth / 2.0f;
+                frustrumExtent.m_Y = config.m_RendererConfig.m_GridHeight / 2.0f;
+            }
+//            std::cout << frustrumExtent.m_X << " " << frustrumExtent.m_Y << std::endl;
+            math::Vector2f levelCenter = m_Background.Position();
+            math::Vector2f levelExtent = m_Background.Extent();
+            math::Vector2f levelLowerLeft = {levelCenter.m_X - levelExtent.m_X, levelCenter.m_Y - levelExtent.m_Y};
+            levelExtent.m_X = levelExtent.m_X < frustrumExtent.m_X ? frustrumExtent.m_X : levelExtent.m_X;
+            levelExtent.m_Y = levelExtent.m_Y < frustrumExtent.m_Y ? frustrumExtent.m_Y : levelExtent.m_Y;
+            levelCenter = {levelLowerLeft.m_X + levelExtent.m_X, levelLowerLeft.m_Y + levelExtent.m_Y };
+
+            math::Vector2f lowerLeft = {levelCenter.m_X - levelExtent.m_X + frustrumExtent.m_X, levelCenter.m_Y - levelExtent.m_Y + frustrumExtent.m_Y};
+            math::Vector2f upperRight = {levelCenter.m_X + levelExtent.m_X - frustrumExtent.m_X, levelCenter.m_Y + levelExtent.m_Y - frustrumExtent.m_Y};
+            math::Vector2f cameraPosition = character->Position();
+            //std::cout << "level center: " << levelCenter.m_X << " " << levelCenter.m_Y << std::endl;
+            //std::cout << "frustrum: " << frustrumExtent.m_X << " " << frustrumExtent.m_Y << std::endl;
+            //std::cout << "lower: " << lowerLeft.m_X << " " << lowerLeft.m_Y << std::endl;
+            //std::cout << "upper: " << upperRight.m_X << " " << upperRight.m_Y << std::endl;
+            cameraPosition.m_X = cameraPosition.m_X < lowerLeft.m_X ? lowerLeft.m_X : cameraPosition.m_X;
+            cameraPosition.m_X = cameraPosition.m_X > upperRight.m_X ? upperRight.m_X : cameraPosition.m_X;
+            cameraPosition.m_Y = cameraPosition.m_Y < lowerLeft.m_Y ? lowerLeft.m_Y : cameraPosition.m_Y;
+//            cameraPosition.m_Y = cameraPosition.m_Y > upperRight.m_Y ? upperRight.m_Y : cameraPosition.m_Y;
+            //std::cout << "position: " << cameraPosition.m_X << " " << cameraPosition.m_Y << std::endl;
+            Context::m_Renderer.SetCameraPosition( cameraPosition );
         }
 
         m_Background.Draw( elapsedTime, 0 );

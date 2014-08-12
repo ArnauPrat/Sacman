@@ -45,5 +45,5 @@ INCLUDE_DIRECTORIES( ${LIB_DIR}/jsoncpp/src/jsoncpp/include )
 
 FILE( GLOB_RECURSE SOURCE_FILES "./*" )
 ADD_LIBRARY( ${PROJECT_NAME} ${SOURCE_FILES} )
-add_dependencies( dali glew freeimage )
+add_dependencies( dali glew freeimage jsoncpp )
 TARGET_LINK_LIBRARIES( ${PROJECT_NAME} ${OPENGL_LIBRARIES} ${LIB_DIR}/glew/src/glew/lib/libGLEW.a ${LIB_DIR}/freeimage/src/freeimage/Dist/libfreeimage.a ${LIB_DIR}/jsoncpp/src/jsoncpp/lib/libjsoncpp.a )

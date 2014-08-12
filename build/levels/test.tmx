@@ -5,13 +5,13 @@
  </tileset>
  <layer name="Tile Layer 1" width="96" height="32">
   <data encoding="base64" compression="zlib">
-   eJzt1LENgCAURVFWs3EWHcMx3BYLCwpNlPAlkXOS2+prPikBAAAAAAAAtebeAwY29R4wsO1oOVs7bwH+r3xzylq8P1HfjtwMtHN3q096c89R//lqP3Ct9v7Upl0auAz5ILim
+   eJzt1LkNgDAQBEC3RkItUAZl0C0kZEbClvEjz0gb3ya3IQAA5DnubJHsLUsBw7MtQM9sFPAH2wL0zEZ9s7YuMLGldYHJPRuRugm2BUhVczdK3bJ1MIa3X/2SlH/+606t/kBc7v9JmZwiE+cCSmPJ6g==
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="96" height="32">
   <object type="box" x="0" y="2030" width="6720" height="210"/>
   <object type="box" x="1050" y="1820" width="1120" height="70"/>
-  <object name="character" type="character" x="140" y="1960" width="70" height="70">
+  <object name="character" type="character" x="3080" y="910" width="70" height="70">
    <properties>
     <property name="prova" value="prova"/>
    </properties>
@@ -24,10 +24,18 @@
    </properties>
   </object>
   <object type="box" x="1610" y="1610" width="490" height="70"/>
-  <object type="box" x="1820" y="1400" width="280" height="70"/>
-  <object type="box" x="3220" y="1610" width="490" height="70"/>
+  <object type="box" x="1890" y="1400" width="210" height="70"/>
+  <object type="box" x="3500" y="1610" width="490" height="70"/>
   <object type="box" x="2870" y="1820" width="1120" height="70"/>
   <object type="box" x="4410" y="1820" width="1120" height="70"/>
   <object type="box" x="4760" y="1610" width="490" height="70"/>
+  <object x="0" y="70" width="70"/>
+  <object x="0" y="3360"/>
+  <object type="box" x="2870" y="1400" width="490" height="70"/>
+  <object type="box" x="3500" y="1190" width="490" height="70"/>
+  <object type="box" x="2870" y="980" width="490" height="70"/>
+  <object type="box" x="3500" y="770" width="490" height="70"/>
+  <object type="box" x="2870" y="560" width="490" height="70"/>
+  <object type="box" x="3500" y="350" width="490" height="70"/>
  </objectgroup>
 </map>

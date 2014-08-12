@@ -43,6 +43,7 @@ namespace sacman {
     void Character::Draw( const double elapsedTime, const int depth ) const {
         math::Vector2f position = m_Body.Position();
         math::Vector2f extent = m_Body.Extent();
+        std::cout << extent.m_X << " " << extent.m_Y << std::endl;
         position.m_X -= extent.m_X;
         position.m_Y -= extent.m_Y;
         extent.m_X *=2.0f;
@@ -56,11 +57,11 @@ namespace sacman {
 
     void Character::Update( const double elapsedTime ) {
         if( (m_CurrentState & E_RIGHT) != 0) {
-                m_Body.Move( 3.0f );
+                m_Body.Move( 5.0f );
         }
 
         if( (m_CurrentState & E_LEFT) != 0) {
-                m_Body.Move( -3.0f );
+                m_Body.Move( -5.0f );
         }
         if( (m_CurrentState & E_STAND) != 0) {
                 m_Body.Move( 0.0f ); 
@@ -78,7 +79,7 @@ namespace sacman {
     void Character::Enter( Level* level ) {
         m_Body.Enter( level );
         m_Body.AddBox( {0.0f, 0.0f}, m_Extent, E_SOLID );  
-        m_Body.AddBox( {0.0f, -m_Extent.m_Y}, { 0.1f, 0.1f }, E_SENSOR, this );  
+        m_Body.AddBox( {0.0f, -m_Extent.m_Y}, { 0.3f, 0.1f }, E_SENSOR, this );  
         level->RegisterListener(KEYBOARD, std::bind(&Character::ListenKeyboard,this,std::placeholders::_1) );
     }
 
@@ -126,7 +127,7 @@ namespace sacman {
                     break;
                 case K_SPACE:
                     if(m_IsGrounded && ((m_CurrentState & E_JUMP) == 0 )) {
-                        m_Body.ApplyForce({0.0f,8.0f});
+                        m_Body.ApplyForce({0.0f,9.0f});
                         m_CurrentState |= E_JUMP;
                     }
                     break;
