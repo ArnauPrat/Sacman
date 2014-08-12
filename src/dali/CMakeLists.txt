@@ -14,17 +14,27 @@ INCLUDE_DIRECTORIES(${LIB_DIR}/jsoncpp)
 INCLUDE(ExternalProject)
 ExternalProject_Add( glew
     PREFIX ${LIB_DIR}/glew
-    GIT_REPOSITORY git://git.code.sf.net/p/glew/code 
+    ##    GIT_REPOSITORY git://git.code.sf.net/p/glew/code 
+    URL http://downloads.sourceforge.net/project/glew/glew/1.11.0/glew-1.11.0.tgz
     CONFIGURE_COMMAND make -C <SOURCE_DIR>/auto 
     BUILD_IN_SOURCE 1
     BUILD_COMMAND make
     INSTALL_COMMAND ""
-    TIMEOUT 10
     )
 INCLUDE_DIRECTORIES(${LIB_DIR}/glew/src/glew/include )
 
+ExternalProject_Add( freeimage 
+    PREFIX ${LIB_DIR}/freeimage
+    URL http://sourceforge.net/projects/freeimage/files/Source%20Distribution/3.16.0/FreeImage3160.zip/download 
+    CONFIGURE_COMMAND ""
+    BUILD_IN_SOURCE 1
+    BUILD_COMMAND make
+    INSTALL_COMMAND ""
+    )
+INCLUDE_DIRECTORIES(${LIB_DIR}/freeimage/src/freeimage/Source )
+
 FILE( GLOB_RECURSE SOURCE_FILES "./*" )
 ADD_LIBRARY( ${PROJECT_NAME} ${SOURCE_FILES} )
-add_dependencies( dali glew )
+add_dependencies( dali glew freeimage )
 SET( SOIL_LIBRARY ${LIB_DIR}/soil/lib/libSOIL.a)
-TARGET_LINK_LIBRARIES( ${PROJECT_NAME} ${SOIL_LIBRARY} ${OPENGL_LIBRARIES} ${LIB_DIR}/glew/src/glew/lib/libGLEW.a )
+TARGET_LINK_LIBRARIES( ${PROJECT_NAME} ${SOIL_LIBRARY} ${OPENGL_LIBRARIES} ${LIB_DIR}/glew/src/glew/lib/libGLEW.a ${LIB_DIR}/freeimage/src/freeimage/Dist/libfreeimage.a )

@@ -12,8 +12,9 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
 #include "Texture.hpp"
+#include <FreeImage.h>
 #include <cassert>
-#include <SOIL.h>
+//#include <SOIL.h>
 #include <iostream>
 
 namespace dali {
@@ -29,7 +30,7 @@ namespace dali {
     }
 
     void Texture::Load( const char* filename ) {
-			int width, height, channels;
+/*			int width, height, channels;
 			unsigned char* image = SOIL_load_image( filename, &width, &height, &channels, SOIL_LOAD_AUTO );
             assert( image != NULL );
 			for( int j = 0; j*2 < height; ++j ) {
@@ -55,5 +56,38 @@ namespace dali {
             } else {
                 std::cout << "DALI: Error loading texture " << filename << std::endl;
             }
+            */
+        FREE_IMAGE_FORMAT format = FreeImage_GetFileType(filename,0);//Automatocally detects the format(from over 20 formats!)
+        FIBITMAP* image = FreeImage_Load(format, filename);
+
+        FIBITMAP* temp = image;
+        image = FreeImage_ConvertTo32Bits(image);
+        FreeImage_Unload(temp);
+
+        int w = FreeImage_GetWidth(image);
+        int h = FreeImage_GetHeight(image);
+
+        GLubyte* texture = new GLubyte[4*w*h];
+        char* pixels = (char*)FreeImage_GetBits(image);
+
+        for(int j= 0; j<w*h; j++){
+            texture[j*4+0]= pixels[j*4+2];
+            texture[j*4+1]= pixels[j*4+1];
+            texture[j*4+2]= pixels[j*4+0];
+            texture[j*4+3]= pixels[j*4+3];
+        }
+
+        glGenTextures(1, &m_TextureID);
+        glBindTexture(GL_TEXTURE_2D, m_TextureID);
+        glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA, w, h, 0, GL_RGBA,GL_UNSIGNED_BYTE,(GLvoid*)texture );
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+        GLenum huboError = glGetError();
+        if(huboError){
+            std::cout<<"There was an error loading the texture"<<std::endl;
+        }
     }
 }

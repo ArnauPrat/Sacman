@@ -16,21 +16,48 @@ endif()
 #PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 
 
-ADD_SUBDIRECTORY( ./lib/Box2D )
-INCLUDE_DIRECTORIES(./lib/Box2D )
+#ADD_SUBDIRECTORY( ./lib/Box2D )
+#INCLUDE_DIRECTORIES(./lib/Box2D )
 
-ADD_SUBDIRECTORY( ./lib/SDL2 )
-INCLUDE_DIRECTORIES(./lib/SDL2/include )
+##ADD_SUBDIRECTORY( ./lib/SDL2 )
+#INCLUDE_DIRECTORIES(./lib/SDL2/include )
+
+INCLUDE(ExternalProject)
+ExternalProject_Add( SDL2 
+    PREFIX ${LIB_DIR}/SDL2
+    URL http://libsdl.org/release/SDL2-2.0.3.tar.gz
+    CONFIGURE_COMMAND cmake -B.. -H.
+    BUILD_IN_SOURCE 1
+    BUILD_COMMAND make -C..
+    INSTALL_COMMAND ""
+    )
+INCLUDE_DIRECTORIES( ${LIB_DIR}/SDL2/src/SDL2/include )
+
+ExternalProject_Add( Box2D 
+    PREFIX ${LIB_DIR}/Box2D
+    SVN_REPOSITORY http://box2d.googlecode.com/svn/tags/v2.3.1
+    CONFIGURE_COMMAND cmake -B. -H./Box2D -DBOX2D_BUILD_EXAMPLES=OFF
+    BUILD_IN_SOURCE 1
+    INSTALL_COMMAND ""
+    )
+INCLUDE_DIRECTORIES(${LIB_DIR}/Box2D/src/Box2D/Box2D/ )
 
 ADD_SUBDIRECTORY( ./src/dali )
 INCLUDE_DIRECTORIES( ./src )
-INCLUDE_DIRECTORIES( ./lib/jsoncpp )
 
+ExternalProject_Add( jsoncpp 
+    PREFIX ${LIB_DIR}/jsoncpp
+    GIT_REPOSITORY  https://github.com/open-source-parsers/jsoncpp.git
+    CONFIGURE_COMMAND cmake . 
+    BUILD_IN_SOURCE 1
+    BUILD_COMMAND make 
+    INSTALL_COMMAND ""
+    )
+INCLUDE_DIRECTORIES( ${LIB_DIR}/jsoncpp/src/jsoncpp/include )
 
 INCLUDE_DIRECTORIES(${LIB_DIR}/glew/src/glew/include )
 
 #FILE( GLOB_RECURSE SOURCE_FILES "src/*" )
-SET( SOURCE_FILES ${SOURCE_FILES} "lib/jsoncpp/jsoncpp.cpp" )
 SET( SOURCE_FILES ${SOURCE_FILES} "src/Config.cpp" )
 SET( SOURCE_FILES ${SOURCE_FILES} "src/Context.cpp" )
 SET( SOURCE_FILES ${SOURCE_FILES} "src/EventManager.cpp" )
@@ -48,4 +75,4 @@ SET( SOURCE_FILES ${SOURCE_FILES} "src/objects/Body.cpp" )
 LINK_DIRECTORIES(${LIB_DIR}/Box2D)
 
 ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCE_FILES})	
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${SDL2_LIBRARIES} dali Box2D)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} dali ${LIB_DIR}/SDL2/src/libSDL2.a ${LIB_DIR}/SDL2/src/libSDL2main.a ${LIB_DIR}/Box2D/src/Box2D/Box2D/libBox2D.a ${LIB_DIR}/jsoncpp/src/jsoncpp/lib/libjsoncpp.a  )

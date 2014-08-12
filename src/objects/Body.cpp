@@ -13,6 +13,7 @@
 
 #include "Body.hpp"
 #include "Context.hpp"
+#include <cfloat>
 
 namespace sacman {
 
@@ -59,6 +60,8 @@ namespace sacman {
 
     math::Vector2f Body::Extent() const {
         b2AABB aabb;
+        aabb.lowerBound = b2Vec2(FLT_MAX,FLT_MAX);
+        aabb.upperBound = b2Vec2(-FLT_MAX,-FLT_MAX); 
         for( b2Fixture* fixture : m_Fixtures ) {
             aabb.Combine(fixture->GetAABB(0));
         }
