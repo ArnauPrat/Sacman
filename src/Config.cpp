@@ -67,6 +67,16 @@ namespace sacman {
                 continue;
             }
 
+            if( option == "PixelAligned" ) {
+                inFile >> value; 
+                std::stringstream ss(value);
+                bool mode;
+                ss >> mode;
+                config.m_RendererConfig.m_RenderingMode = mode ? dali::PIXEL_ALIGNED : dali::GRID_ALIGNED;
+                PRINT_OPTION(option, config.m_DrawDebug);
+                continue;
+            }
+
             if( option == "Directory" ) {
                 inFile >> value; 
                 dali::pathFinder.AddDirectory( value.c_str() );

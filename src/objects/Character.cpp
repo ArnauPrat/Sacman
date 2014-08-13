@@ -42,8 +42,9 @@ namespace sacman {
 
     void Character::Draw( const double elapsedTime, const int depth ) const {
         math::Vector2f position = m_Body.Position();
-        math::Vector2f extent = m_Body.Extent();
-        std::cout << extent.m_X << " " << extent.m_Y << std::endl;
+        //math::Vector2f extent = m_Body.Extent();
+        math::Vector2f extent = m_Extent;
+//        std::cout << extent.m_X << " " << extent.m_Y << std::endl;
         position.m_X -= extent.m_X;
         position.m_Y -= extent.m_Y;
         extent.m_X *=2.0f;
