@@ -1,0 +1,3 @@
+repository='external project URL'
+module='http://sourceforge.net/projects/freeimage/files/Source%20Distribution/3.16.0/FreeImage3160.zip/download'
+tag=''

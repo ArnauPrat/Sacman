@@ -1,0 +1,3 @@
+repository='external project URL'
+module='http://downloads.sourceforge.net/project/glew/glew/1.11.0/glew-1.11.0.tgz'
+tag=''
