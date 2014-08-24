@@ -1,49 +1,50 @@
 CMAKE_MINIMUM_REQUIRED( VERSION 2.8.3 )
 PROJECT( dali )
 
-INCLUDE(FindPkgConfig)
-##PKG_SEARCH_MODULE(GLEW REQUIRED glew)
-FIND_PACKAGE(OpenGL REQUIRED)
-FIND_PACKAGE(GLEW REQUIRED)
+IF( UNIX )
+	SET(CMAKE_CXX_FLAGS_DEBUG "-O0 --std=c++11 -g -pg -Wall")	
+	SET(CMAKE_CXX_FLAGS_RELEASE "-O3 --std=c++11 -DNDEBUG -Wall")
+	SET(PLATFORM "unix" )
+ENDIF( UNIX )
 
-INCLUDE_DIRECTORIES(./)
-INCLUDE_DIRECTORIES(../)
-INCLUDE_DIRECTORIES(${LIB_DIR}/soil/include)
-INCLUDE_DIRECTORIES(${LIB_DIR}/jsoncpp)
+IF( WIN32 )
+	IF( ${CMAKE_SIZEOF_VOID_P} EQUAL 4)
+		MESSAGE( FATAL_ERROR "Win32 is Unsupported" )
+	ENDIF( ${CMAKE_SIZEOF_VOID_P} EQUAL 4)
+	SET( PLATFORM "win64" )
+ENDIF( WIN32 )
 
-INCLUDE(ExternalProject)
-ExternalProject_Add( glew
-    PREFIX ${LIB_DIR}/glew
-    ##    GIT_REPOSITORY git://git.code.sf.net/p/glew/code 
-    URL http://downloads.sourceforge.net/project/glew/glew/1.11.0/glew-1.11.0.tgz
-    CONFIGURE_COMMAND make -C <SOURCE_DIR>/auto 
-    BUILD_IN_SOURCE 1
-    BUILD_COMMAND make
-    INSTALL_COMMAND ""
-    )
-INCLUDE_DIRECTORIES(${LIB_DIR}/glew/src/glew/include )
+IF( NOT PLATFORM )
+	MESSAGE(FATAL_ERROR "Unable to detect platform")
+ENDIF( NOT PLATFORM )
 
-ExternalProject_Add( freeimage 
-    PREFIX ${LIB_DIR}/freeimage
-    URL http://sourceforge.net/projects/freeimage/files/Source%20Distribution/3.16.0/FreeImage3160.zip/download 
-    CONFIGURE_COMMAND ""
-    BUILD_IN_SOURCE 1
-    BUILD_COMMAND make
-    INSTALL_COMMAND ""
-    )
-INCLUDE_DIRECTORIES(${LIB_DIR}/freeimage/src/freeimage/Source )
 
-ExternalProject_Add( jsoncpp 
-    PREFIX ${LIB_DIR}/jsoncpp
-    GIT_REPOSITORY  https://github.com/open-source-parsers/jsoncpp.git
-    CONFIGURE_COMMAND cmake . 
-    BUILD_IN_SOURCE 1
-    BUILD_COMMAND make 
-    INSTALL_COMMAND ""
-    )
-INCLUDE_DIRECTORIES( ${LIB_DIR}/jsoncpp/src/jsoncpp/include )
+INCLUDE_DIRECTORIES( ./ )
+INCLUDE_DIRECTORIES( ../ )
+INCLUDE_DIRECTORIES( ${LIB_DIR}/jsoncpp/include )
+INCLUDE_DIRECTORIES( ${LIB_DIR}/glew/include )
+INCLUDE_DIRECTORIES( ${LIB_DIR}/freeimage/include )
 
-FILE( GLOB_RECURSE SOURCE_FILES "./*" )
+SET( SOURCE_FILES 
+	${CMAKE_CURRENT_SOURCE_DIR}/Effect.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Globals.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/GLSL.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/PathFinder.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/PixelShader.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Renderer.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/RendererConfig.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Sprite.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/SpriteRenderer.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Texture.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/VertexShader.cpp
+	)
+
 ADD_LIBRARY( ${PROJECT_NAME} ${SOURCE_FILES} )
-add_dependencies( dali glew freeimage jsoncpp )
-TARGET_LINK_LIBRARIES( ${PROJECT_NAME} ${OPENGL_LIBRARIES} ${LIB_DIR}/glew/src/glew/lib/libGLEW.a ${LIB_DIR}/freeimage/src/freeimage/Dist/libfreeimage.a ${LIB_DIR}/jsoncpp/src/jsoncpp/lib/libjsoncpp.a )
+TARGET_LINK_LIBRARIES( ${PROJECT_NAME}  )
+
+SET( DALI_INCLUDE_DIRS 
+    ${CMAKE_CURRENT_SOURCE_DIR} 
+    ${LIB_DIR}/freeimage/include
+    ${LIB_DIR}/glew/include
+    PARENT_SCOPE
+)

@@ -54,7 +54,7 @@ namespace dali {
 			int i =0;
 			for(it=source.begin();it!=source.end();it++) {
 				std::string saux = (std::string)*it;
-				sizes[i] = saux.size();
+				sizes[i] = static_cast<int>(saux.size());
 				src[i] = new char[sizes[i]+1];
 				strcpy(src[i],saux.c_str());
 				i++;
@@ -77,7 +77,7 @@ namespace dali {
 
 			m_Vars = ParseVars(source.size(), src, sizes); 
 			
-			for(uint32_t i = 0; i < source.size();i++)
+			for(int i = 0; i < source.size();i++)
 			{
 				delete [] src[i];
 			}
