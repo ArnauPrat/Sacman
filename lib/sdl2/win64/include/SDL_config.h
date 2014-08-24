@@ -19,7 +19,6 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-<<<<<<< HEAD
 #ifndef _SDL_config_windows_h
 #define _SDL_config_windows_h
 
@@ -209,39 +208,3 @@ typedef unsigned int uintptr_t;
 #endif
 
 #endif /* _SDL_config_windows_h */
-=======
-#ifndef _SDL_config_h
-#define _SDL_config_h
-
-#include "SDL_platform.h"
-
-/**
- *  \file SDL_config.h
- */
-
-/* Add any platform that doesn't build using the configure system. */
-#ifdef USING_PREMAKE_CONFIG_H
-#include "SDL_config_premake.h"
-#elif defined(__WIN32__)
-#include "SDL_config_windows.h"
-#elif defined(__WINRT__)
-#include "SDL_config_winrt.h"
-#elif defined(__MACOSX__)
-#include "SDL_config_macosx.h"
-#elif defined(__IPHONEOS__)
-#include "SDL_config_iphoneos.h"
-#elif defined(__ANDROID__)
-#include "SDL_config_android.h"
-#elif defined(__PSP__)
-#include "SDL_config_psp.h"
-#else
-/* This is a minimal configuration just to get SDL running on new platforms */
-#include "SDL_config_minimal.h"
-#endif /* platform config */
-
-#ifdef USING_GENERATED_CONFIG_H
-#error Wrong SDL_config.h, check your include path?
-#endif
-
-#endif /* _SDL_config_h */
->>>>>>> 8b8ae309a87c75fdea4d259cb4fb2139932d911e
