@@ -43,7 +43,7 @@ namespace sacman {
     void Background::Load( const TiledLevel& tiledLevel ) {
         for( int i = 0; i < tiledLevel.m_NumLayers; ++i ) {
             if( tiledLevel.m_Layers[i].m_Type == TILE_LAYER ) {
-                Bucket buckets[tiledLevel.m_NumTileSets];
+                Bucket* buckets = new Bucket[tiledLevel.m_NumTileSets];
                 TiledLayer& layer = tiledLevel.m_Layers[i];
                 for( int j = 0; j < layer.m_TileLayer.m_NumCells; ++j ) {
                     int tileSetId = FindTileSet( tiledLevel, layer.m_TileLayer.m_Cells[j].m_Tile ); 
@@ -54,9 +54,9 @@ namespace sacman {
                     if( cells.size() > 0 ) {
                         math::Vector2f min = {FLT_MAX, FLT_MAX};
                         math::Vector2f max = {-FLT_MAX, -FLT_MAX};
-                        math::Vector2f vertices[cells.size()*4];
-                        math::Vector2f texCoords[cells.size()*4];
-                        unsigned short indices[cells.size()*6];
+                        math::Vector2f* vertices = new math::Vector2f[cells.size()*4];
+                        math::Vector2f* texCoords = new math::Vector2f[cells.size()*4];
+                        unsigned short* indices = new unsigned short[cells.size()*6];
                         for( unsigned int k = 0; k < cells.size(); ++k ) {
                             vertices[k*4].m_X = cells[k].m_X; 
                             vertices[k*4].m_Y = tiledLevel.m_Height - (cells[k].m_Y+1); 
@@ -104,8 +104,12 @@ namespace sacman {
                         m_Min.m_Y = m_Min.m_Y > min.m_Y ? min.m_Y : m_Min.m_Y;
                         m_Max.m_X = m_Max.m_X < max.m_X ? max.m_X : m_Max.m_X;
                         m_Max.m_Y = m_Max.m_Y < max.m_Y ? max.m_Y : m_Max.m_Y;
+                        delete [] vertices;
+                        delete [] texCoords;
+                        delete [] indices;
                     }
                 }
+                delete [] buckets;
             }
         }
     }

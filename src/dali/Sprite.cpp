@@ -74,7 +74,7 @@ namespace dali {
         m_Texture = dali::textureLoader.Load(textureName.asCString());
         const Json::Value texCoords = root["TexCoords"];
         assert(texCoords.size() <= 256 );
-        math::Vector2f texData[texCoords.size()*4];
+        math::Vector2f* texData = new math::Vector2f[texCoords.size()*4];
         int i = 0;
         for( Json::Value::iterator it = texCoords.begin(); it != texCoords.end(); ++it, ++i) {
             const Json::Value texCoords = (*it);
@@ -86,6 +86,7 @@ namespace dali {
             texData[i*4 + 3] = {min.m_X, max.m_Y};
         }
         m_TexCoords.AddData( texData, texCoords.size()*4 );
+        delete[] texData;
 
         const Json::Value animations = root["Animations"];
         for( unsigned i = 0; i < animations.size(); ++i ) {
