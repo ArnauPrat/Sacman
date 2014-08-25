@@ -24,3 +24,5 @@ build/src/dali/Release/dali.lib
 *.list
 *.stamp
 *.sdf
+*.user
+build/dali.lib
