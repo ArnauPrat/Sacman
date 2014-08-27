@@ -21,13 +21,12 @@
 	namespace dali {
 #define GLSLVARMACRO(varnumber, varstring) varnumber,
 #define GLSLVARENUM \
-                GLSLVARMACRO(E_PROJECTION_MATRIX,"ProjectionMatrix") \
-                GLSLVARMACRO(E_VIEW_MATRIX,"ViewMatrix") \
-                GLSLVARMACRO(E_MODEL_MATRIX,"ModelMatrix") \
-                GLSLVARMACRO(E_TEX_DIFFUSE,"TexDiffuse") \
-                GLSLVARMACRO(E_COLOR_DIFFUSE,"ColorDiffuse") \
+                GLSLVARMACRO(E_PROJECTION_MATRIX,"uProjectionMatrix") \
+                GLSLVARMACRO(E_VIEW_MATRIX,"uViewMatrix") \
+                GLSLVARMACRO(E_MODEL_MATRIX,"uModelMatrix") \
+                GLSLVARMACRO(E_TEX_DIFFUSE,"uTexDiffuse") \
+                GLSLVARMACRO(E_COLOR_DIFFUSE,"uColorDiffuse") \
                 GLSLVARMACRO(E_NUM_VARS,"Error") 
-
                 enum GlslVar 
                 {
                         GLSLVARENUM

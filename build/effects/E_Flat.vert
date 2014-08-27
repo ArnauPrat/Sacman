@@ -1,8 +1,9 @@
-uniform mat3 ProjectionMatrix;
-uniform mat3 ViewMatrix;
-uniform mat3 ModelMatrix;
+uniform mat3 uProjectionMatrix;
+uniform mat3 uViewMatrix;
+uniform mat3 uModelMatrix;
+in vec2 aPosition;
 void main()
 {
-	vec3 projected = ProjectionMatrix*ViewMatrix*ModelMatrix*vec3(gl_Vertex.xy,1.0);
+	vec3 projected = uProjectionMatrix*uViewMatrix*uModelMatrix*vec3(aPosition.xy,1.0);
 	gl_Position =  vec4(projected.xy,0.0,1.0);
 }

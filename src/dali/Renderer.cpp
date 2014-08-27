@@ -20,10 +20,11 @@
 #include <functional>
 #include <iostream>
 #include <algorithm>
+#include <FreeImage.h>
 
 namespace dali {
 
-    static void SetIdentity( float matrix[3][3] ) {
+    static void SetIdentity(float matrix[3][3]) {
         matrix[0][0] = 1.0f;
         matrix[0][1] = 0.0f;
         matrix[0][2] = 0.0f;
@@ -44,23 +45,24 @@ namespace dali {
     Renderer::~Renderer() {
     }
 
-    void Renderer::StartUp( const RendererConfig& config ) {
+    void Renderer::StartUp(const RendererConfig& config) {
+        FreeImage_Initialise();
         m_Config = config;
-        PrintConfig( m_Config );
+        PrintConfig(m_Config);
 
         /** Initialize Projection matrix. */
-        switch( m_Config.m_RenderingMode ) {
-            case PIXEL_ALIGNED:
-                SetProjectionPixelAligned();
-                break;
-            case GRID_ALIGNED:
-                SetProjectionGridAligned();
-                break;
+        switch (m_Config.m_RenderingMode) {
+        case PIXEL_ALIGNED:
+            SetProjectionPixelAligned();
+            break;
+        case GRID_ALIGNED:
+            SetProjectionGridAligned();
+            break;
         }
 
         /** Initialize matrices to identity.*/
-        SetIdentity( m_ViewMatrix );
-        SetIdentity( m_ModelMatrix );
+        SetIdentity(m_ViewMatrix);
+        SetIdentity(m_ModelMatrix);
 
         /** Setting current rendering data.*/
         m_CurrentInfo = NULL;
@@ -68,11 +70,11 @@ namespace dali {
         InitOpenGL();
 
         /** Set Shader state functions .*/
-        Effect::SetStateFunction( E_PROJECTION_MATRIX, std::bind(&Renderer::ShaderSetProjectionMatrix, this, std::placeholders::_1 ));
-        Effect::SetStateFunction( E_VIEW_MATRIX, std::bind(&Renderer::ShaderSetViewMatrix, this, std::placeholders::_1 ));
-        Effect::SetStateFunction( E_MODEL_MATRIX, std::bind(&Renderer::ShaderSetModelMatrix, this, std::placeholders::_1 ));
-        Effect::SetStateFunction( E_TEX_DIFFUSE, std::bind(&Renderer::ShaderSetTexDiffuse, this, std::placeholders::_1 ));
-        Effect::SetStateFunction( E_COLOR_DIFFUSE, std::bind(&Renderer::ShaderSetColorDiffuse, this, std::placeholders::_1 ));
+        Effect::SetStateFunction(E_PROJECTION_MATRIX, std::bind(&Renderer::ShaderSetProjectionMatrix, this, std::placeholders::_1));
+        Effect::SetStateFunction(E_VIEW_MATRIX, std::bind(&Renderer::ShaderSetViewMatrix, this, std::placeholders::_1));
+        Effect::SetStateFunction(E_MODEL_MATRIX, std::bind(&Renderer::ShaderSetModelMatrix, this, std::placeholders::_1));
+        Effect::SetStateFunction(E_TEX_DIFFUSE, std::bind(&Renderer::ShaderSetTexDiffuse, this, std::placeholders::_1));
+        Effect::SetStateFunction(E_COLOR_DIFFUSE, std::bind(&Renderer::ShaderSetColorDiffuse, this, std::placeholders::_1));
 
         m_Textured = effectLoader.Load("E_Sprite.sha");
         m_Flat = effectLoader.Load("E_Flat.sha");
@@ -87,7 +89,7 @@ namespace dali {
         data[2].m_Y = 1.0f;
         data[3].m_X = 0.0f;
         data[3].m_Y = 1.0f;
-        m_Quad.AddData( data, 4 );
+        m_Quad.AddData(data, 4);
 
         unsigned short indices[6];
         indices[0] = 0;
@@ -96,11 +98,12 @@ namespace dali {
         indices[3] = 1;
         indices[4] = 2;
         indices[5] = 3;
-        m_Indices.AddData( indices, 6 );
+        m_Indices.AddData(indices, 6);
 
     }
 
     void Renderer::ShutDown() {
+        FreeImage_DeInitialise();
     }
 
     void Renderer::BeginFrame() {
@@ -108,40 +111,43 @@ namespace dali {
         m_FrameDrawingInfo.clear();
     }
 
-    bool Renderer::SortByDepth( const Renderer::DrawingInfo& a, const Renderer::DrawingInfo& b ) {
+    bool Renderer::SortByDepth(const Renderer::DrawingInfo& a, const Renderer::DrawingInfo& b) {
         return a.m_Depth < b.m_Depth;
-    } 
+    }
 
     void Renderer::EndFrame() {
         std::sort(m_FrameDrawingInfo.begin(), m_FrameDrawingInfo.end(), SortByDepth);
         int size = m_FrameDrawingInfo.size();
-        for( int i = 0; i < size; ++i ) {
+        for (int i = 0; i < size; ++i) {
             m_CurrentInfo = &m_FrameDrawingInfo[i];
-            glPolygonMode(GL_FRONT, m_CurrentInfo->m_PolygonMode );
+            glPolygonMode(GL_FRONT, m_CurrentInfo->m_PolygonMode);
             Effect::SetEffect(*m_CurrentInfo->m_Effect);
-            glEnableClientState(GL_VERTEX_ARRAY);
+            //glEnableClientState(GL_VERTEX_ARRAY);
             glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_Vertices->m_Data);
-            glVertexPointer(2,GL_FLOAT,0,0);
+//            glVertexPointer(2, GL_FLOAT, 0, 0);
+            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+            glEnableVertexAttribArray(0);
 
-            glEnableClientState(GL_INDEX_ARRAY);
+            //glEnableClientState(GL_INDEX_ARRAY);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_CurrentInfo->m_Indices->m_Data);
-            glDrawElements(GL_TRIANGLES,m_CurrentInfo->m_Indices->m_NumElements,GL_UNSIGNED_SHORT,0);
+            glDrawElements(GL_TRIANGLES, m_CurrentInfo->m_Indices->m_NumElements, GL_UNSIGNED_SHORT, 0);
 
-            glDisableClientState(GL_INDEX_ARRAY);
-            glDisableClientState(GL_VERTEX_ARRAY);
-            glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+            //glDisableClientState(GL_INDEX_ARRAY);
+            glDisableVertexAttribArray(1);
+            glDisableVertexAttribArray(0);
+            //glDisableClientState(GL_VERTEX_ARRAY);
+            //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         }
     }
 
-    void    Renderer::Draw( const Vector2fBuffer* vertices, 
-            const Vector2fBuffer* texCoords,
-            const IndexBuffer* indices,
-            const Texture* texture,
-            const int depth,
-            const void* texOffset,
-            const math::Vector2f& translate, 
-            const math::Vector2f& scale) {
-
+    void    Renderer::Draw(const Vector2fBuffer* vertices,
+        const Vector2fBuffer* texCoords,
+        const IndexBuffer* indices,
+        const Texture* texture,
+        const int depth,
+        const void* texOffset,
+        const math::Vector2f& translate,
+        const math::Vector2f& scale) {
         DrawingInfo info;
         info.m_Vertices = const_cast<Vector2fBuffer*>(vertices);
         info.m_TexCoords = const_cast<Vector2fBuffer*>(texCoords);
@@ -153,14 +159,14 @@ namespace dali {
         info.m_Translate = translate;
         info.m_Scale = scale;
         info.m_PolygonMode = GL_FILL;
-        m_FrameDrawingInfo.push_back( info );
+        m_FrameDrawingInfo.push_back(info);
     }
 
-    void    Renderer::Draw( const Vector2fBuffer* texCoords,
-            const Texture* texture,
-            const int depth,
-            const math::Vector2f& translate, 
-            const math::Vector2f& scale) {
+    void    Renderer::Draw(const Vector2fBuffer* texCoords,
+        const Texture* texture,
+        const int depth,
+        const math::Vector2f& translate,
+        const math::Vector2f& scale) {
         DrawingInfo info;
         info.m_Vertices = &m_Quad;
         info.m_TexCoords = const_cast<Vector2fBuffer*>(texCoords);
@@ -172,13 +178,13 @@ namespace dali {
         info.m_Translate = translate;
         info.m_Scale = scale;
         info.m_PolygonMode = GL_FILL;
-        m_FrameDrawingInfo.push_back( info );
+        m_FrameDrawingInfo.push_back(info);
     }
 
-    void    Renderer::DrawBox( const math::Vector2f& min, 
-                               const math::Vector2f& extent,
-                               const RGBAColor& color,
-                               const int depth ) {
+    void    Renderer::DrawBox(const math::Vector2f& min,
+        const math::Vector2f& extent,
+        const RGBAColor& color,
+        const int depth) {
         DrawingInfo info;
         info.m_Vertices = &m_Quad;
         info.m_Indices = &m_Indices;
@@ -192,7 +198,7 @@ namespace dali {
         m_FrameDrawingInfo.push_back(info);
     }
 
-    void    Renderer::SetCameraPosition( const math::Vector2f& position ) {
+    void    Renderer::SetCameraPosition(const math::Vector2f& position) {
         m_ViewMatrix[0][0] = 1.0f;
         m_ViewMatrix[0][1] = 0.0f;
         m_ViewMatrix[0][2] = 0.0f;
@@ -214,14 +220,14 @@ namespace dali {
             std::cout << "ERROR Loading glew" << std::endl;
         }
         std::cout << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
-        glViewport( 0, 0, m_Config.m_ViewportWidth, m_Config.m_ViewportHeight );
-        glClearColor(0.0f, 0.0f, 1.0f,1.0f);                   
+        glViewport(0, 0, m_Config.m_ViewportWidth, m_Config.m_ViewportHeight);
+        glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
         glEnable(GL_BLEND);
         glBlendEquation(GL_FUNC_ADD);
-        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDisable(GL_CULL_FACE);
-        glDisable(GL_DEPTH_TEST); 
-        glDisable(GL_STENCIL_TEST); 
+        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_STENCIL_TEST);
     }
 
     void Renderer::SetProjectionGridAligned() {
@@ -230,17 +236,17 @@ namespace dali {
         float right = m_Config.m_GridWidth;
         float top = m_Config.m_GridHeight;
 
-        m_ProjectionMatrix[0][0] = 2/(float)(right-left);
+        m_ProjectionMatrix[0][0] = 2 / (float)(right - left);
         m_ProjectionMatrix[0][1] = 0;
         m_ProjectionMatrix[0][2] = 0;
 
         m_ProjectionMatrix[1][0] = 0;
-        m_ProjectionMatrix[1][1] = 2/(float)(top-bottom);
+        m_ProjectionMatrix[1][1] = 2 / (float)(top - bottom);
         m_ProjectionMatrix[1][2] = 0;
 
-        m_ProjectionMatrix[2][0] = -(right+left)/(float)(right-left);
-        m_ProjectionMatrix[2][1] = -(top+bottom)/(float)(top-bottom);
-        m_ProjectionMatrix[2][2] = 1 ;
+        m_ProjectionMatrix[2][0] = -(right + left) / (float)(right - left);
+        m_ProjectionMatrix[2][1] = -(top + bottom) / (float)(top - bottom);
+        m_ProjectionMatrix[2][2] = 1;
     }
 
     void Renderer::SetProjectionPixelAligned() {
@@ -249,51 +255,53 @@ namespace dali {
         float right = m_Config.m_ViewportWidth;
         float top = m_Config.m_ViewportHeight;
 
-        m_ProjectionMatrix[0][0] = 2/(float)(right-left) * m_Config.m_CellWidth;;
+        m_ProjectionMatrix[0][0] = 2 / (float)(right - left) * m_Config.m_CellWidth;;
         m_ProjectionMatrix[0][1] = 0;
         m_ProjectionMatrix[0][2] = 0;
 
         m_ProjectionMatrix[1][0] = 0;
-        m_ProjectionMatrix[1][1] = 2/(float)(top-bottom) * m_Config.m_CellHeight;
+        m_ProjectionMatrix[1][1] = 2 / (float)(top - bottom) * m_Config.m_CellHeight;
         m_ProjectionMatrix[1][2] = 0;
 
-        m_ProjectionMatrix[2][0] = -(right+left)/(float)(right-left);
-        m_ProjectionMatrix[2][1] = -(top+bottom)/(float)(top-bottom);
+        m_ProjectionMatrix[2][0] = -(right + left) / (float)(right - left);
+        m_ProjectionMatrix[2][1] = -(top + bottom) / (float)(top - bottom);
         m_ProjectionMatrix[2][3] = 1;
     }
 
-    void Renderer::ShaderSetProjectionMatrix( GLint pos ) {
-        glUniformMatrix3fv( pos, 1, GL_FALSE, static_cast<const GLfloat*>(&m_ProjectionMatrix[0][0]) );
+    void Renderer::ShaderSetProjectionMatrix(GLint pos) {
+        glUniformMatrix3fv(pos, 1, GL_FALSE, static_cast<const GLfloat*>(&m_ProjectionMatrix[0][0]));
     }
 
-    void Renderer::ShaderSetViewMatrix( GLint pos ) {
-        glUniformMatrix3fv( pos, 1, GL_FALSE, static_cast<const GLfloat*>(&m_ViewMatrix[0][0]) );
+    void Renderer::ShaderSetViewMatrix(GLint pos) {
+        glUniformMatrix3fv(pos, 1, GL_FALSE, static_cast<const GLfloat*>(&m_ViewMatrix[0][0]));
     }
 
-    void Renderer::ShaderSetModelMatrix( GLint pos ) {
-        std::memset(&m_ModelMatrix[0][0],0,sizeof(float)*9);
+    void Renderer::ShaderSetModelMatrix(GLint pos) {
+        std::memset(&m_ModelMatrix[0][0], 0, sizeof(float)* 9);
         m_ModelMatrix[2][0] = m_CurrentInfo->m_Translate.m_X;
         m_ModelMatrix[2][1] = m_CurrentInfo->m_Translate.m_Y;
         m_ModelMatrix[2][2] = 1.0f;
         m_ModelMatrix[0][0] = m_CurrentInfo->m_Scale.m_X;
         m_ModelMatrix[1][1] = m_CurrentInfo->m_Scale.m_Y;
-        glUniformMatrix3fv( pos, 1, GL_FALSE, static_cast<const GLfloat*>(&m_ModelMatrix[0][0]) );
+        glUniformMatrix3fv(pos, 1, GL_FALSE, static_cast<const GLfloat*>(&m_ModelMatrix[0][0]));
     }
 
-    void Renderer::ShaderSetTexDiffuse( GLint pos ) {
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    void Renderer::ShaderSetTexDiffuse(GLint pos) {
+//        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
         glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_TexCoords->m_Data);
-        glTexCoordPointer(2,GL_FLOAT,0,static_cast<const GLvoid*>(m_CurrentInfo->m_TexOffset));
+        //glTexCoordPointer(2, GL_FLOAT, 0, static_cast<const GLvoid*>(m_CurrentInfo->m_TexOffset));
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0,static_cast<const GLvoid*>(m_CurrentInfo->m_TexOffset));
+        glEnableVertexAttribArray(1);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, m_CurrentInfo->m_Texture->m_TextureID);
         glUniform1i(pos, 0);
     }
 
-    void Renderer::ShaderSetColorDiffuse( GLint pos) {
-        glUniform4f( pos, 
-                     m_CurrentInfo->m_ColorDiffuse.m_R, 
-                     m_CurrentInfo->m_ColorDiffuse.m_G, 
-                     m_CurrentInfo->m_ColorDiffuse.m_B, 
-                     m_CurrentInfo->m_ColorDiffuse.m_A);
+    void Renderer::ShaderSetColorDiffuse(GLint pos) {
+        glUniform4f(pos,
+            m_CurrentInfo->m_ColorDiffuse.m_R,
+            m_CurrentInfo->m_ColorDiffuse.m_G,
+            m_CurrentInfo->m_ColorDiffuse.m_B,
+            m_CurrentInfo->m_ColorDiffuse.m_A);
     }
 }
