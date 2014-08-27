@@ -20,6 +20,7 @@
 #include <functional>
 #include <iostream>
 #include <algorithm>
+#include <FreeImage.h>
 
 namespace dali {
 
@@ -45,6 +46,7 @@ namespace dali {
     }
 
     void Renderer::StartUp(const RendererConfig& config) {
+        FreeImage_Initialise();
         m_Config = config;
         PrintConfig(m_Config);
 
@@ -101,6 +103,7 @@ namespace dali {
     }
 
     void Renderer::ShutDown() {
+        FreeImage_DeInitialise();
     }
 
     void Renderer::BeginFrame() {
@@ -119,17 +122,21 @@ namespace dali {
             m_CurrentInfo = &m_FrameDrawingInfo[i];
             glPolygonMode(GL_FRONT, m_CurrentInfo->m_PolygonMode);
             Effect::SetEffect(*m_CurrentInfo->m_Effect);
-            glEnableClientState(GL_VERTEX_ARRAY);
+            //glEnableClientState(GL_VERTEX_ARRAY);
             glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_Vertices->m_Data);
-            glVertexPointer(2, GL_FLOAT, 0, 0);
+//            glVertexPointer(2, GL_FLOAT, 0, 0);
+            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+            glEnableVertexAttribArray(0);
 
-            glEnableClientState(GL_INDEX_ARRAY);
+            //glEnableClientState(GL_INDEX_ARRAY);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_CurrentInfo->m_Indices->m_Data);
             glDrawElements(GL_TRIANGLES, m_CurrentInfo->m_Indices->m_NumElements, GL_UNSIGNED_SHORT, 0);
 
-            glDisableClientState(GL_INDEX_ARRAY);
-            glDisableClientState(GL_VERTEX_ARRAY);
-            glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+            //glDisableClientState(GL_INDEX_ARRAY);
+            glDisableVertexAttribArray(1);
+            glDisableVertexAttribArray(0);
+            //glDisableClientState(GL_VERTEX_ARRAY);
+            //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         }
     }
 
@@ -141,7 +148,6 @@ namespace dali {
         const void* texOffset,
         const math::Vector2f& translate,
         const math::Vector2f& scale) {
-
         DrawingInfo info;
         info.m_Vertices = const_cast<Vector2fBuffer*>(vertices);
         info.m_TexCoords = const_cast<Vector2fBuffer*>(texCoords);
@@ -281,9 +287,11 @@ namespace dali {
     }
 
     void Renderer::ShaderSetTexDiffuse(GLint pos) {
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+//        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
         glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_TexCoords->m_Data);
-        glTexCoordPointer(2, GL_FLOAT, 0, static_cast<const GLvoid*>(m_CurrentInfo->m_TexOffset));
+        //glTexCoordPointer(2, GL_FLOAT, 0, static_cast<const GLvoid*>(m_CurrentInfo->m_TexOffset));
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0,static_cast<const GLvoid*>(m_CurrentInfo->m_TexOffset));
+        glEnableVertexAttribArray(1);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, m_CurrentInfo->m_Texture->m_TextureID);
         glUniform1i(pos, 0);

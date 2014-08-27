@@ -1,7 +1,7 @@
-uniform sampler2D TexDiffuse;
-varying vec2 texCoord;
+uniform sampler2D uTexDiffuse;
+varying vec2 vTexCoord;
 void main()
 {
-	vec4 pc = texture2D(TexDiffuse,texCoord);
+	vec4 pc = texture2D(uTexDiffuse,vTexCoord);
 	gl_FragColor = pc;
 }

@@ -30,7 +30,13 @@ namespace dali {
 
     void Texture::Load( const char* filename ) {
         FREE_IMAGE_FORMAT format = FreeImage_GetFileType(filename,0);//Automatocally detects the format(from over 20 formats!)
+        if (format == FIF_UNKNOWN) {
+            std::cout << "Error derecting imaga file format of " << filename << std::endl;
+        }
         FIBITMAP* image = FreeImage_Load(format, filename);
+        if (!image) {
+            std::cout<<"There was an error loading the texture"<<std::endl;
+        }
 
         FIBITMAP* temp = image;
         image = FreeImage_ConvertTo32Bits(image);

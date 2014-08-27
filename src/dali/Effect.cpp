@@ -56,6 +56,8 @@ namespace dali {
 
 		glAttachShader(m_ShaderID,vertexShader->m_ShaderID);
 		glAttachShader(m_ShaderID,pixelShader->m_ShaderID);
+        glBindAttribLocation(m_ShaderID, 0, "aPosition");
+        glBindAttribLocation(m_ShaderID, 1, "aTexCoord");
 		glLinkProgram(m_ShaderID);
 
 		GLint result;

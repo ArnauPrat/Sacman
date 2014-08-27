@@ -1,5 +1,5 @@
-uniform vec4 ColorDiffuse;
+uniform vec4 uColorDiffuse;
 void main()
 {
-	gl_FragColor = ColorDiffuse;
+	gl_FragColor = uColorDiffuse;
 }
