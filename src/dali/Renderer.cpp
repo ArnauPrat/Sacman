@@ -117,26 +117,20 @@ namespace dali {
 
     void Renderer::EndFrame() {
         std::sort(m_FrameDrawingInfo.begin(), m_FrameDrawingInfo.end(), SortByDepth);
-        int size = m_FrameDrawingInfo.size();
+        int size = static_cast<int>(m_FrameDrawingInfo.size());
         for (int i = 0; i < size; ++i) {
             m_CurrentInfo = &m_FrameDrawingInfo[i];
             glPolygonMode(GL_FRONT, m_CurrentInfo->m_PolygonMode);
             Effect::SetEffect(*m_CurrentInfo->m_Effect);
-            //glEnableClientState(GL_VERTEX_ARRAY);
             glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_Vertices->m_Data);
-//            glVertexPointer(2, GL_FLOAT, 0, 0);
             glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
             glEnableVertexAttribArray(0);
 
-            //glEnableClientState(GL_INDEX_ARRAY);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_CurrentInfo->m_Indices->m_Data);
             glDrawElements(GL_TRIANGLES, m_CurrentInfo->m_Indices->m_NumElements, GL_UNSIGNED_SHORT, 0);
 
-            //glDisableClientState(GL_INDEX_ARRAY);
             glDisableVertexAttribArray(1);
             glDisableVertexAttribArray(0);
-            //glDisableClientState(GL_VERTEX_ARRAY);
-            //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         }
     }
 
@@ -233,8 +227,8 @@ namespace dali {
     void Renderer::SetProjectionGridAligned() {
         float bottom = 0;
         float left = 0;
-        float right = m_Config.m_GridWidth;
-        float top = m_Config.m_GridHeight;
+        float right = static_cast<float>(m_Config.m_GridWidth);
+        float top = static_cast<float>(m_Config.m_GridHeight);
 
         m_ProjectionMatrix[0][0] = 2 / (float)(right - left);
         m_ProjectionMatrix[0][1] = 0;
@@ -252,8 +246,8 @@ namespace dali {
     void Renderer::SetProjectionPixelAligned() {
         float bottom = 0;
         float left = 0;
-        float right = m_Config.m_ViewportWidth;
-        float top = m_Config.m_ViewportHeight;
+        float right = static_cast<float>(m_Config.m_ViewportWidth);
+        float top = static_cast<float>(m_Config.m_ViewportHeight);
 
         m_ProjectionMatrix[0][0] = 2 / (float)(right - left) * m_Config.m_CellWidth;;
         m_ProjectionMatrix[0][1] = 0;

@@ -54,13 +54,13 @@ namespace dali {
 			int i =0;
 			for(it=source.begin();it!=source.end();it++) {
 				std::string saux = (std::string)*it;
-				sizes[i] = saux.size();
+				sizes[i] = static_cast<int>(saux.size());
 				src[i] = new char[sizes[i]+1];
 				strcpy(src[i],saux.c_str());
 				i++;
 			}
 			
-			glShaderSource(m_ShaderID,source.size(),(const GLchar**)src,sizes);
+			glShaderSource(m_ShaderID,static_cast<GLsizei>(source.size()),(const GLchar**)src,sizes);
 			glCompileShader(m_ShaderID);
 			
 			GLint result;
@@ -75,7 +75,7 @@ namespace dali {
 				std::cout << std::string(log) << std::endl;
 			}
 
-			m_Vars = ParseVars(source.size(), src, sizes); 
+			m_Vars = ParseVars(static_cast<int>(source.size()), src, sizes); 
 			
 			for(int i = 0; i < source.size();i++)
 			{

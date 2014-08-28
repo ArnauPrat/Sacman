@@ -65,7 +65,7 @@ namespace dali {
         bool parsedSuccess = reader.parse(str, root, false);
         if(!parsedSuccess) {
             std::cout << "Failed to parse JSON"<< std::endl 
-                << reader.getFormatedErrorMessages()
+                << reader.getFormattedErrorMessages()
                 << std::endl;
             assert(false);
         }

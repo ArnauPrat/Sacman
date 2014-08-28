@@ -30,7 +30,7 @@ namespace sacman {
         bool parsedSuccess = reader.parse( str, root, false );
         if(!parsedSuccess) {
             std::cout << "Failed to parse Tiled .json file: " << fileName << std::endl 
-                << reader.getFormatedErrorMessages()
+                << reader.getFormattedErrorMessages()
                 << std::endl;
             assert(false);
         }

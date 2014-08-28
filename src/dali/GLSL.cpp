@@ -35,7 +35,7 @@ namespace dali {
 				if( strstr(currentLine,"uniform") != NULL ) {
 					size_t semicolonPos = strcspn(currentLine,";");
 					int j;
-					for( j = semicolonPos - 1; j >= 0; j-- ) {
+					for( j = static_cast<int>(semicolonPos - 1); j >= 0; j-- ) {
 						if( currentLine[j] == ' ' ) {
 							break;
 						}

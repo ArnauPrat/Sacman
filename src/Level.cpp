@@ -197,7 +197,7 @@ namespace sacman {
     void Level::SimulatePhysics( const double elapsedTime ) {
         m_PhysicsTime+=elapsedTime;
         while(m_PhysicsTime >= m_TimeStep ) {
-            m_B2World->Step(m_TimeStep, 6, 2);
+            m_B2World->Step(static_cast<float32>(m_TimeStep), 6, 2);
             m_PhysicsTime-=m_TimeStep;
         }
     }
@@ -235,8 +235,8 @@ namespace sacman {
         const char* x = FindProperty(object,"target_x");
         const char* y = FindProperty(object,"target_y");
         math::Vector2f targetPosition = {0.0f, 0.0f};
-        if( x ) targetPosition.m_X = atof(x);
-        if( y ) targetPosition.m_Y = atof(y);
+        if( x ) targetPosition.m_X = static_cast<float>(atof(x));
+        if( y ) targetPosition.m_Y = static_cast<float>(atof(y));
         Portal* portal = new Portal(object.m_Name, targetLevel, targetPosition, position, extent );
         if( object.m_TileId > 0 ) {
             math::Vector2f texCoords[4];

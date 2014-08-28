@@ -58,19 +58,18 @@ namespace sacman {
                         math::Vector2f* texCoords = new math::Vector2f[cells.size()*4];
                         unsigned short* indices = new unsigned short[cells.size()*6];
                         for( unsigned int k = 0; k < cells.size(); ++k ) {
-                            vertices[k*4].m_X = cells[k].m_X; 
-                            vertices[k*4].m_Y = tiledLevel.m_Height - (cells[k].m_Y+1); 
+                            vertices[k*4].m_X = static_cast<float>(cells[k].m_X); 
+                            vertices[k*4].m_Y = static_cast<float>(tiledLevel.m_Height - (cells[k].m_Y+1)); 
                             min.m_X = min.m_X > vertices[k*4].m_X ? vertices[k*4].m_X : min.m_X;
                             min.m_Y = min.m_Y > vertices[k*4].m_Y ? vertices[k*4].m_Y : min.m_Y;
-                            vertices[k*4+1].m_X = cells[k].m_X+1; 
-                            vertices[k*4+1].m_Y = tiledLevel.m_Height - (cells[k].m_Y+1); 
-                            vertices[k*4+2].m_X = cells[k].m_X+1; 
-                            vertices[k*4+2].m_Y = tiledLevel.m_Height - cells[k].m_Y; 
+                            vertices[k*4+1].m_X = static_cast<float>(cells[k].m_X+1); 
+                            vertices[k*4+1].m_Y = static_cast<float>(tiledLevel.m_Height - (cells[k].m_Y+1)); 
+                            vertices[k*4+2].m_X = static_cast<float>(cells[k].m_X+1); 
+                            vertices[k*4+2].m_Y = static_cast<float>(tiledLevel.m_Height - cells[k].m_Y); 
                             max.m_X = max.m_X < vertices[k*4].m_X ? vertices[k*4].m_X : max.m_X;
                             max.m_Y = max.m_Y < vertices[k*4].m_Y ? vertices[k*4].m_Y : max.m_Y;
-                            vertices[k*4+3].m_X = cells[k].m_X; 
-                            vertices[k*4+3].m_Y = tiledLevel.m_Height - cells[k].m_Y; 
-
+                            vertices[k*4+3].m_X = static_cast<float>(cells[k].m_X); 
+                            vertices[k*4+3].m_Y = static_cast<float>(tiledLevel.m_Height - cells[k].m_Y); 
 
                             math::Vector2f min = MinTexCoord( tiledLevel.m_TileSets[j], cells[k].m_Tile ); 
                             math::Vector2f max = MaxTexCoord( tiledLevel.m_TileSets[j], cells[k].m_Tile ); 
@@ -92,9 +91,9 @@ namespace sacman {
                         }
 
                         Chunk* chunk = new Chunk();
-                        chunk->m_Vertices.AddData(vertices,cells.size()*4);
-                        chunk->m_TexCoords.AddData(texCoords,cells.size()*4);
-                        chunk->m_Indices.AddData(indices,cells.size()*6);
+                        chunk->m_Vertices.AddData(vertices,static_cast<int>(cells.size())*4);
+                        chunk->m_TexCoords.AddData(texCoords,static_cast<int>(cells.size())*4);
+                        chunk->m_Indices.AddData(indices,static_cast<int>(cells.size()*6));
                         chunk->m_Texture = dali::textureLoader.Load(tiledLevel.m_TileSets[j].m_ImageName);
                         chunk->m_Depth = i;
                         chunk->m_Min = min;
