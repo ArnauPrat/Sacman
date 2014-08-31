@@ -22,7 +22,6 @@
 #include "objects/Body.hpp"
 #include <memory>
 
-
 namespace sacman {
     class Level;
     enum MovementState {
@@ -33,14 +32,14 @@ namespace sacman {
     };
     class Character : public Entity {
         public:
-            Character( const char* name, const char* spriteName, const math::Vector2f& position, const math::Vector2f& extent );
+            Character( const char* name, const char* spriteName );
             ~Character();
 
             void Draw( const double elapsedTime, const int depth ) const ;
             void DrawShape( const double elapsedTime, const int depth ) const;
             void Update( const double elapsedTime );
             void Collide( const Collision& collision );
-            void Enter( Level* level );
+            void Enter(Level* level, const math::Vector2f position, const math::Vector2f& extent);
             void Leave( Level* level );
 
 

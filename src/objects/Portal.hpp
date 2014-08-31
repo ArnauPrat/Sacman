@@ -22,18 +22,16 @@
 namespace sacman {
     class Portal : public Entity {
         public:
-            Portal( const char* name, 
-                    const char* targetLevel, 
-                    const math::Vector2f& targetPosition,
-                    const math::Vector2f& position, 
-                    const math::Vector2f& extent );
+            Portal(const char* name,
+                const char* targetLevel,
+                const math::Vector2f& targetPosition);
             ~Portal();
 
             void Draw( const double elapsedTime, const int depth ) const ;
             void DrawShape( const double elapsedTime, const int depth ) const;
             void Update( const double elapsedTime );
             void LoadTexture( const char* textureName, const math::Vector2f texCoords[4] );
-            void Enter( Level* level );
+            void Enter(Level* level, const math::Vector2f position, const math::Vector2f& extent);
             void Leave( Level* level );
 
             virtual math::Vector2f Position() const;
@@ -43,8 +41,6 @@ namespace sacman {
 
         private:
             static const char*      m_Type;
-            math::Vector2f          m_Position;
-            math::Vector2f          m_Scale;
             dali::Texture*          m_Texture;
             dali::Vector2fBuffer    m_TexCoords;
             char                    m_TargetLevel[LEVEL_NAME_LENGTH];

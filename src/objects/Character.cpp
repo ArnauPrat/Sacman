@@ -21,16 +21,14 @@ namespace sacman {
     const char* Character::m_Type = "character";
 
     Character::Character( const char* name, 
-                          const char* spriteName, 
-                          const math::Vector2f& position, 
-                          const math::Vector2f& extent ) :
+                          const char* spriteName) :
         Entity( name ),
         m_SpriteRenderer( NULL ),  
-        m_Body( "", E_DYNAMIC, {position.m_X, position.m_Y} ), 
+        m_Body( "", E_DYNAMIC ), 
         m_CurrentState(E_STAND),
         m_PreviousState(E_RIGHT),
-        m_IsGrounded(true),
-        m_Extent( extent )  {
+        m_IsGrounded(true)
+        {
             dali::Sprite* sprite = dali::spriteLoader.Load( spriteName );
             m_SpriteRenderer = new dali::SpriteRenderer( *sprite );
 
@@ -42,9 +40,7 @@ namespace sacman {
 
     void Character::Draw( const double elapsedTime, const int depth ) const {
         math::Vector2f position = m_Body.Position();
-        //math::Vector2f extent = m_Body.Extent();
         math::Vector2f extent = m_Extent;
-//        std::cout << extent.m_X << " " << extent.m_Y << std::endl;
         position.m_X -= extent.m_X;
         position.m_Y -= extent.m_Y;
         extent.m_X *=2.0f;
@@ -77,8 +73,9 @@ namespace sacman {
         }
     }
 
-    void Character::Enter( Level* level ) {
-        m_Body.Enter( level );
+    void Character::Enter(Level* level, const math::Vector2f position, const math::Vector2f& extent) {
+        m_Extent = extent;
+        m_Body.Enter( level, position, extent );
         m_Body.AddBox( {0.0f, 0.0f}, m_Extent, E_SOLID );  
         m_Body.AddBox( {0.0f, -m_Extent.m_Y}, { 0.3f, 0.1f }, E_SENSOR, this );  
         level->RegisterListener(KEYBOARD, std::bind(&Character::ListenKeyboard,this,std::placeholders::_1) );

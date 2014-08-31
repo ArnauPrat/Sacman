@@ -51,8 +51,8 @@
                  "type":"character",
                  "visible":true,
                  "width":70,
-                 "x":3080,
-                 "y":910
+                 "x":2590,
+                 "y":1960
                 }, 
                 {
                  "gid":82,
@@ -251,6 +251,20 @@
                  "width":490,
                  "x":3500,
                  "y":350
+                }, 
+                {
+                 "gid":98,
+                 "height":0,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "type":"occluder",
+                 "visible":true,
+                 "width":0,
+                 "x":2450,
+                 "y":2030
                 }],
          "opacity":1,
          "type":"objectgroup",

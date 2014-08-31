@@ -19,6 +19,7 @@
 #include "objects/Character.hpp"
 #include "objects/Portal.hpp"
 #include "objects/Body.hpp"
+#include "objects/Occluder.hpp"
 #include <cstring>
 #include <functional>
 
@@ -176,8 +177,8 @@ namespace sacman {
 
     }
 
-    void Level::Insert( Entity* entity ) {
-        entity->Enter(this);
+    void Level::Insert( Entity* entity, math::Vector2f& position, math::Vector2f& extent ) {
+        entity->Enter(this, position, extent );
         m_Entities.push_back(entity);
     }
 
@@ -216,9 +217,9 @@ namespace sacman {
         }
         position.m_X+=extent.m_X;
         position.m_Y+=extent.m_Y;
-        Character* character = new Character(object.m_Name, "character.sprite", position, extent );
+        Character* character = new Character(object.m_Name, "character.sprite");
         character->SetDepth(2);
-        Insert(character);
+        Insert(character, position, extent );
     }
 
     void Level::LoadPortal( const TiledLevel& tiledLevel, const TiledObject& object ) {
@@ -237,7 +238,7 @@ namespace sacman {
         math::Vector2f targetPosition = {0.0f, 0.0f};
         if( x ) targetPosition.m_X = static_cast<float>(atof(x));
         if( y ) targetPosition.m_Y = static_cast<float>(atof(y));
-        Portal* portal = new Portal(object.m_Name, targetLevel, targetPosition, position, extent );
+        Portal* portal = new Portal(object.m_Name, targetLevel, targetPosition );
         if( object.m_TileId > 0 ) {
             math::Vector2f texCoords[4];
             TiledTileSet& tileSet = tiledLevel.m_TileSets[FindTileSet( tiledLevel, object.m_TileId )];
@@ -253,7 +254,7 @@ namespace sacman {
             texCoords[3].m_Y = max.m_Y;
             portal->LoadTexture( tileSet.m_ImageName, texCoords );
         }
-        Insert(portal);
+        Insert(portal, position, extent );
     }
 
     void Level::LoadBox( const TiledLevel& tiledLevel, const TiledObject& object ) {
@@ -266,9 +267,32 @@ namespace sacman {
         }
         position.m_X+=extent.m_X;
         position.m_Y+=extent.m_Y;
-        Body* body = new Body( object.m_Name, E_STATIC, {position.m_X, position.m_Y} );
-        Insert(body);
+        Body* body = new Body( object.m_Name, E_STATIC);
+        Insert(body, position, extent );
         body->AddBox({0.0f, 0.0f}, extent, E_SOLID);
+    }
+
+    void Level::LoadOccluder( const TiledLevel& tiledLevel, const TiledObject& object ) {
+        if (object.m_TileId > 0) {
+            math::Vector2f position = TransformPosition(tiledLevel, object.m_X, object.m_Y + object.m_Height);
+            math::Vector2f extent = { 0.5f, 0.5f };
+            position.m_X += extent.m_X;
+            position.m_Y += extent.m_Y;
+            math::Vector2f texCoords[4];
+            TiledTileSet& tileSet = tiledLevel.m_TileSets[FindTileSet( tiledLevel, object.m_TileId )];
+            math::Vector2f min = MinTexCoord( tileSet, object.m_TileId );  
+            math::Vector2f max = MaxTexCoord( tileSet, object.m_TileId );  
+            texCoords[0].m_X = min.m_X;
+            texCoords[0].m_Y = min.m_Y;
+            texCoords[1].m_X = max.m_X;
+            texCoords[1].m_Y = min.m_Y;
+            texCoords[2].m_X = max.m_X;
+            texCoords[2].m_Y = max.m_Y;
+            texCoords[3].m_X = min.m_X;
+            texCoords[3].m_Y = max.m_Y;
+            Occluder* occluder = new Occluder( object.m_Name, tileSet.m_ImageName, texCoords );
+            Insert(occluder, position, extent);
+        }
     }
 
     void Level::LoadLevel( const char* fileName ) {
@@ -285,6 +309,8 @@ namespace sacman {
                         LoadPortal( *tiledLevel, object );
                     } else if( std::strcmp(object.m_Type, "box") == 0 ) {
                         LoadBox( *tiledLevel, object );
+                    } else if( std::strcmp(object.m_Type, "occluder") == 0 ) {
+                        LoadOccluder( *tiledLevel, object );
                     }
                 }
             }

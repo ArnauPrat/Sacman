@@ -11,56 +11,36 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
-#ifndef SACMAN_BODY_H
-#define SACMAN_BODY_H
+#ifndef SACMAN_STATICSPRITE_H
+#define SACMAN_STATICSPRITE_H
 
-#include "Level.hpp"
-#include "Entity.hpp"
-#include "math/Types.hpp"
-#include <Box2D/Box2D.h>
+#include "objects/Entity.hpp"
+#include "dali/Buffer.hpp"
+#include "dali/Texture.hpp"
 
 namespace sacman {
 
-    enum BodyType{
-        E_STATIC,
-        E_DYNAMIC
-    };
-
-    enum BoxType {
-        E_SOLID,
-        E_SENSOR
-    };
-
-    class Body : public Entity {
+    class StaticSprite : public Entity {
         public:
-            Body( const char* name, 
-                 const BodyType type );
-
-            ~Body();
+            StaticSprite(const char* name, const char* textureName, const math::Vector2f texCoords[4] );
+            ~StaticSprite();
 
             math::Vector2f Position() const ;
             math::Vector2f Extent() const ;
             void SetPosition( const math::Vector2f& position );
             const char* Type() const;
+            void Draw( const double elapsedTime, const int depth ) const;
             void DrawShape( const double elapsedTime, const int depth ) const;
             void Enter(Level* level, const math::Vector2f position, const math::Vector2f& extent);
             void Leave( Level* level );
-            void Move( const float speed );
-            void ApplyForce( const math::Vector2f& force );
-            void AddBox( const math::Vector2f& position, 
-                         const math::Vector2f extent, 
-                         const BoxType boxType,
-                         void* userData = NULL );
-
 
         private:
             static const char*                  m_Type;
-            b2Body*                             m_Body;
-            std::vector<b2Fixture*>             m_Fixtures;
-            BodyType                            m_BodyType;
+            dali::Vector2fBuffer                m_TexCoords;
+            dali::Texture*                      m_Texture;
             math::Vector2f                      m_Position;
+            math::Vector2f                      m_Extent;
     };
 }
 
 #endif
-

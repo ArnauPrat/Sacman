@@ -20,18 +20,16 @@ namespace sacman {
     const char* Body::m_Type = "body";
 
     Body::Body( const char* name,
-            const BodyType bodyType,
-            const math::Vector2f& position ) :
+            const BodyType bodyType) :
         Entity( name ),
         m_BodyType( bodyType )
     {
-        m_Position = position;
     }
 
     Body::~Body() {
     }
 
-    void Body::Enter( Level* level ) {
+    void Body::Enter(Level* level, const math::Vector2f position, const math::Vector2f& extent) {
         b2BodyDef bodyDef;
         switch(m_BodyType) {
             case E_DYNAMIC:
@@ -42,7 +40,7 @@ namespace sacman {
                 break;
         }
 
-        bodyDef.position.Set( m_Position.m_X, m_Position.m_Y );
+        bodyDef.position.Set( position.m_X, position.m_Y );
         m_Body = level->B2World().CreateBody(&bodyDef);
     }
 

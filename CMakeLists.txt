@@ -14,6 +14,8 @@ ENDIF( UNIX )
 IF( WIN32 )
 	SET(CMAKE_CXX_FLAGS_DEBUG "/Od /openmp /W3 /Zi")	
 	SET(CMAKE_CXX_FLAGS_RELEASE "/O2 /openmp /Oi /Ot /W3")	
+	SET(CMAKE_EXE_LINKER_FLAGS_DEBUG "/LTCG")	
+	SET(CMAKE_EXE_LINKER_FLAGS_RELEASE "/LTCG")	
 	IF( ${CMAKE_SIZEOF_VOID_P} EQUAL 4)
 		MESSAGE( FATAL_ERROR "Win32 is Unsupported" )
 	ENDIF( ${CMAKE_SIZEOF_VOID_P} EQUAL 4)
@@ -81,6 +83,10 @@ SET( SOURCE_FILES
 		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Portal.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Body.hpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Body.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Occluder.hpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Occluder.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/StaticSprite.hpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/StaticSprite.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
  )
 

@@ -42,7 +42,7 @@ namespace sacman {
     void Entity::Collide( const Collision& collision ) {
     }
 
-    void Entity::Enter( Level* level ) {
+    void Entity::Enter(Level* level, const math::Vector2f position, const math::Vector2f& extent) {
     }
 
     void Entity::Leave( Level* level ) {

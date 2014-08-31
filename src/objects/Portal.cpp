@@ -21,15 +21,11 @@ namespace sacman {
 
     Portal::Portal( const char* name, 
                     const char* targetLevel,
-                    const math::Vector2f& targetPosition,
-                    const math::Vector2f& position, 
-                    const math::Vector2f& extent ) :
+                    const math::Vector2f& targetPosition) :
         Entity( name ),
-        m_Position( position ),
-        m_Scale( extent ),
         m_Texture( NULL ),
         m_TargetPosition( targetPosition ),
-        m_Body("",E_STATIC, position )
+        m_Body("",E_STATIC )
     {
         if( targetLevel ) {
             assert(std::strlen(targetLevel) < LEVEL_NAME_LENGTH); 
@@ -62,9 +58,9 @@ namespace sacman {
     void Portal::Update( const double elapsedTime ) {
     }
 
-    void Portal::Enter( Level* level ) {
-        m_Body.Enter( level );
-        m_Body.AddBox({0.0f, 0.0f}, m_Scale, E_SENSOR);
+    void Portal::Enter(Level* level, const math::Vector2f position, const math::Vector2f& extent) {
+        m_Body.Enter( level, position, extent );
+        m_Body.AddBox({0.0f, 0.0f}, extent, E_SENSOR);
     }
 
     void Portal::Leave( Level* level ) {
