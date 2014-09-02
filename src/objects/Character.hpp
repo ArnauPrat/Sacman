@@ -29,6 +29,7 @@ namespace sacman {
         E_LEFT  = 0x2,
         E_JUMP  = 0x4,
         E_STAND = 0x8,
+        E_OCCLUDER = 0x10,
     };
     class Character : public Entity {
         public:

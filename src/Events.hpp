@@ -24,6 +24,7 @@ namespace sacman {
         K_LEFT,
         K_RIGHT,
         K_SPACE,
+        K_E,
         K_ESC
     };
 

@@ -75,10 +75,11 @@ namespace sacman {
             /** @brief Processes the level events.**/
             void ProcessEvents();
 
-            void LoadCharacter( const TiledLevel& level, const TiledObject& object );
-            void LoadPortal( const TiledLevel& level, const TiledObject& object );
-            void LoadBox( const TiledLevel& level, const TiledObject& object );
-            void LoadOccluder(const TiledLevel& tiledLevel, const TiledObject& object);
+            Entity* LoadCharacter( const TiledLevel& level, const TiledObject& object );
+            Entity* LoadPortal( const TiledLevel& level, const TiledObject& object );
+            Entity* LoadBox( const TiledLevel& level, const TiledObject& object );
+            Entity* LoadOccluder(const TiledLevel& tiledLevel, const TiledObject& object);
+            
 
             /** @brief Loads a level from a file.
              *  @param fileName The level's file name .*/

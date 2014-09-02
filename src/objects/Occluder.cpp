@@ -49,13 +49,13 @@ namespace sacman {
     }
 
     void Occluder::DrawShape(const double elapsedTime, const int depth) const {
-        m_Sprite.DrawShape(elapsedTime, depth);
         m_Body.DrawShape(elapsedTime, depth);
     }
 
     void Occluder::Enter(Level* level, const math::Vector2f position, const math::Vector2f& extent) {
         m_Sprite.Enter(level, position, extent);
         m_Body.Enter( level, position, extent );
+        m_Body.AddBox({ 0.0f, 0.0f }, extent, E_SENSOR, this);
     }
 
     void Occluder::Leave(Level* level) {

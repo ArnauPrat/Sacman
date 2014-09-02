@@ -20,7 +20,7 @@ namespace sacman {
     EntityId Entity::m_CurrentId = 0;
 
     Entity::Entity( const char* name ) :
-        m_Depth(0)
+        m_Depth(256)
      {
         assert(std::strlen(name) < ENTITY_NAME_LENGTH);
         std::strcpy( m_Name, name );

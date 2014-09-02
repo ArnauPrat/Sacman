@@ -42,19 +42,6 @@
                  "y":1820
                 }, 
                 {
-                 "height":70,
-                 "name":"character",
-                 "properties":
-                    {
-                     "prova":"prova"
-                    },
-                 "type":"character",
-                 "visible":true,
-                 "width":70,
-                 "x":2590,
-                 "y":1960
-                }, 
-                {
                  "gid":82,
                  "height":0,
                  "name":"",
@@ -253,7 +240,7 @@
                  "y":350
                 }, 
                 {
-                 "gid":98,
+                 "gid":67,
                  "height":0,
                  "name":"",
                  "properties":
@@ -263,8 +250,32 @@
                  "type":"occluder",
                  "visible":true,
                  "width":0,
-                 "x":2450,
+                 "x":2310,
                  "y":2030
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":96,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "height":32,
+         "name":"Movables",
+         "objects":[
+                {
+                 "height":70,
+                 "name":"character",
+                 "properties":
+                    {
+                     "prova":"prova"
+                    },
+                 "type":"character",
+                 "visible":true,
+                 "width":70,
+                 "x":2590,
+                 "y":1960
                 }],
          "opacity":1,
          "type":"objectgroup",

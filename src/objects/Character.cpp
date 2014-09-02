@@ -66,10 +66,20 @@ namespace sacman {
     }
 
     void Character::Collide( const Collision& collision ) {
+
         if( std::strcmp(collision.m_Entity->Type(), "body" ) == 0 )  {
             m_IsGrounded = collision.m_Type == E_ENTER ? true : false;
             if( m_IsGrounded ) m_CurrentState &= ~E_JUMP;
-//            std::cout << "IS GROUNDED: " << m_IsGrounded << std::endl;
+            return;
+        }
+
+        if (std::strcmp(collision.m_Entity->Type(), "occluder") == 0)  {
+            if (collision.m_Type == E_ENTER && collision.m_Entity->Depth() == (Depth() - 1) )  m_CurrentState |= E_OCCLUDER;
+            if (collision.m_Type == E_LEAVE){
+                if( !(m_CurrentState & E_OCCLUDER) && collision.m_Entity->Depth() > Depth() ) SetDepth(collision.m_Entity->Depth()+1);
+                m_CurrentState &= ~E_OCCLUDER;
+            }
+            return;
         }
     }
 
@@ -127,6 +137,12 @@ namespace sacman {
                     if(m_IsGrounded && ((m_CurrentState & E_JUMP) == 0 )) {
                         m_Body.ApplyForce({0.0f,9.0f});
                         m_CurrentState |= E_JUMP;
+                    }
+                    break;
+                case K_E:
+                    if (m_CurrentState & E_OCCLUDER) {
+                        SetDepth(Depth() - 2);
+                        m_CurrentState &= ~E_OCCLUDER;
                     }
                     break;
                 default:

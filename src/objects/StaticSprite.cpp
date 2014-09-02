@@ -53,7 +53,7 @@ namespace sacman {
     }
 
     void StaticSprite::DrawShape(const double elapsedTime, const int depth) const {
-        Context::m_Renderer.DrawBox({ m_Position.m_X - m_Extent.m_X, m_Position.m_Y - m_Extent.m_Y }, { m_Extent.m_X*2.0f, m_Extent.m_Y*2.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, 256);
+//        Context::m_Renderer.DrawBox({ m_Position.m_X - m_Extent.m_X, m_Position.m_Y - m_Extent.m_Y }, { m_Extent.m_X*2.0f, m_Extent.m_Y*2.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, 256);
     }
 
     void StaticSprite::Enter(Level* level, const math::Vector2f position, const math::Vector2f& extent) {
