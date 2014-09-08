@@ -23,7 +23,7 @@
 namespace dali {
 
     bool   Sprite::m_Initialized = false;
-    Vector2fBuffer    Sprite::m_Vertices;
+    VertexBuffer    Sprite::m_Vertices;
     IndexBuffer       Sprite::m_Indices;
      
 

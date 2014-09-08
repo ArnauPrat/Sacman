@@ -98,8 +98,8 @@ namespace sacman {
             collisionB.m_Entity = entityA;
             entityB->Collide( collisionB );
         }
-        if (entityA) std::cout << entityA->Type() << std::endl;
-        if (entityB) std::cout << entityB->Type() << std::endl;
+//        if (entityA) std::cout << entityA->Type() << std::endl;
+ //       if (entityB) std::cout << entityB->Type() << std::endl;
     }
 
     void Level::EndContact(b2Contact* contact) {

@@ -33,6 +33,7 @@ INCLUDE_DIRECTORIES( ${LIB_DIR}/freeimage/include )
 
 SET( SOURCE_FILES 
     ${LIB_DIR}/jsoncpp/jsoncpp.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Buffer.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Effect.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Effect.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Globals.hpp

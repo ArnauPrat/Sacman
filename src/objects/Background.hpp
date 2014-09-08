@@ -24,33 +24,31 @@ namespace sacman {
     class Background : public Entity {
 
         struct Chunk {
-            dali::Vector2fBuffer m_Vertices;
-            dali::Vector2fBuffer m_TexCoords;
-            dali::IndexBuffer    m_Indices;
-            dali::Texture*       m_Texture;
-            int                  m_Depth;
-            math::Vector2f       m_Min;
-            math::Vector2f       m_Max;
+            dali::VertexBuffer      m_Vertices;
+            dali::TexCoordBuffer    m_TexCoords;
+            dali::IndexBuffer       m_Indices;
+            dali::Texture*          m_Texture;
+            int                     m_Depth;
+            math::Vector2f          m_Min;
+            math::Vector2f          m_Max;
         };
 
         public:
             Background( const char* name );
             ~Background();
             
-            void Load( const TiledLevel& tiledLevel );
-
-            void Draw( const double elapsedTime, const int depth );
-
-            math::Vector2f Position() const;
-            void SetPosition( const math::Vector2f& position );
-            math::Vector2f Extent() const;
-            const char* Type() const;
+            void                    Load( const TiledLevel& tiledLevel );
+            void                    Draw( const double elapsedTime, const int depth );
+            math::Vector2f          Position() const;
+            void                    SetPosition( const math::Vector2f& position );
+            math::Vector2f          Extent() const;
+            const char*             Type() const;
 
         private:
-            static const char* m_Type;
-            std::vector<Chunk*> m_Chunks;
-            math::Vector2f      m_Min;
-            math::Vector2f      m_Max;
+            static const char*      m_Type;
+            std::vector<Chunk*>     m_Chunks;
+            math::Vector2f          m_Min;
+            math::Vector2f          m_Max;
     };
 }
 

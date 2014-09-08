@@ -24,13 +24,22 @@
 
 namespace sacman {
     class Level;
-    enum MovementState {
+/*    enum MovementState {
         E_RIGHT = 0x1,
         E_LEFT  = 0x2,
         E_JUMP  = 0x4,
         E_STAND = 0x8,
         E_OCCLUDER = 0x10,
+    };*/
+
+    struct MovementState {
+        bool m_Right : 1;
+        bool m_Left : 1;
+        bool m_Jump : 1;
+        bool m_Stand : 1;
+        bool m_Occluder : 1;
     };
+
     class Character : public Entity {
         public:
             Character( const char* name, const char* spriteName );
@@ -58,10 +67,11 @@ namespace sacman {
             void ListenKeyboard( std::shared_ptr<void> data );
             dali::SpriteRenderer*   m_SpriteRenderer;
             Body                    m_Body;
-            int                     m_CurrentState;
-            int                     m_PreviousState;
+            MovementState           m_CurrentState;
+            MovementState           m_PreviousState;
             bool                    m_IsGrounded;
             math::Vector2f          m_Extent;
+            int                     m_OccluderDepth;
     };
 }
 

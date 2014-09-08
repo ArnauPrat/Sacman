@@ -99,7 +99,6 @@ namespace dali {
         indices[4] = 2;
         indices[5] = 3;
         m_Indices.AddData(indices, 6);
-
     }
 
     void Renderer::ShutDown() {
@@ -115,26 +114,48 @@ namespace dali {
         return a.m_Depth < b.m_Depth;
     }
 
+    bool Renderer::InsideFrustrum(const Renderer::DrawingInfo& info) {
+        math::Vector2f realMin = { info.m_Vertices->m_AABBMin.m_X * info.m_Scale.m_X + info.m_Translate.m_X,
+                                   info.m_Vertices->m_AABBMin.m_Y*info.m_Scale.m_Y + info.m_Translate.m_Y };
+        math::Vector2f realMax = { info.m_Vertices->m_AABBMax.m_X * info.m_Scale.m_X + info.m_Translate.m_X,
+                                   info.m_Vertices->m_AABBMax.m_Y*info.m_Scale.m_Y + info.m_Translate.m_Y };
+        math::Vector2f realCenter = { (realMax.m_X - realMin.m_X) / 2.0f + realMin.m_X, (realMax.m_Y - realMin.m_Y) / 2.0f + realMin.m_Y };
+        float tx = std::abs(realCenter.m_X - m_FrustrumCenter.m_X);
+        if (tx > std::abs((realCenter.m_X - realMin.m_X) - (m_FrustrumCenter.m_X - m_FrustrumMin.m_X))) {
+            std::cout << tx << " " << realCenter.m_X << " " << m_FrustrumCenter.m_X << std::endl;
+            return false;
+        }
+
+        float ty = std::abs(realCenter.m_Y - m_FrustrumCenter.m_Y);
+        if (ty > std::abs((realCenter.m_Y - realMin.m_Y) - (m_FrustrumCenter.m_Y - m_FrustrumMin.m_Y))) {
+            return false;
+        }
+        return true;
+    }
+
+
     void Renderer::EndFrame() {
         std::sort(m_FrameDrawingInfo.begin(), m_FrameDrawingInfo.end(), SortByDepth);
         int size = static_cast<int>(m_FrameDrawingInfo.size());
         for (int i = 0; i < size; ++i) {
             m_CurrentInfo = &m_FrameDrawingInfo[i];
-            glPolygonMode(GL_FRONT, m_CurrentInfo->m_PolygonMode);
-            Effect::SetEffect(*m_CurrentInfo->m_Effect);
-            glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_Vertices->m_Data);
-            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
-            glEnableVertexAttribArray(0);
+            if (InsideFrustrum(*m_CurrentInfo)) {
+                glPolygonMode(GL_FRONT, m_CurrentInfo->m_PolygonMode);
+                Effect::SetEffect(*m_CurrentInfo->m_Effect);
+                glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_Vertices->m_Data);
+                glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+                glEnableVertexAttribArray(0);
 
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_CurrentInfo->m_Indices->m_Data);
-            glDrawElements(GL_TRIANGLES, m_CurrentInfo->m_Indices->m_NumElements, GL_UNSIGNED_SHORT, 0);
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_CurrentInfo->m_Indices->m_Data);
+                glDrawElements(GL_TRIANGLES, m_CurrentInfo->m_Indices->m_NumElements, GL_UNSIGNED_SHORT, 0);
 
-            glDisableVertexAttribArray(1);
-            glDisableVertexAttribArray(0);
+                glDisableVertexAttribArray(1);
+                glDisableVertexAttribArray(0);
+            }
         }
     }
 
-    void    Renderer::Draw(const Vector2fBuffer* vertices,
+    void    Renderer::Draw(const VertexBuffer* vertices,
         const Vector2fBuffer* texCoords,
         const IndexBuffer* indices,
         const Texture* texture,
@@ -143,8 +164,8 @@ namespace dali {
         const math::Vector2f& translate,
         const math::Vector2f& scale) {
         DrawingInfo info;
-        info.m_Vertices = const_cast<Vector2fBuffer*>(vertices);
-        info.m_TexCoords = const_cast<Vector2fBuffer*>(texCoords);
+        info.m_Vertices = const_cast<VertexBuffer*>(vertices);
+        info.m_TexCoords = const_cast<TexCoordBuffer*>(texCoords);
         info.m_Indices = const_cast<IndexBuffer*>(indices);
         info.m_Texture = const_cast<Texture*>(texture);
         info.m_Effect = m_Textured;
@@ -156,14 +177,14 @@ namespace dali {
         m_FrameDrawingInfo.push_back(info);
     }
 
-    void    Renderer::Draw(const Vector2fBuffer* texCoords,
+    void    Renderer::Draw(const TexCoordBuffer* texCoords,
         const Texture* texture,
         const int depth,
         const math::Vector2f& translate,
         const math::Vector2f& scale) {
         DrawingInfo info;
         info.m_Vertices = &m_Quad;
-        info.m_TexCoords = const_cast<Vector2fBuffer*>(texCoords);
+        info.m_TexCoords = const_cast<TexCoordBuffer*>(texCoords);
         info.m_Indices = &m_Indices;
         info.m_Texture = const_cast<Texture*>(texture);
         info.m_Effect = m_Textured;
@@ -204,8 +225,21 @@ namespace dali {
         m_ViewMatrix[2][0] = -position.m_X;
         m_ViewMatrix[2][1] = -position.m_Y;
         m_ViewMatrix[2][2] = 0.0f;
-    }
 
+        m_FrustrumCenter = { position.m_X, position.m_Y };
+        if (m_Config.m_RenderingMode == GRID_ALIGNED) {
+            m_FrustrumMin = { position.m_X - m_Config.m_GridWidth / 2.0f,
+                              position.m_Y - m_Config.m_GridHeight / 2.0f };
+            m_FrustrumMax = { position.m_X + m_Config.m_GridWidth / 2.0f,
+                              position.m_Y + m_Config.m_GridHeight / 2.0f };
+        }
+        else {
+            m_FrustrumMin = { position.m_X - m_Config.m_ViewportWidth / (2.0f*m_Config.m_CellWidth),
+                              position.m_Y - m_Config.m_ViewportHeight / (2.0f*m_Config.m_CellHeight) };
+            m_FrustrumMax = { position.m_X + m_Config.m_ViewportWidth / (2.0f*m_Config.m_CellWidth),
+                              position.m_Y + m_Config.m_ViewportHeight / (2.0f*m_Config.m_CellHeight) };
+        }
+    }
 
     void Renderer::InitOpenGL() {
         GLuint err = glewInit();

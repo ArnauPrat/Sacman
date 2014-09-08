@@ -16,14 +16,13 @@
 
 #include <GL/glew.h>
 #include <cassert>
+#include <cfloat>
 #include <math/Types.hpp>
 
 namespace dali {
     template <class T, GLenum BufferType >
         class Buffer {
-            friend class Renderer;
             public:
-
             Buffer() :
                 m_Data( GL_INVALID_VALUE ),
                 m_NumElements( 0 ) {
@@ -48,19 +47,34 @@ namespace dali {
                 glBindBuffer( BufferType, 0 );
             }
 
-            private:
-
-
-            Buffer<T, BufferType>& operator=( const Buffer<T, BufferType>& buffer ) {
+/*            Buffer<T, BufferType>& operator=( const Buffer<T, BufferType>& buffer ) {
                 return *this;
             }
+            */
             
-
             GLuint m_Data;
             int    m_NumElements;
         }; 
 
     typedef Buffer<math::Vector2f, GL_ARRAY_BUFFER> Vector2fBuffer;
+    typedef Buffer<math::Vector2f, GL_ARRAY_BUFFER> TexCoordBuffer;
     typedef Buffer<unsigned short, GL_ELEMENT_ARRAY_BUFFER> IndexBuffer;
+
+    class VertexBuffer : public Vector2fBuffer {
+    public:
+        void AddData(const math::Vector2f vertices[], const int numElements) {
+            Vector2fBuffer::AddData(vertices, numElements);
+            m_AABBMin = { FLT_MAX, FLT_MAX };
+            m_AABBMax = { -FLT_MAX, -FLT_MAX };
+            for (int i = 0; i < numElements; ++i) {
+                m_AABBMin.m_X = m_AABBMin.m_X > vertices[i].m_X ? vertices[i].m_X : m_AABBMin.m_X;
+                m_AABBMin.m_Y = m_AABBMin.m_Y > vertices[i].m_Y ? vertices[i].m_Y : m_AABBMin.m_Y;
+                m_AABBMax.m_X = m_AABBMax.m_X < vertices[i].m_X ? vertices[i].m_X : m_AABBMax.m_X;
+                m_AABBMax.m_Y = m_AABBMax.m_Y < vertices[i].m_Y ? vertices[i].m_Y : m_AABBMax.m_Y;
+            }
+        }
+        math::Vector2f      m_AABBMin;
+        math::Vector2f      m_AABBMax;
+    };
 }
 #endif

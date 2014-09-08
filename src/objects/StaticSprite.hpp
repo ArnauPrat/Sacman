@@ -36,7 +36,7 @@ namespace sacman {
 
         private:
             static const char*                  m_Type;
-            dali::Vector2fBuffer                m_TexCoords;
+            dali::TexCoordBuffer                m_TexCoords;
             dali::Texture*                      m_Texture;
             math::Vector2f                      m_Position;
             math::Vector2f                      m_Extent;

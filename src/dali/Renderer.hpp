@@ -28,17 +28,17 @@ namespace dali {
 	class Renderer {
 
 		struct DrawingInfo {
-			Vector2fBuffer* m_Vertices;
-			Vector2fBuffer* m_TexCoords;
-			IndexBuffer*    m_Indices;
-			Texture*        m_Texture;
-            void*           m_TexOffset;
-            Effect*         m_Effect;
-            int             m_Depth;
-            math::Vector2f  m_Translate;
-            math::Vector2f  m_Scale;
-            dali::RGBAColor m_ColorDiffuse;
-            GLenum          m_PolygonMode; 
+			VertexBuffer*       m_Vertices;
+			TexCoordBuffer*     m_TexCoords;
+			IndexBuffer*        m_Indices;
+			Texture*            m_Texture;
+            void*               m_TexOffset;
+            Effect*             m_Effect;
+            int                 m_Depth;
+            math::Vector2f      m_Translate;
+            math::Vector2f      m_Scale;
+            dali::RGBAColor     m_ColorDiffuse;
+            GLenum              m_PolygonMode; 
 		};
 
 		public:
@@ -60,8 +60,8 @@ namespace dali {
 		void            	EndFrame();
 
 
-		void                Draw( const Vector2fBuffer* vertices, 
-                                  const Vector2fBuffer* texCoords,
+		void                Draw( const VertexBuffer* vertices, 
+                                  const TexCoordBuffer* texCoords,
                                   const IndexBuffer* indices,
                                   const Texture* texture,
                                   const int depth,
@@ -69,7 +69,7 @@ namespace dali {
                                   const math::Vector2f& translate = {0.0f, 0.0f}, 
                                   const math::Vector2f& scale = {1.0f, 1.0f} );
 
-		void                Draw( const Vector2fBuffer* texCoords,
+		void                Draw( const TexCoordBuffer* texCoords,
                                   const Texture* texture,
                                   const int depth,
                                   const math::Vector2f& translate = {0.0f, 0.0f}, 
@@ -86,41 +86,49 @@ namespace dali {
 		private:
 
         /** @brief Used to sort drawing info structs.*/
-        static bool SortByDepth( const Renderer::DrawingInfo& a, const Renderer::DrawingInfo& b );
+        static bool                 SortByDepth( const Renderer::DrawingInfo& a, const Renderer::DrawingInfo& b );
+
+        /** @brief Tests if a Drawinginfo is inside the frustrum **/
+        bool                 InsideFrustrum(const Renderer::DrawingInfo& info);
 
 		/**	@brief Initializes OpenGL.*/
-		void InitOpenGL();
+		void                        InitOpenGL();
 
 		/** @brief Sets the projection for the grid aligned rendering mode.*/
-		void SetProjectionGridAligned();
+		void                        SetProjectionGridAligned();
 
 		/** @brief Sets the projection for the grid aligned rendering mode.*/
-		void SetProjectionPixelAligned();
+		void                        SetProjectionPixelAligned();
 
 		/** Matrices.*/
-		float   m_ProjectionMatrix[3][3];       /**< @brief The projection matrix used to render.*/
-		float   m_ViewMatrix[3][3];             /**< @brief The current view matrix.*/
-		float   m_ModelMatrix[3][3];            /**< @brief The current model matrix.*/
+		float                       m_ProjectionMatrix[3][3];       /**< @brief The projection matrix used to render.*/
+		float                       m_ViewMatrix[3][3];             /**< @brief The current view matrix.*/
+		float                       m_ModelMatrix[3][3];            /**< @brief The current model matrix.*/
+
+        /** Frustrum limits **/
+        math::Vector2f              m_FrustrumMin;
+        math::Vector2f              m_FrustrumMax;
+        math::Vector2f              m_FrustrumCenter;
 
 		/** Current rendering data */
-		DrawingInfo*	m_CurrentInfo;	    /**< @brief The current texture to use for rendering.*/
-		std::vector<DrawingInfo> m_FrameDrawingInfo;	/** @brief The drawing info objects to render this frame.*/
+		DrawingInfo*	            m_CurrentInfo;	    /**< @brief The current texture to use for rendering.*/
+		std::vector<DrawingInfo>    m_FrameDrawingInfo;	/** @brief The drawing info objects to render this frame.*/
 
 		/** Configuration. */
-		RendererConfig  m_Config;
+		RendererConfig              m_Config;
 
 		/** Resources. */
-		Effect*			        m_Textured;         /**< @brief The effect used to render textured quads.*/
-        Effect*                 m_Flat;             /**< @brief The effect used to print shapes with flat color such as boxes.*/
-        Vector2fBuffer          m_Quad;             /**< @brief The buffer id of a buffer containing a quad.*/
-        IndexBuffer             m_Indices;          /**< @brief The buffer id of a buffer containing indices.*/
+		Effect*			            m_Textured;         /**< @brief The effect used to render textured quads.*/
+        Effect*                     m_Flat;             /**< @brief The effect used to print shapes with flat color such as boxes.*/
+        VertexBuffer                m_Quad;             /**< @brief The buffer id of a buffer containing a quad.*/
+        IndexBuffer                 m_Indices;          /**< @brief The buffer id of a buffer containing indices.*/
 
 		/** Shader satate functions */
-		void ShaderSetProjectionMatrix( GLint pos );
-		void ShaderSetViewMatrix( GLint pos );
-		void ShaderSetModelMatrix( GLint pos );
-		void ShaderSetTexDiffuse( GLint pos );
-        void ShaderSetColorDiffuse( GLint pos);
+		void                        ShaderSetProjectionMatrix( GLint pos );
+		void                        ShaderSetViewMatrix( GLint pos );
+		void                        ShaderSetModelMatrix( GLint pos );
+		void                        ShaderSetTexDiffuse( GLint pos );
+        void                        ShaderSetColorDiffuse( GLint pos);
 	};
 }
 #endif
