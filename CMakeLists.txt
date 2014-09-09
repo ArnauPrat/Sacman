@@ -14,6 +14,8 @@ ENDIF( UNIX )
 IF( WIN32 )
 	SET(CMAKE_CXX_FLAGS_DEBUG "/Od /openmp /W3 /Zi")	
 	SET(CMAKE_CXX_FLAGS_RELEASE "/O2 /openmp /Oi /Ot /W3")	
+#	SET(CMAKE_EXE_LINKER_FLAGS_DEBUG "/LTCG")	
+#	SET(CMAKE_EXE_LINKER_FLAGS_RELEASE "/LTCG")	
 	IF( ${CMAKE_SIZEOF_VOID_P} EQUAL 4)
 		MESSAGE( FATAL_ERROR "Win32 is Unsupported" )
 	ENDIF( ${CMAKE_SIZEOF_VOID_P} EQUAL 4)
@@ -35,7 +37,8 @@ ENDIF( NOT PLATFORM )
 
 #DEFINITIONS
 ADD_DEFINITIONS(-DGLEW_STATIC
-                -DFREEIMAGE_LIB)
+                -DFREEIMAGE_LIB
+                -D_CRT_SECURE_NO_WARNINGS)
 
 SET(LIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib")
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modules")
@@ -59,19 +62,33 @@ INCLUDE_DIRECTORIES( ${DALI_INCLUDE_DIRS} )
 
 
 SET( SOURCE_FILES 
-
         ${LIB_DIR}/jsoncpp/jsoncpp.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/Events.hpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/Config.hpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/Config.cpp 
+		${CMAKE_CURRENT_SOURCE_DIR}/src/Context.hpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/Context.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/EventManager.hpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/EventManager.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/Level.hpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/Level.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/Tiled.hpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/Tiled.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Background.hpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Background.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Character.hpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Character.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Entity.hpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Entity.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Portal.hpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Portal.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Body.hpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Body.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Occluder.hpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Occluder.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/StaticSprite.hpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/StaticSprite.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
  )
 
 

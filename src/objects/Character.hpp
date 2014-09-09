@@ -22,25 +22,34 @@
 #include "objects/Body.hpp"
 #include <memory>
 
-
 namespace sacman {
     class Level;
-    enum MovementState {
+/*    enum MovementState {
         E_RIGHT = 0x1,
         E_LEFT  = 0x2,
         E_JUMP  = 0x4,
         E_STAND = 0x8,
+        E_OCCLUDER = 0x10,
+    };*/
+
+    struct MovementState {
+        bool m_Right : 1;
+        bool m_Left : 1;
+        bool m_Jump : 1;
+        bool m_Stand : 1;
+        bool m_Occluder : 1;
     };
+
     class Character : public Entity {
         public:
-            Character( const char* name, const char* spriteName, const math::Vector2f& position, const math::Vector2f& extent );
+            Character( const char* name, const char* spriteName );
             ~Character();
 
             void Draw( const double elapsedTime, const int depth ) const ;
             void DrawShape( const double elapsedTime, const int depth ) const;
             void Update( const double elapsedTime );
             void Collide( const Collision& collision );
-            void Enter( Level* level );
+            void Enter(Level* level, const math::Vector2f position, const math::Vector2f& extent);
             void Leave( Level* level );
 
 
@@ -58,10 +67,11 @@ namespace sacman {
             void ListenKeyboard( std::shared_ptr<void> data );
             dali::SpriteRenderer*   m_SpriteRenderer;
             Body                    m_Body;
-            int                     m_CurrentState;
-            int                     m_PreviousState;
+            MovementState           m_CurrentState;
+            MovementState           m_PreviousState;
             bool                    m_IsGrounded;
             math::Vector2f          m_Extent;
+            int                     m_OccluderDepth;
     };
 }
 

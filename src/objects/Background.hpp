@@ -16,41 +16,48 @@
 
 #include "dali/Buffer.hpp"
 #include "dali/Texture.hpp"
-#include <vector>
 #include "Entity.hpp"
+#include <vector>
 
 namespace sacman {
     struct TiledLevel;
+    struct TiledTileSet;
+    struct TiledCell;
+    struct TiledLayer;
     class Background : public Entity {
 
         struct Chunk {
-            dali::Vector2fBuffer m_Vertices;
-            dali::Vector2fBuffer m_TexCoords;
-            dali::IndexBuffer    m_Indices;
-            dali::Texture*       m_Texture;
-            int                  m_Depth;
-            math::Vector2f       m_Min;
-            math::Vector2f       m_Max;
+            dali::VertexBuffer      m_Vertices;
+            dali::TexCoordBuffer    m_TexCoords;
+            dali::IndexBuffer       m_Indices;
+            dali::Texture*          m_Texture;
+            int                     m_Depth;
+            math::Vector2f          m_Min;
+            math::Vector2f          m_Max;
         };
 
         public:
             Background( const char* name );
             ~Background();
             
-            void Load( const TiledLevel& tiledLevel );
-
-            void Draw( const double elapsedTime, const int depth );
-
-            math::Vector2f Position() const;
-            void SetPosition( const math::Vector2f& position );
-            math::Vector2f Extent() const;
-            const char* Type() const;
+            void                    Load( const TiledLevel& tiledLevel );
+            void                    Draw( const double elapsedTime, const int depth ) const;
+            void                    DrawShape(const double elapsedTime, const int depth) const;
+            math::Vector2f          Position() const;
+            void                    SetPosition( const math::Vector2f& position );
+            math::Vector2f          Extent() const;
+            const char*             Type() const;
 
         private:
-            static const char* m_Type;
-            std::vector<Chunk*> m_Chunks;
-            math::Vector2f      m_Min;
-            math::Vector2f      m_Max;
+
+            void                    LoadLayer(const TiledLevel& tiledLevel, const TiledLayer& layer );
+            void                    LoadChunk(const TiledLevel& tiledLevel, const TiledLayer& layer, const TiledTileSet& tileSet, const TiledCell cells[], const int numCells);
+            void                    Subdivide(const TiledLevel& tiledLevel, const TiledLayer& layer, const TiledTileSet& tileSet, const TiledCell cells[], const int numCells);
+
+            static const char*      m_Type;
+            std::vector<Chunk*>     m_Chunks;
+            math::Vector2f          m_Min;
+            math::Vector2f          m_Max;
     };
 }
 

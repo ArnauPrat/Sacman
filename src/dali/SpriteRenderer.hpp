@@ -46,8 +46,6 @@ namespace dali {
              *  @return True if it is running. False otherwise.*/
             bool IsAnimationRunning( const char* name );
 
-
-
         private:
             /** @brief Gets the index of an animation.
              *  @param name The name of the animation.

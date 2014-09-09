@@ -30,7 +30,7 @@ namespace sacman {
         bool parsedSuccess = reader.parse( str, root, false );
         if(!parsedSuccess) {
             std::cout << "Failed to parse Tiled .json file: " << fileName << std::endl 
-                << reader.getFormatedErrorMessages()
+                << reader.getFormattedErrorMessages()
                 << std::endl;
             assert(false);
         }
@@ -46,6 +46,7 @@ namespace sacman {
             const char* type = (*it)["type"].asCString();
             if( std::strcmp(type,"tilelayer") == 0 ) {
                 level->m_Layers[i].m_Type = TILE_LAYER;
+                level->m_Layers[i].m_Id = i;
                 const Json::Value& data = (*it)["data"];
                 int numFull = 0;
                 for( Json::Value::iterator it2 = data.begin(); it2 != data.end(); ++it2) {

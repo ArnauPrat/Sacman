@@ -39,7 +39,7 @@ namespace dali {
 
         void* frame = 0;
         if( m_AnimationRunning ) {
-            m_ElapsedTime += elapsedTime;
+            m_ElapsedTime += static_cast<float>(elapsedTime);
             if( m_ElapsedTime >= m_TotalTime && !m_Loop ) { 
                 m_ElapsedTime = 0;
                 m_TotalTime = 1.0;  
@@ -56,7 +56,7 @@ namespace dali {
 
     void SpriteRenderer::LaunchAnimation( const char* name, double totalTime, bool loop ) {
         m_AnimationIndex = GetAnimationIndex( name );
-        m_TotalTime = totalTime;
+        m_TotalTime = static_cast<float>(totalTime);
         m_ElapsedTime = 0.0;
         m_Loop = loop;
         m_AnimationRunning = true;

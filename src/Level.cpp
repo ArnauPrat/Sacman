@@ -19,6 +19,7 @@
 #include "objects/Character.hpp"
 #include "objects/Portal.hpp"
 #include "objects/Body.hpp"
+#include "objects/Occluder.hpp"
 #include <cstring>
 #include <functional>
 
@@ -71,6 +72,9 @@ namespace sacman {
                     case SDLK_RIGHT:
                         kEvent->m_KCode = K_RIGHT;
                         break;
+                    case SDLK_e:
+                        kEvent->m_KCode = K_E;
+                        break;
                     case SDLK_SPACE:
                         kEvent->m_KCode = K_SPACE;
                         break;
@@ -94,6 +98,8 @@ namespace sacman {
             collisionB.m_Entity = entityA;
             entityB->Collide( collisionB );
         }
+//        if (entityA) std::cout << entityA->Type() << std::endl;
+ //       if (entityB) std::cout << entityB->Type() << std::endl;
     }
 
     void Level::EndContact(b2Contact* contact) {
@@ -121,8 +127,6 @@ namespace sacman {
     void Level::Draw( const double elapsedTime ) {
         Entity* character = GetEntity("character");
         if( character ) {
-//            std::cout << levelCenter.m_X << " " << levelCenter.m_Y << std::endl;
- //           std::cout << levelExtent.m_X << " " << levelExtent.m_Y << std::endl;
             Config config = Context::GetConfig();
             math::Vector2f frustrumExtent;
             if( config.m_RendererConfig.m_RenderingMode == dali::PIXEL_ALIGNED ) {
@@ -132,7 +136,6 @@ namespace sacman {
                 frustrumExtent.m_X = config.m_RendererConfig.m_GridWidth / 2.0f;
                 frustrumExtent.m_Y = config.m_RendererConfig.m_GridHeight / 2.0f;
             }
-//            std::cout << frustrumExtent.m_X << " " << frustrumExtent.m_Y << std::endl;
             math::Vector2f levelCenter = m_Background.Position();
             math::Vector2f levelExtent = m_Background.Extent();
             math::Vector2f levelLowerLeft = {levelCenter.m_X - levelExtent.m_X, levelCenter.m_Y - levelExtent.m_Y};
@@ -143,15 +146,9 @@ namespace sacman {
             math::Vector2f lowerLeft = {levelCenter.m_X - levelExtent.m_X + frustrumExtent.m_X, levelCenter.m_Y - levelExtent.m_Y + frustrumExtent.m_Y};
             math::Vector2f upperRight = {levelCenter.m_X + levelExtent.m_X - frustrumExtent.m_X, levelCenter.m_Y + levelExtent.m_Y - frustrumExtent.m_Y};
             math::Vector2f cameraPosition = character->Position();
-            //std::cout << "level center: " << levelCenter.m_X << " " << levelCenter.m_Y << std::endl;
-            //std::cout << "frustrum: " << frustrumExtent.m_X << " " << frustrumExtent.m_Y << std::endl;
-            //std::cout << "lower: " << lowerLeft.m_X << " " << lowerLeft.m_Y << std::endl;
-            //std::cout << "upper: " << upperRight.m_X << " " << upperRight.m_Y << std::endl;
             cameraPosition.m_X = cameraPosition.m_X < lowerLeft.m_X ? lowerLeft.m_X : cameraPosition.m_X;
             cameraPosition.m_X = cameraPosition.m_X > upperRight.m_X ? upperRight.m_X : cameraPosition.m_X;
             cameraPosition.m_Y = cameraPosition.m_Y < lowerLeft.m_Y ? lowerLeft.m_Y : cameraPosition.m_Y;
-//            cameraPosition.m_Y = cameraPosition.m_Y > upperRight.m_Y ? upperRight.m_Y : cameraPosition.m_Y;
-            //std::cout << "position: " << cameraPosition.m_X << " " << cameraPosition.m_Y << std::endl;
             Context::m_Renderer.SetCameraPosition( cameraPosition );
         }
 
@@ -162,8 +159,9 @@ namespace sacman {
     }
 
     void Level::DrawDebug( const double elapsedTime ) {
+        m_Background.DrawShape(elapsedTime, 256);
         for( Entity* e : m_Entities ) {
-            e->DrawShape( elapsedTime, 10);
+//            e->DrawShape( elapsedTime, 256);
         }
     }
 
@@ -176,8 +174,8 @@ namespace sacman {
 
     }
 
-    void Level::Insert( Entity* entity ) {
-        entity->Enter(this);
+    void Level::Insert( Entity* entity, math::Vector2f& position, math::Vector2f& extent ) {
+        entity->Enter(this, position, extent );
         m_Entities.push_back(entity);
     }
 
@@ -197,7 +195,7 @@ namespace sacman {
     void Level::SimulatePhysics( const double elapsedTime ) {
         m_PhysicsTime+=elapsedTime;
         while(m_PhysicsTime >= m_TimeStep ) {
-            m_B2World->Step(m_TimeStep, 6, 2);
+            m_B2World->Step(static_cast<float32>(m_TimeStep), 6, 2);
             m_PhysicsTime-=m_TimeStep;
         }
     }
@@ -206,7 +204,7 @@ namespace sacman {
         return *m_B2World;
     }
 
-    void Level::LoadCharacter( const TiledLevel& tiledLevel, const TiledObject& object ) {
+    Entity* Level::LoadCharacter( const TiledLevel& tiledLevel, const TiledObject& object ) {
         math::Vector2f position = TransformPosition( tiledLevel, object.m_X, object.m_Y+object.m_Height);
         math::Vector2f extent;
         if( object.m_TileId ) {
@@ -216,12 +214,13 @@ namespace sacman {
         }
         position.m_X+=extent.m_X;
         position.m_Y+=extent.m_Y;
-        Character* character = new Character(object.m_Name, "character.sprite", position, extent );
+        Character* character = new Character(object.m_Name, "character.sprite");
         character->SetDepth(2);
-        Insert(character);
+        Insert(character, position, extent );
+        return character;
     }
 
-    void Level::LoadPortal( const TiledLevel& tiledLevel, const TiledObject& object ) {
+    Entity* Level::LoadPortal( const TiledLevel& tiledLevel, const TiledObject& object ) {
         math::Vector2f position = TransformPosition( tiledLevel, object.m_X, object.m_Y+object.m_Height);
         math::Vector2f extent;
         if( object.m_TileId ) {
@@ -235,9 +234,9 @@ namespace sacman {
         const char* x = FindProperty(object,"target_x");
         const char* y = FindProperty(object,"target_y");
         math::Vector2f targetPosition = {0.0f, 0.0f};
-        if( x ) targetPosition.m_X = atof(x);
-        if( y ) targetPosition.m_Y = atof(y);
-        Portal* portal = new Portal(object.m_Name, targetLevel, targetPosition, position, extent );
+        if( x ) targetPosition.m_X = static_cast<float>(atof(x));
+        if( y ) targetPosition.m_Y = static_cast<float>(atof(y));
+        Portal* portal = new Portal(object.m_Name, targetLevel, targetPosition );
         if( object.m_TileId > 0 ) {
             math::Vector2f texCoords[4];
             TiledTileSet& tileSet = tiledLevel.m_TileSets[FindTileSet( tiledLevel, object.m_TileId )];
@@ -253,10 +252,11 @@ namespace sacman {
             texCoords[3].m_Y = max.m_Y;
             portal->LoadTexture( tileSet.m_ImageName, texCoords );
         }
-        Insert(portal);
+        Insert(portal, position, extent );
+        return portal;
     }
 
-    void Level::LoadBox( const TiledLevel& tiledLevel, const TiledObject& object ) {
+    Entity* Level::LoadBox( const TiledLevel& tiledLevel, const TiledObject& object ) {
         math::Vector2f position = TransformPosition( tiledLevel, object.m_X, object.m_Y+object.m_Height);
         math::Vector2f extent;
         if( object.m_TileId ) {
@@ -266,9 +266,35 @@ namespace sacman {
         }
         position.m_X+=extent.m_X;
         position.m_Y+=extent.m_Y;
-        Body* body = new Body( object.m_Name, E_STATIC, {position.m_X, position.m_Y} );
-        Insert(body);
+        Body* body = new Body( object.m_Name, E_STATIC);
+        Insert(body, position, extent );
         body->AddBox({0.0f, 0.0f}, extent, E_SOLID);
+        return body;
+    }
+
+    Entity* Level::LoadOccluder( const TiledLevel& tiledLevel, const TiledObject& object ) {
+        if (object.m_TileId > 0) {
+            math::Vector2f position = TransformPosition(tiledLevel, object.m_X, object.m_Y + object.m_Height);
+            math::Vector2f extent = { 0.5f, 0.5f };
+            position.m_X += extent.m_X;
+            position.m_Y += extent.m_Y;
+            math::Vector2f texCoords[4];
+            TiledTileSet& tileSet = tiledLevel.m_TileSets[FindTileSet( tiledLevel, object.m_TileId )];
+            math::Vector2f min = MinTexCoord( tileSet, object.m_TileId );  
+            math::Vector2f max = MaxTexCoord( tileSet, object.m_TileId );  
+            texCoords[0].m_X = min.m_X;
+            texCoords[0].m_Y = min.m_Y;
+            texCoords[1].m_X = max.m_X;
+            texCoords[1].m_Y = min.m_Y;
+            texCoords[2].m_X = max.m_X;
+            texCoords[2].m_Y = max.m_Y;
+            texCoords[3].m_X = min.m_X;
+            texCoords[3].m_Y = max.m_Y;
+            Occluder* occluder = new Occluder( object.m_Name, tileSet.m_ImageName, texCoords );
+            Insert(occluder, position, extent);
+        return occluder;
+        }
+        return NULL;
     }
 
     void Level::LoadLevel( const char* fileName ) {
@@ -279,13 +305,17 @@ namespace sacman {
                 TiledLayer& layer = tiledLevel->m_Layers[i];
                 for( int j = 0; j < layer.m_ObjectGroup.m_NumObjects; ++j ) {
                     TiledObject& object = layer.m_ObjectGroup.m_Objects[j];
+                    Entity* entity = NULL;
                     if( std::strcmp(object.m_Type, "character") == 0 ) {
-                        LoadCharacter( *tiledLevel, object );
+                        entity = LoadCharacter( *tiledLevel, object );
                     } else if( std::strcmp(object.m_Type, "portal") == 0 ) {
-                        LoadPortal( *tiledLevel, object );
+                        entity = LoadPortal( *tiledLevel, object );
                     } else if( std::strcmp(object.m_Type, "box") == 0 ) {
-                        LoadBox( *tiledLevel, object );
+                        entity = LoadBox( *tiledLevel, object );
+                    } else if( std::strcmp(object.m_Type, "occluder") == 0 ) {
+                        entity = LoadOccluder( *tiledLevel, object );
                     }
+                    if (entity) entity->SetDepth(i);
                 }
             }
         }

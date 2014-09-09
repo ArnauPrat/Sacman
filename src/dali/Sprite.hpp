@@ -41,9 +41,9 @@ namespace dali {
 
         private:
             static bool              m_Initialized;
-            static Vector2fBuffer    m_Vertices;
+            static VertexBuffer      m_Vertices;
             static IndexBuffer       m_Indices;
-            Vector2fBuffer           m_TexCoords;
+            TexCoordBuffer           m_TexCoords;
             Texture*                 m_Texture;
             std::vector<Animation> m_Animations;
     };

@@ -42,8 +42,10 @@ namespace sacman {
             /** @brief Updates the entities of the level.*/
             void Update( const double elapsedTime );
 
-            /** @brief Inserts an entity into the level. */
-            void Insert( Entity* entity );
+            /** @brief Inserts an entity into the level.
+             *  @param position The position to insert the entity to.
+             *  @param extent The extent of the entity.*/
+            void Insert(Entity* entity, math::Vector2f& position, math::Vector2f& extent);
 
             /** @brief Removes an entity from the level. */
             void Remove( Entity* entity );
@@ -73,9 +75,11 @@ namespace sacman {
             /** @brief Processes the level events.**/
             void ProcessEvents();
 
-            void LoadCharacter( const TiledLevel& level, const TiledObject& object );
-            void LoadPortal( const TiledLevel& level, const TiledObject& object );
-            void LoadBox( const TiledLevel& level, const TiledObject& object );
+            Entity* LoadCharacter( const TiledLevel& level, const TiledObject& object );
+            Entity* LoadPortal( const TiledLevel& level, const TiledObject& object );
+            Entity* LoadBox( const TiledLevel& level, const TiledObject& object );
+            Entity* LoadOccluder(const TiledLevel& tiledLevel, const TiledObject& object);
+            
 
             /** @brief Loads a level from a file.
              *  @param fileName The level's file name .*/

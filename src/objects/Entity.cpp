@@ -20,7 +20,7 @@ namespace sacman {
     EntityId Entity::m_CurrentId = 0;
 
     Entity::Entity( const char* name ) :
-        m_Depth(0)
+        m_Depth(256)
      {
         assert(std::strlen(name) < ENTITY_NAME_LENGTH);
         std::strcpy( m_Name, name );
@@ -42,7 +42,7 @@ namespace sacman {
     void Entity::Collide( const Collision& collision ) {
     }
 
-    void Entity::Enter( Level* level ) {
+    void Entity::Enter(Level* level, const math::Vector2f position, const math::Vector2f& extent) {
     }
 
     void Entity::Leave( Level* level ) {

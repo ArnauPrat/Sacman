@@ -11,11 +11,6 @@
  <objectgroup name="Object Layer 1" width="96" height="32">
   <object type="box" x="0" y="2030" width="6720" height="210"/>
   <object type="box" x="1050" y="1820" width="1120" height="70"/>
-  <object name="character" type="character" x="3080" y="910" width="70" height="70">
-   <properties>
-    <property name="prova" value="prova"/>
-   </properties>
-  </object>
   <object type="portal" gid="82" x="1960" y="1400">
    <properties>
     <property name="target" value="test2.json"/>
@@ -37,5 +32,13 @@
   <object type="box" x="3500" y="770" width="490" height="70"/>
   <object type="box" x="2870" y="560" width="490" height="70"/>
   <object type="box" x="3500" y="350" width="490" height="70"/>
+  <object type="occluder" gid="67" x="70" y="2030"/>
+ </objectgroup>
+ <objectgroup name="Movables" width="96" height="32">
+  <object name="character" type="character" x="1470" y="1960" width="70" height="70">
+   <properties>
+    <property name="prova" value="prova"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

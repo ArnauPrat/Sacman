@@ -33,7 +33,7 @@ namespace sacman {
             virtual void DrawShape( const double elapsedTime, const int depth ) const;
             virtual void Update( const double elapsedTime );
             virtual void Collide( const Collision& collision );
-            virtual void Enter( Level* level );
+            virtual void Enter( Level* level , const math::Vector2f position, const math::Vector2f& extent);
             virtual void Leave( Level* level );
             virtual math::Vector2f Position() const = 0;
             virtual void SetPosition( const math::Vector2f& position ) = 0;

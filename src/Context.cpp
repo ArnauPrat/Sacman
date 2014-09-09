@@ -69,7 +69,7 @@ namespace sacman {
         while (m_Run) {
             unsigned int newTime = SDL_GetTicks();
             double elapsedTime = (newTime - currentTime);
-            currentTime += elapsedTime;
+            currentTime += static_cast<unsigned int>(elapsedTime);
             m_CurrentLevel.Update( elapsedTime / 1000.0f );
             m_Renderer.BeginFrame();
             m_CurrentLevel.Draw( elapsedTime / 1000.0 );
