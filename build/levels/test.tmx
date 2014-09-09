@@ -32,10 +32,10 @@
   <object type="box" x="3500" y="770" width="490" height="70"/>
   <object type="box" x="2870" y="560" width="490" height="70"/>
   <object type="box" x="3500" y="350" width="490" height="70"/>
-  <object type="occluder" gid="67" x="2310" y="2030"/>
+  <object type="occluder" gid="67" x="70" y="2030"/>
  </objectgroup>
  <objectgroup name="Movables" width="96" height="32">
-  <object name="character" type="character" x="2590" y="1960" width="70" height="70">
+  <object name="character" type="character" x="1470" y="1960" width="70" height="70">
    <properties>
     <property name="prova" value="prova"/>
    </properties>

@@ -159,8 +159,9 @@ namespace sacman {
     }
 
     void Level::DrawDebug( const double elapsedTime ) {
+        m_Background.DrawShape(elapsedTime, 256);
         for( Entity* e : m_Entities ) {
-            e->DrawShape( elapsedTime, 256);
+//            e->DrawShape( elapsedTime, 256);
         }
     }
 

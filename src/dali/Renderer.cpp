@@ -121,13 +121,12 @@ namespace dali {
                                    info.m_Vertices->m_AABBMax.m_Y*info.m_Scale.m_Y + info.m_Translate.m_Y };
         math::Vector2f realCenter = { (realMax.m_X - realMin.m_X) / 2.0f + realMin.m_X, (realMax.m_Y - realMin.m_Y) / 2.0f + realMin.m_Y };
         float tx = std::abs(realCenter.m_X - m_FrustrumCenter.m_X);
-        if (tx > std::abs((realCenter.m_X - realMin.m_X) - (m_FrustrumCenter.m_X - m_FrustrumMin.m_X))) {
-            std::cout << tx << " " << realCenter.m_X << " " << m_FrustrumCenter.m_X << std::endl;
+        if (tx > std::abs((realCenter.m_X - realMin.m_X) + (m_FrustrumCenter.m_X - m_FrustrumMin.m_X))) {
             return false;
         }
 
         float ty = std::abs(realCenter.m_Y - m_FrustrumCenter.m_Y);
-        if (ty > std::abs((realCenter.m_Y - realMin.m_Y) - (m_FrustrumCenter.m_Y - m_FrustrumMin.m_Y))) {
+        if (ty > std::abs((realCenter.m_Y - realMin.m_Y) + (m_FrustrumCenter.m_Y - m_FrustrumMin.m_Y))) {
             return false;
         }
         return true;
@@ -137,9 +136,11 @@ namespace dali {
     void Renderer::EndFrame() {
         std::sort(m_FrameDrawingInfo.begin(), m_FrameDrawingInfo.end(), SortByDepth);
         int size = static_cast<int>(m_FrameDrawingInfo.size());
+        int numDrawn = 0;
         for (int i = 0; i < size; ++i) {
             m_CurrentInfo = &m_FrameDrawingInfo[i];
             if (InsideFrustrum(*m_CurrentInfo)) {
+                numDrawn++;
                 glPolygonMode(GL_FRONT, m_CurrentInfo->m_PolygonMode);
                 Effect::SetEffect(*m_CurrentInfo->m_Effect);
                 glBindBuffer(GL_ARRAY_BUFFER, m_CurrentInfo->m_Vertices->m_Data);

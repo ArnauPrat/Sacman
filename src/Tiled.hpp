@@ -55,7 +55,8 @@ namespace sacman {
     };
 
     struct TiledLayer {
-        LayerType  m_Type;
+        LayerType   m_Type;
+        int         m_Id;
         union {
             struct {
                 int        m_NumCells;
