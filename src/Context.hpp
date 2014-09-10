@@ -17,19 +17,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 #include "Config.hpp"
 #include "Level.hpp"
 #include "dali/Dali.hpp"
+#include "logging/Log.hpp"
 #include <GL/glew.h>
 #include <SDL.h>
 
 namespace sacman {
-
 #define LEVEL_NAME_LENGTH   32
 
     class Context {
         public:
 
             /** @brief Initializes up the system.
-             *  @param config The configuration of the engine*/
-            static void StartUp( const Config& config );
+             *  @param configFileName The configuration file name of the engine*/
+            static void StartUp( const char* configFileName );
 
             /** @brief Frees the system.*/
             static void ShutDown();
@@ -42,6 +42,9 @@ namespace sacman {
 
             /** Rendering **/
             static dali::Renderer m_Renderer;
+
+            /** Logging **/
+            static logging::Log* log;
 
             static Config GetConfig();
 

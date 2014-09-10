@@ -55,18 +55,16 @@
 
 int main( int argc, char** argv ) {
 
-    const char* configFilename;
+    const char* configFilename = NULL;
     bool configFilenameSet = false; 
     for (int i = 1; i < argc; i++) {
         CHECK_ARGUMENT_STRING(i, "-c", configFilename, configFilenameSet)
     }
 
-    sacman::Config config; 
-    if( configFilenameSet ) {
-        sacman::Load( config, configFilename );
-    }
 
-    sacman::Context::StartUp( config );
+    const char* defaultFile = "config.ini";
+    configFilename = !configFilename ? defaultFile : configFilename;
+    sacman::Context::StartUp( configFilename );
     sacman::Context::StartGameLoop();
     sacman::Context::ShutDown();
     return 0;

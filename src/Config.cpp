@@ -13,6 +13,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
 
 #include "Config.hpp"
+#include "Context.hpp"
 #include "dali/Globals.hpp"
 #include <fstream>
 #include <iostream>
@@ -27,65 +28,61 @@ namespace sacman {
     Config::~Config() {
     }
 
-#define PRINT_OPTION(a,b) std::cout << "Parsed option " << a << " with " << b << " value. " <<  std::endl; 
-
     bool Load( Config& config, const std::string& filename ) {
         std::ifstream inFile;
         inFile.open(filename.c_str());
-        std::string option;
-        std::string value;
-        while( inFile >> option ) {
-            if( option == "ViewportWidth" ) {
-                inFile >> value; 
-                std::stringstream ss(value);
-                ss >> config.m_RendererConfig.m_ViewportWidth;
-                PRINT_OPTION(option, config.m_RendererConfig.m_ViewportWidth)
-                continue;
-            }
+        if (inFile) {
+            std::string option;
+            std::string value;
+            while (inFile >> option) {
+                if (option == "ViewportWidth") {
+                    inFile >> value;
+                    std::stringstream ss(value);
+                    ss >> config.m_RendererConfig.m_ViewportWidth;
+                    goto end;
+                }
 
-            if( option == "ViewportHeight" ) {
-                inFile >> value; 
-                std::stringstream ss(value);
-                ss >> config.m_RendererConfig.m_ViewportHeight;
-                PRINT_OPTION(option, config.m_RendererConfig.m_ViewportHeight);
-                continue;
-            }
+                if (option == "ViewportHeight") {
+                    inFile >> value;
+                    std::stringstream ss(value);
+                    ss >> config.m_RendererConfig.m_ViewportHeight;
+                    goto end;
+                }
 
-            if( option == "FullScreen" ) {
-                inFile >> value; 
-                std::stringstream ss(value);
-                ss >> config.m_FullScreen;
-                PRINT_OPTION(option, config.m_FullScreen);
-                continue;
-            }
+                if (option == "FullScreen") {
+                    inFile >> value;
+                    std::stringstream ss(value);
+                    ss >> config.m_FullScreen;
+                    goto end;
+                }
 
-            if( option == "DrawDebug" ) {
-                inFile >> value; 
-                std::stringstream ss(value);
-                ss >> config.m_DrawDebug;
-                PRINT_OPTION(option, config.m_DrawDebug);
-                continue;
-            }
+                if (option == "DrawDebug") {
+                    inFile >> value;
+                    std::stringstream ss(value);
+                    ss >> config.m_DrawDebug;
+                    goto end;
+                }
 
-            if( option == "PixelAligned" ) {
-                inFile >> value; 
-                std::stringstream ss(value);
-                bool mode;
-                ss >> mode;
-                config.m_RendererConfig.m_RenderingMode = mode ? dali::PIXEL_ALIGNED : dali::GRID_ALIGNED;
-                PRINT_OPTION(option, config.m_DrawDebug);
-                continue;
-            }
+                if (option == "PixelAligned") {
+                    inFile >> value;
+                    std::stringstream ss(value);
+                    bool mode;
+                    ss >> mode;
+                    config.m_RendererConfig.m_RenderingMode = mode ? dali::PIXEL_ALIGNED : dali::GRID_ALIGNED;
+                    goto end;
+                }
 
-            if( option == "Directory" ) {
-                inFile >> value; 
-                dali::pathFinder.AddDirectory( value.c_str() );
-                PRINT_OPTION(option, value);
+                if (option == "Directory") {
+                    inFile >> value;
+                    dali::pathFinder.AddDirectory(value.c_str());
+                    goto end;
+                }
                 continue;
+            end:
+                Context::log->Print("Parsed option %s with value %s", option, value);
             }
-
+            inFile.close();
         }
-        inFile.close();
         return true;
     }
 

@@ -63,6 +63,8 @@ INCLUDE_DIRECTORIES( ${DALI_INCLUDE_DIRS} )
 
 SET( SOURCE_FILES 
         ${LIB_DIR}/jsoncpp/jsoncpp.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/logging/Log.hpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/logging/Log.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/Events.hpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/Config.hpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/Config.cpp 

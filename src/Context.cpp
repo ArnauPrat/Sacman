@@ -24,18 +24,18 @@ namespace sacman {
     bool            Context::m_Run;
     Level           Context::m_CurrentLevel;
     dali::Renderer  Context::m_Renderer;
+    logging::Log*       Context::log;
 
     void Context::SDLStartUp() {
         if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
-            std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
+            log->Error("SDL_Init Error: ", SDL_GetError());
             exit(1);
         }
         // Window mode MUST include SDL_WINDOW_OPENGL for use with OpenGL.
-        m_Window = SDL_CreateWindow(
-                "SDL2/OpenGL Demo", 0, 0, 
-                m_Config.m_RendererConfig.m_ViewportWidth,
-                m_Config.m_RendererConfig.m_ViewportHeight, 
-                SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
+        m_Window = SDL_CreateWindow( "Sacman", 0, 0, 
+                                      m_Config.m_RendererConfig.m_ViewportWidth,
+                                      m_Config.m_RendererConfig.m_ViewportHeight, 
+                                      SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
 
         // Create an OpenGL context associated with the window.
         m_GLcontext = SDL_GL_CreateContext(m_Window);
@@ -50,8 +50,9 @@ namespace sacman {
     void Context::ProcessEvents() {
     }
 
-    void Context::StartUp( const Config& config ) {
-        m_Config = config;
+    void Context::StartUp( const char* configFileName ) {
+        log = new logging::Log("sacman.log");
+        Load(m_Config, configFileName);
         m_Run = true;
         SDLStartUp();
         m_Renderer.StartUp( m_Config.m_RendererConfig );
@@ -62,6 +63,7 @@ namespace sacman {
         m_CurrentLevel.ShutDown();
         m_Renderer.ShutDown();
         SDLShutDown();
+        delete log;
     }
 
     void Context::StartGameLoop() {
