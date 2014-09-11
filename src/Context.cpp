@@ -16,14 +16,29 @@
 #include "dali/Sprite.hpp"
 #include <iostream>
 
+/** PROFILING STUFF **/
+#if defined(__APPLE__) || defined(__linux__)
+#include <unistd.h>
+#endif
+
+#define MICRO_PROFILE_IMPL
+#define MICROPROFILE_UI 0
+#define MICROPROFILE_GPU_TIMERS 0
+#define MICROPROFILE_WEBSERVER 0 
+#include <microprofile.h>
+MICROPROFILE_DEFINE(MAIN, "MAIN", "Main", 0xff0000);
+/*********************/
+
+#define FRAMES_PER_SECOND 60
+
 namespace sacman {
 
-    SDL_GLContext   Context::m_GLcontext;
-    SDL_Window*     Context::m_Window = NULL;
-    Config          Context::m_Config;
-    bool            Context::m_Run;
-    Level           Context::m_CurrentLevel;
-    dali::Renderer  Context::m_Renderer;
+    SDL_GLContext       Context::m_GLcontext;
+    SDL_Window*         Context::m_Window = NULL;
+    Config              Context::m_Config;
+    bool                Context::m_Run;
+    Level               Context::m_CurrentLevel;
+    dali::Renderer      Context::m_Renderer;
     logging::Log*       Context::log;
 
     void Context::SDLStartUp() {
@@ -67,19 +82,30 @@ namespace sacman {
     }
 
     void Context::StartGameLoop() {
+        MicroProfileOnThreadCreate("Main");
+        MicroProfileSetForceEnable(true);
+        MicroProfileSetEnableAllGroups(true);
+        MicroProfileSetForceMetaCounters(true);
         unsigned int currentTime = SDL_GetTicks();
         while (m_Run) {
             unsigned int newTime = SDL_GetTicks();
             double elapsedTime = (newTime - currentTime);
-            currentTime += static_cast<unsigned int>(elapsedTime);
-            m_CurrentLevel.Update( elapsedTime / 1000.0f );
-            m_Renderer.BeginFrame();
-            m_CurrentLevel.Draw( elapsedTime / 1000.0 );
-            if( m_Config.m_DrawDebug ) 
-                m_CurrentLevel.DrawDebug( elapsedTime / 1000.0 );
+            MICROPROFILE_SCOPE(MAIN);
+            {
+                currentTime += static_cast<unsigned int>(elapsedTime);
+                MICROPROFILE_SCOPEI("Main", "Dummy", 0xff3399ff);
+                MICROPROFILE_META_CPU("Frame", 1);
+                m_CurrentLevel.Update(elapsedTime / 1000.0f);
+                m_Renderer.BeginFrame();
+                m_CurrentLevel.Draw(elapsedTime / 1000.0);
+                if (m_Config.m_DrawDebug)
+                    m_CurrentLevel.DrawDebug(elapsedTime / 1000.0);
+            }
+            MicroProfileFlip();
             m_Renderer.EndFrame();
             SDL_GL_SwapWindow(m_Window);
         }
+        MicroProfileShutdown();
     }
 
     void Context::Exit() {
