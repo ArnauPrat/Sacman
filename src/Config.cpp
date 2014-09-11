@@ -79,7 +79,7 @@ namespace sacman {
                 }
                 continue;
             end:
-                Context::log->Print("Parsed option %s with value %s", option, value);
+                Context::log->Print("Parsed option %s with value %s", option.c_str(), value.c_str());
             }
             inFile.close();
         }
