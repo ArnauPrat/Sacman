@@ -14,32 +14,28 @@
 #ifndef OCCLUDER_H
 #define OCCLUDER_H
 
-#include "objects/Entity.hpp"
+#include "arnitech/scene/Entity.hpp"
 #include "objects/Body.hpp"
 #include "objects/StaticSprite.hpp"
 #include "math/Types.hpp"
 
-namespace sacman {
-    class Occluder : public Entity {
-        public:
-            Occluder(const char* name, const char* textureName, const math::Vector2f texCoords[4] );
-            ~Occluder();
+class Occluder : public atEntity {
+    public:
+        Occluder(const char* name, const char* textureName, const atVector2f texCoords[4] );
+        ~Occluder();
 
-            math::Vector2f Position() const ;
-            math::Vector2f Extent() const ;
-            void SetPosition( const math::Vector2f& position );
-            const char* Type() const;
-            void Draw(const double elapsedTime, const int depth) const;
-            void DrawShape( const double elapsedTime, const int depth ) const;
-            void Enter(Level* level, const math::Vector2f position, const math::Vector2f& extent);
-            void Leave( Level* level );
+        atVector2f Position() const ;
+        atVector2f Extent() const ;
+        void SetPosition( const atVector2f& position );
+        const char* Type() const;
+        void Draw(const double elapsedTime, const int depth) const;
+        void DrawShape( const double elapsedTime, const int depth ) const;
+        void Enter( atLevel* level, const atVector2f position, const atVector2f& extent);
+        void Leave( atLevel* level );
 
-        private:
-            static const char*                  m_Type;
-            Body                                m_Body;
-            StaticSprite                        m_Sprite;
-    };
-
-}
-
+    private:
+        static const char*                  m_Type;
+        Body                                m_Body;
+        StaticSprite                        m_Sprite;
+};
 #endif

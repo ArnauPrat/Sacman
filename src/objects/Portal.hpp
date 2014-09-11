@@ -14,40 +14,37 @@
 #ifndef SACMAN_PORTAL_H
 #define SACMAN_PORTAL_H
 
-#include "Context.hpp"
-#include "dali/Buffer.hpp"
-#include "dali/Texture.hpp"
+#include "arnitech/system/Context.hpp"
+#include "arnitech/renderer/Buffer.hpp"
+#include "arnitech/renderer/Texture.hpp"
 #include "Body.hpp"
 
-namespace sacman {
-    class Portal : public Entity {
-        public:
-            Portal(const char* name,
+class Portal : public atEntity {
+    public:
+        Portal(const char* name,
                 const char* targetLevel,
-                const math::Vector2f& targetPosition);
-            ~Portal();
+                const atVector2f& targetPosition);
+        ~Portal();
 
-            void Draw( const double elapsedTime, const int depth ) const ;
-            void DrawShape( const double elapsedTime, const int depth ) const;
-            void Update( const double elapsedTime );
-            void LoadTexture( const char* textureName, const math::Vector2f texCoords[4] );
-            void Enter(Level* level, const math::Vector2f position, const math::Vector2f& extent);
-            void Leave( Level* level );
+        void Draw( const double elapsedTime, const int depth ) const ;
+        void DrawShape( const double elapsedTime, const int depth ) const;
+        void Update( const double elapsedTime );
+        void LoadTexture( const char* textureName, const atVector2f texCoords[4] );
+        void Enter( atLevel* level, const atVector2f position, const atVector2f& extent);
+        void Leave( atLevel* level );
 
-            virtual math::Vector2f Position() const;
-            virtual void SetPosition( const math::Vector2f& position );
-            virtual math::Vector2f Extent() const;
-            virtual const char* Type() const; 
+        atVector2f Position() const;
+        void SetPosition( const atVector2f& position );
+        atVector2f Extent() const;
+        const char* Type() const; 
 
-        private:
-            static const char*      m_Type;
-            dali::Texture*          m_Texture;
-            dali::Vector2fBuffer    m_TexCoords;
-            char                    m_TargetLevel[LEVEL_NAME_LENGTH];
-            math::Vector2f          m_TargetPosition;
-            Body                    m_Body;
+    private:
+        static const char*      m_Type;
+        atTexture*              m_Texture;
+        atVector2fBuffer        m_TexCoords;
+        char                    m_TargetLevel[ATLEVEL_NAME_LENGTH];
+        atVector2f              m_TargetPosition;
+        Body                    m_Body;
 
-    };
-}
-
+};
 #endif

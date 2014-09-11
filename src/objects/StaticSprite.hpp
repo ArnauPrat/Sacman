@@ -14,33 +14,30 @@
 #ifndef SACMAN_STATICSPRITE_H
 #define SACMAN_STATICSPRITE_H
 
-#include "objects/Entity.hpp"
-#include "dali/Buffer.hpp"
-#include "dali/Texture.hpp"
+#include "arnitech/scene/Entity.hpp"
+#include "arnitech/renderer/Buffer.hpp"
+#include "arnitech/renderer/Texture.hpp"
 
-namespace sacman {
+class StaticSprite : public atEntity {
+    public:
+        StaticSprite(const char* name, const char* textureName, const atVector2f texCoords[4] );
+        ~StaticSprite();
 
-    class StaticSprite : public Entity {
-        public:
-            StaticSprite(const char* name, const char* textureName, const math::Vector2f texCoords[4] );
-            ~StaticSprite();
+        atVector2f Position() const ;
+        atVector2f Extent() const ;
+        void SetPosition( const atVector2f& position );
+        const char* Type() const;
+        void Draw( const double elapsedTime, const int depth ) const;
+        void DrawShape( const double elapsedTime, const int depth ) const;
+        void Enter( atLevel* level, const atVector2f position, const atVector2f& extent);
+        void Leave( atLevel* level );
 
-            math::Vector2f Position() const ;
-            math::Vector2f Extent() const ;
-            void SetPosition( const math::Vector2f& position );
-            const char* Type() const;
-            void Draw( const double elapsedTime, const int depth ) const;
-            void DrawShape( const double elapsedTime, const int depth ) const;
-            void Enter(Level* level, const math::Vector2f position, const math::Vector2f& extent);
-            void Leave( Level* level );
-
-        private:
-            static const char*                  m_Type;
-            dali::TexCoordBuffer                m_TexCoords;
-            dali::Texture*                      m_Texture;
-            math::Vector2f                      m_Position;
-            math::Vector2f                      m_Extent;
-    };
-}
+    private:
+        static const char*              m_Type;
+        atTexCoordBuffer                m_TexCoords;
+        atTexture*                      m_Texture;
+        atVector2f                      m_Position;
+        atVector2f                      m_Extent;
+};
 
 #endif

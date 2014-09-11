@@ -11,27 +11,17 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
-#ifndef CHARACTER_H
-#define CHARACTER_H
+#ifndef SACMANCHARACTER_H
+#define SACMANCHARACTER_H
 
 #include "Box2D/Box2D.h"
-#include "dali/Dali.hpp"
-#include "dali/SpriteRenderer.hpp"
-#include "math/Types.hpp"
-#include "objects/Entity.hpp"
+#include "arnitech/renderer/SpriteRenderer.hpp"
+#include "arnitech/math/Types.hpp"
+#include "arnitech/scene/Entity.hpp"
 #include "objects/Body.hpp"
 #include <memory>
 
-namespace sacman {
-    class Level;
-/*    enum MovementState {
-        E_RIGHT = 0x1,
-        E_LEFT  = 0x2,
-        E_JUMP  = 0x4,
-        E_STAND = 0x8,
-        E_OCCLUDER = 0x10,
-    };*/
-
+    class atLevel;
     struct MovementState {
         bool m_Right : 1;
         bool m_Left : 1;
@@ -40,7 +30,7 @@ namespace sacman {
         bool m_Occluder : 1;
     };
 
-    class Character : public Entity {
+    class Character : public atEntity {
         public:
             Character( const char* name, const char* spriteName );
             ~Character();
@@ -48,32 +38,31 @@ namespace sacman {
             void Draw( const double elapsedTime, const int depth ) const ;
             void DrawShape( const double elapsedTime, const int depth ) const;
             void Update( const double elapsedTime );
-            void Collide( const Collision& collision );
-            void Enter(Level* level, const math::Vector2f position, const math::Vector2f& extent);
-            void Leave( Level* level );
+            void Collide( const atCollision& collision );
+            void Enter( atLevel* level, const atVector2f position, const atVector2f& extent);
+            void Leave( atLevel* level );
 
 
             void MoveRight( float speed );
             void MoveLeft( float speed );
             void Stop();
 
-            virtual math::Vector2f Position() const;
-            virtual void SetPosition( const math::Vector2f& position );
-            virtual math::Vector2f Extent() const;
+            virtual atVector2f Position() const;
+            virtual void SetPosition( const atVector2f& position );
+            virtual atVector2f Extent() const;
             virtual const char* Type() const;
 
         private:
             static const char* m_Type;
             void ListenKeyboard( std::shared_ptr<void> data );
-            dali::SpriteRenderer*   m_SpriteRenderer;
+
+            atSpriteRenderer*       m_SpriteRenderer;
             Body                    m_Body;
             MovementState           m_CurrentState;
             MovementState           m_PreviousState;
             bool                    m_IsGrounded;
-            math::Vector2f          m_Extent;
+            atVector2f              m_Extent;
             int                     m_OccluderDepth;
     };
-}
-
 
 #endif

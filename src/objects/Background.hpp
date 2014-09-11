@@ -11,54 +11,51 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
-#ifndef BACKGROUND_HPP 
-#define BACKGROUND_HPP 
+#ifndef SACMANBACKGROUND_HPP 
+#define SACMANBACKGROUND_HPP 
 
-#include "dali/Buffer.hpp"
-#include "dali/Texture.hpp"
-#include "Entity.hpp"
+#include "renderer/Buffer.hpp"
+#include "renderer/Texture.hpp"
+#include "scene/Entity.hpp"
 #include <vector>
 
-namespace sacman {
-    struct TiledLevel;
-    struct TiledTileSet;
-    struct TiledCell;
-    struct TiledLayer;
-    class Background : public Entity {
+    struct atTiledLevel;
+    struct atTiledTileSet;
+    struct atTiledCell;
+    struct atTiledLayer;
+    class Background : public atEntity {
 
         struct Chunk {
-            dali::VertexBuffer      m_Vertices;
-            dali::TexCoordBuffer    m_TexCoords;
-            dali::IndexBuffer       m_Indices;
-            dali::Texture*          m_Texture;
-            int                     m_Depth;
-            math::Vector2f          m_Min;
-            math::Vector2f          m_Max;
+            atVertexBuffer      m_Vertices;
+            atTexCoordBuffer    m_TexCoords;
+            atIndexBuffer       m_Indices;
+            atTexture*          m_Texture;
+            int                 m_Depth;
+            atVector2f          m_Min;
+            atVector2f          m_Max;
         };
 
         public:
             Background( const char* name );
             ~Background();
             
-            void                    Load( const TiledLevel& tiledLevel );
+            void                    Load( const atTiledLevel& tiledLevel );
             void                    Draw( const double elapsedTime, const int depth ) const;
             void                    DrawShape(const double elapsedTime, const int depth) const;
-            math::Vector2f          Position() const;
-            void                    SetPosition( const math::Vector2f& position );
-            math::Vector2f          Extent() const;
+            atVector2f              Position() const;
+            void                    SetPosition( const atVector2f& position );
+            atVector2f              Extent() const;
             const char*             Type() const;
 
         private:
 
-            void                    LoadLayer(const TiledLevel& tiledLevel, const TiledLayer& layer );
-            void                    LoadChunk(const TiledLevel& tiledLevel, const TiledLayer& layer, const TiledTileSet& tileSet, const TiledCell cells[], const int numCells);
-            void                    Subdivide(const TiledLevel& tiledLevel, const TiledLayer& layer, const TiledTileSet& tileSet, const TiledCell cells[], const int numCells);
+            void                    LoadLayer(const atTiledLevel& tiledLevel, const atTiledLayer& layer );
+            void                    LoadChunk(const atTiledLevel& tiledLevel, const atTiledLayer& layer, const atTiledTileSet& tileSet, const atTiledCell cells[], const int numCells);
+            void                    Subdivide(const atTiledLevel& tiledLevel, const atTiledLayer& layer, const atTiledTileSet& tileSet, const atTiledCell cells[], const int numCells);
 
             static const char*      m_Type;
             std::vector<Chunk*>     m_Chunks;
-            math::Vector2f          m_Min;
-            math::Vector2f          m_Max;
+            atVector2f              m_Min;
+            atVector2f              m_Max;
     };
-}
-
 #endif

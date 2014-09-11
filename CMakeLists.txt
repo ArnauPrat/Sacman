@@ -47,40 +47,28 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif()
 
 
-ADD_SUBDIRECTORY( ${CMAKE_CURRENT_SOURCE_DIR}/src/dali )
+ADD_SUBDIRECTORY( ${CMAKE_CURRENT_SOURCE_DIR}/src/arnitech )
 
 
 #library directories
 INCLUDE_DIRECTORIES( ./src )
+INCLUDE_DIRECTORIES( ${LIB_DIR}/jsoncpp/include )
+INCLUDE_DIRECTORIES( ${LIB_DIR}/glew/include )
+INCLUDE_DIRECTORIES( ${LIB_DIR}/freeimage/include )
 INCLUDE_DIRECTORIES( ${LIB_DIR}/sdl2/include )
 INCLUDE_DIRECTORIES( ${LIB_DIR}/sdl2/${PLATFORM}/include )
 INCLUDE_DIRECTORIES( ${LIB_DIR}/box2d/include )
 INCLUDE_DIRECTORIES( ${LIB_DIR}/jsoncpp/include )
 INCLUDE_DIRECTORIES( ${LIB_DIR}/microprofile/include )
-INCLUDE_DIRECTORIES( ${DALI_INCLUDE_DIRS} )
+INCLUDE_DIRECTORIES( ${ARNITECH_INCLUDE_DIRS} )
 
 
 SET( SOURCE_FILES 
         ${LIB_DIR}/jsoncpp/jsoncpp.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/logging/Log.hpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/logging/Log.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/Events.hpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/Config.hpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/Config.cpp 
-		${CMAKE_CURRENT_SOURCE_DIR}/src/Context.hpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/Context.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/EventManager.hpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/EventManager.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/Level.hpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/Level.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/Tiled.hpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/Tiled.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Background.hpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Background.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Character.hpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Character.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Entity.hpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Entity.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Portal.hpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Portal.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Body.hpp
@@ -106,4 +94,4 @@ SET( SDL2_LIBRARIES
 )
 
 ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCE_FILES})	
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} dali box2d ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} glew freeimage )
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} arnitech box2d ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} glew freeimage )
