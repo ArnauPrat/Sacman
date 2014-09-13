@@ -17,52 +17,52 @@
 #include "Box2D/Box2D.h"
 #include "arnitech/renderer/SpriteRenderer.hpp"
 #include "arnitech/math/Types.hpp"
+#include "arnitech/scene/Body.hpp"
 #include "arnitech/scene/Entity.hpp"
-#include "objects/Body.hpp"
 #include <memory>
 
-    class atLevel;
-    struct MovementState {
-        bool m_Right : 1;
-        bool m_Left : 1;
-        bool m_Jump : 1;
-        bool m_Stand : 1;
-        bool m_Occluder : 1;
-    };
+class atLevel;
+struct MovementState {
+    bool m_Right : 1;
+    bool m_Left : 1;
+    bool m_Jump : 1;
+    bool m_Stand : 1;
+    bool m_Occluder : 1;
+};
 
-    class Character : public atEntity {
-        public:
-            Character( const char* name, const char* spriteName );
-            ~Character();
+class Character : public atEntity {
+    public:
+        Character( const char* name, const char* spriteName );
+        ~Character();
 
-            void Draw( const double elapsedTime, const int depth ) const ;
-            void DrawShape( const double elapsedTime, const int depth ) const;
-            void Update( const double elapsedTime );
-            void Collide( const atCollision& collision );
-            void Enter( atLevel* level, const atVector2f position, const atVector2f& extent);
-            void Leave( atLevel* level );
+        void Draw( const double elapsedTime, const int depth ) const ;
+        void DrawShape( const double elapsedTime, const int depth ) const;
+        void Update( const double elapsedTime );
+        void Collide( const atCollision& collision );
+        void Enter( atLevel* level, const atVector2f position, const atVector2f& extent);
+        void Leave( atLevel* level );
 
 
-            void MoveRight( float speed );
-            void MoveLeft( float speed );
-            void Stop();
+        void MoveRight( float speed );
+        void MoveLeft( float speed );
+        void Stop();
 
-            virtual atVector2f Position() const;
-            virtual void SetPosition( const atVector2f& position );
-            virtual atVector2f Extent() const;
-            virtual const char* Type() const;
+        virtual atVector2f Position() const;
+        virtual void SetPosition( const atVector2f& position );
+        virtual atVector2f Extent() const;
+        virtual const char* Type() const;
 
-        private:
-            static const char* m_Type;
-            void ListenKeyboard( std::shared_ptr<void> data );
+    private:
+        static const char* m_Type;
+        void ListenKeyboard( std::shared_ptr<void> data );
 
-            atSpriteRenderer*       m_SpriteRenderer;
-            Body                    m_Body;
-            MovementState           m_CurrentState;
-            MovementState           m_PreviousState;
-            bool                    m_IsGrounded;
-            atVector2f              m_Extent;
-            int                     m_OccluderDepth;
-    };
+        atSpriteRenderer*       m_SpriteRenderer;
+        atBody                  m_Body;
+        MovementState           m_CurrentState;
+        MovementState           m_PreviousState;
+        bool                    m_IsGrounded;
+        atVector2f              m_Extent;
+        int                     m_OccluderDepth;
+};
 
 #endif

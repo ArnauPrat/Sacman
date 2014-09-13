@@ -2,8 +2,8 @@ CMAKE_MINIMUM_REQUIRED( VERSION 2.8.3 )
 PROJECT( arnitech )
 
 IF( UNIX )
-	SET(CMAKE_CXX_FLAGS_DEBUG "-O0 --std=c++11 -g -pg -Wall")	
-	SET(CMAKE_CXX_FLAGS_RELEASE "-O3 --std=c++11 -DNDEBUG -Wall")
+    SET(CMAKE_CXX_FLAGS_DEBUG "-O0 --std=c++11 -g -pg -Wall -Wno-strict-aliasing")	
+	SET(CMAKE_CXX_FLAGS_RELEASE "-O3 --std=c++11 -DNDEBUG -Wall -Wno-strict-aliasing")
 	IF( ${CMAKE_SIZEOF_VOID_P} EQUAL 4)
         MESSAGE( FATAL_ERROR "Linux32 is Unsupported" )
 	ENDIF( ${CMAKE_SIZEOF_VOID_P} EQUAL 4)
@@ -76,6 +76,12 @@ SET( SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/system/Context.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/system/EventManager.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/system/EventManager.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/scene/Body.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/scene/Body.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/scene/Camera.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/scene/Camera.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/scene/StaticSprite.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/scene/StaticSprite.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/scene/Entity.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/scene/Entity.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/scene/Level.hpp

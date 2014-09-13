@@ -32,85 +32,93 @@ MICROPROFILE_DEFINE(MAIN, "MAIN", "Main", 0xff0000);
 #define FRAMES_PER_SECOND 60
 
 
-    SDL_GLContext       atContext::m_GLcontext;
-    SDL_Window*         atContext::m_Window = NULL;
-    atConfig              atContext::m_Config;
-    bool                atContext::m_Run;
-    atLevel               atContext::m_CurrentLevel;
-    atRenderer      atContext::m_Renderer;
-    atLog*       atContext::log;
+SDL_GLContext       atContext::m_GLcontext;
+SDL_Window*         atContext::m_Window = NULL;
+atConfig            atContext::m_Config;
+bool                atContext::m_Run;
+atLevel*            atContext::m_CurrentLevel;
+atRenderer          atContext::m_Renderer;
+atLog*              atContext::log;
 
-    void atContext::SDLStartUp() {
-        if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
-            log->Error("SDL_Init Error: ", SDL_GetError());
-            exit(1);
+void atContext::SDLStartUp() {
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
+        log->Error("SDL_Init Error: ", SDL_GetError());
+        exit(1);
+    }
+    // Window mode MUST include SDL_WINDOW_OPENGL for use with OpenGL.
+    m_Window = SDL_CreateWindow( "Sacman", 0, 0, 
+            m_Config.m_RendererConfig.m_ViewportWidth,
+            m_Config.m_RendererConfig.m_ViewportHeight, 
+            SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
+
+    // Create an OpenGL context associated with the window.
+    m_GLcontext = SDL_GL_CreateContext(m_Window);
+}
+
+void atContext::SDLShutDown() {
+    SDL_GL_DeleteContext(m_GLcontext);
+    SDL_DestroyWindow(m_Window);
+    SDL_Quit();
+}
+
+void atContext::ProcessEvents() {
+}
+
+void atContext::StartUp( const char* configFileName ) {
+    log = new atLog("sacman.log");
+    Load(m_Config, configFileName);
+    m_Run = true;
+    SDLStartUp();
+    m_Renderer.StartUp( m_Config.m_RendererConfig );
+}
+
+void atContext::PushLevel( atLevel* level ) {
+    m_CurrentLevel = level;
+    m_CurrentLevel->_StartUp();
+}
+
+void atContext::PopLevel( ) {
+    m_CurrentLevel->_ShutDown();
+    m_CurrentLevel = NULL;
+}
+
+void atContext::ShutDown() {
+    m_Renderer.ShutDown();
+    SDLShutDown();
+    delete log;
+}
+
+void atContext::StartGameLoop() {
+    MicroProfileOnThreadCreate("Main");
+    MicroProfileSetForceEnable(true);
+    MicroProfileSetEnableAllGroups(true);
+    MicroProfileSetForceMetaCounters(true);
+    unsigned int currentTime = SDL_GetTicks();
+    while (m_Run) {
+        unsigned int newTime = SDL_GetTicks();
+        double elapsedTime = (newTime - currentTime);
+        MICROPROFILE_SCOPE(MAIN);
+        {
+            currentTime += static_cast<unsigned int>(elapsedTime);
+            MICROPROFILE_SCOPEI("Main", "Dummy", 0xff3399ff);
+            MICROPROFILE_META_CPU("Frame", 1);
+            m_CurrentLevel->Update(elapsedTime / 1000.0f);
+            m_Renderer.BeginFrame();
+            m_CurrentLevel->Draw(elapsedTime / 1000.0);
+            if (m_Config.m_DrawDebug)
+                m_CurrentLevel->DrawDebug(elapsedTime / 1000.0);
         }
-        // Window mode MUST include SDL_WINDOW_OPENGL for use with OpenGL.
-        m_Window = SDL_CreateWindow( "Sacman", 0, 0, 
-                                      m_Config.m_RendererConfig.m_ViewportWidth,
-                                      m_Config.m_RendererConfig.m_ViewportHeight, 
-                                      SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
-
-        // Create an OpenGL context associated with the window.
-        m_GLcontext = SDL_GL_CreateContext(m_Window);
+        MicroProfileFlip();
+        m_Renderer.EndFrame();
+        SDL_GL_SwapWindow(m_Window);
     }
+    MicroProfileShutdown();
+}
 
-    void atContext::SDLShutDown() {
-        SDL_GL_DeleteContext(m_GLcontext);
-        SDL_DestroyWindow(m_Window);
-        SDL_Quit();
-    }
+void atContext::Exit() {
+    m_Run = false;
+}
 
-    void atContext::ProcessEvents() {
-    }
-
-    void atContext::StartUp( const char* configFileName ) {
-        log = new atLog("sacman.log");
-        Load(m_Config, configFileName);
-        m_Run = true;
-        SDLStartUp();
-        m_Renderer.StartUp( m_Config.m_RendererConfig );
-        m_CurrentLevel.StartUp();
-    }
-
-    void atContext::ShutDown() {
-        m_CurrentLevel.ShutDown();
-        m_Renderer.ShutDown();
-        SDLShutDown();
-        delete log;
-    }
-
-    void atContext::StartGameLoop() {
-        MicroProfileOnThreadCreate("Main");
-        MicroProfileSetForceEnable(true);
-        MicroProfileSetEnableAllGroups(true);
-        MicroProfileSetForceMetaCounters(true);
-        unsigned int currentTime = SDL_GetTicks();
-        while (m_Run) {
-            unsigned int newTime = SDL_GetTicks();
-            double elapsedTime = (newTime - currentTime);
-            MICROPROFILE_SCOPE(MAIN);
-            {
-                currentTime += static_cast<unsigned int>(elapsedTime);
-                MICROPROFILE_SCOPEI("Main", "Dummy", 0xff3399ff);
-                MICROPROFILE_META_CPU("Frame", 1);
-                m_CurrentLevel.Update(elapsedTime / 1000.0f);
-                m_Renderer.BeginFrame();
-                m_CurrentLevel.Draw(elapsedTime / 1000.0);
-                if (m_Config.m_DrawDebug)
-                    m_CurrentLevel.DrawDebug(elapsedTime / 1000.0);
-            }
-            MicroProfileFlip();
-            m_Renderer.EndFrame();
-            SDL_GL_SwapWindow(m_Window);
-        }
-        MicroProfileShutdown();
-    }
-
-    void atContext::Exit() {
-        m_Run = false;
-    }
-
-    atConfig atContext::GetConfig() {
-        return m_Config;
-    }
+atConfig atContext::GetConfig() {
+    return m_Config;
+}

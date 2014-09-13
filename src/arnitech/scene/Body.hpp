@@ -20,35 +20,33 @@
 #include <Box2D/Box2D.h>
 
 
-enum BodyType{
+enum atBodyType{
     E_STATIC,
     E_DYNAMIC
 };
 
-enum BoxType {
+enum atBoxType {
     E_SOLID,
     E_SENSOR
 };
 
-class Body : public atEntity {
+ATENTITY_CLASS(atBody) {
     public:
-        Body( const char* name, 
-                const BodyType type );
+        atBody( const char* name, 
+                const atBodyType type );
 
-        ~Body();
+        ~atBody();
 
-        atVector2f Position() const ;
-        atVector2f Extent() const ;
-        void SetPosition( const atVector2f& position );
-        const char* Type() const;
-        void DrawShape( const double elapsedTime, const int depth ) const;
-        void Enter( atLevel* level, const atVector2f position, const atVector2f& extent);
-        void Leave( atLevel* level );
+        ATENTITY_DRAW_SHAPE;
+        ATENTITY_ENTER;
+        ATENTITY_LEAVE;
+        ATENTITY_ABSTRACT;
+        
         void Move( const float speed );
         void ApplyForce( const atVector2f& force );
         void AddBox( const atVector2f& position, 
                 const atVector2f extent, 
-                const BoxType boxType,
+                const atBoxType boxType,
                 void* userData = NULL );
 
 
@@ -56,7 +54,7 @@ class Body : public atEntity {
         static const char*                  m_Type;
         b2Body*                             m_Body;
         std::vector<b2Fixture*>             m_Fixtures;
-        BodyType                            m_BodyType;
+        atBodyType                          m_BodyType;
         atVector2f                          m_Position;
 };
 

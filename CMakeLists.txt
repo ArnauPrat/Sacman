@@ -3,8 +3,8 @@ PROJECT( sacman )
 
 #detecting platform and setting variables
 IF( UNIX )
-	SET(CMAKE_CXX_FLAGS_DEBUG "-O0 --std=c++11 -g -pg -Wall")	
-	SET(CMAKE_CXX_FLAGS_RELEASE "-O3 --std=c++11 -DNDEBUG -Wall")
+    SET(CMAKE_CXX_FLAGS_DEBUG "-O0 --std=c++11 -g -pg -Wall -Wno-strict-aliasing")	
+	SET(CMAKE_CXX_FLAGS_RELEASE "-O3 --std=c++11 -DNDEBUG -Wall -Wno-strict-aliasing")
 	IF( ${CMAKE_SIZEOF_VOID_P} EQUAL 4)
         MESSAGE( FATAL_ERROR "Linux32 is Unsupported" )
 	ENDIF( ${CMAKE_SIZEOF_VOID_P} EQUAL 4)
@@ -65,18 +65,18 @@ INCLUDE_DIRECTORIES( ${ARNITECH_INCLUDE_DIRS} )
 
 SET( SOURCE_FILES 
         ${LIB_DIR}/jsoncpp/jsoncpp.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Background.hpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Background.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Character.hpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Background.hpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Character.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Portal.hpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Portal.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Body.hpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Body.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Occluder.hpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Character.hpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Occluder.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/StaticSprite.hpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/StaticSprite.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Occluder.hpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Portal.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Portal.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Level.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/objects/Level.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/objects/LoadLevel.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/objects/LoadLevel.hpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
  )
 

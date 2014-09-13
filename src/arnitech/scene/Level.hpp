@@ -14,92 +14,86 @@
 #ifndef ATLEVEL_H
 #define ATLEVEL_H
 
-#include "resources/Tiled.hpp"
-#include "../objects/Background.hpp"
 #include "scene/Entity.hpp"
 #include "system/EventManager.hpp"
 #include <Box2D/Box2D.h>
 
-    class atRenderer;
-    class atLevel : public b2ContactListener {
-        public:
-            atLevel();
-            ~atLevel();
+#define ATLEVEL_CLASS(className) class className : public atLevel 
+#define ATLEVEL_START_UP  virtual void StartUp();
+#define ATLEVEL_SHUT_DOWN virtual void ShutDown();
 
-            /** @brief Initializes a level.*/
-            void StartUp();
+#define ATLEVEL_START_UP_DEF(className)  void className::StartUp()
+#define ATLEVEL_SHUT_DOWN_DEF(className) void className::ShutDown()
 
-            /** @brief Frees a level.*/
-            void ShutDown();
+class atRenderer;
+class atLevel : public b2ContactListener {
+    friend class atContext;
+    public:
+    atLevel();
+    virtual ~atLevel();
 
-            /** @brief Draws the level.**/
-            void Draw( const double elapsedTime );
+    /** @brief Initializes a level.*/
+    virtual void StartUp();
 
-            /** @brief Draws debug information.**/
-            void DrawDebug( const double elapsedTime );
-            
-            /** @brief Updates the entities of the level.*/
-            void Update( const double elapsedTime );
+    /** @brief Frees a level.*/
+    virtual void ShutDown();
 
-            /** @brief Inserts an entity into the level.
-             *  @param position The position to insert the entity to.
-             *  @param extent The extent of the entity.*/
-            void Insert( atEntity* entity, atVector2f& position, atVector2f& extent);
+    /** @brief Draws the level.**/
+    void Draw( const double elapsedTime );
 
-            /** @brief Removes an entity from the level. */
-            void Remove( atEntity* entity );
+    /** @brief Draws debug information.**/
+    void DrawDebug( const double elapsedTime );
 
-            /** @brief Gets an entity. */
-            atEntity* GetEntity( const char* name );
+    /** @brief Updates the entities of the level.*/
+    void Update( const double elapsedTime );
 
-            /** Event managing functions. **/
-            void RegisterListener( atEventType eventType, std::function<void( std::shared_ptr<void>)> listener ); 
-            void RegisterListener( const char* eventType,std::function<void( std::shared_ptr<void>)> listener  ); 
-            void UnregisterListener( atEventType eventType, std::function<void( std::shared_ptr<void>)> listener ); 
-            void UnregisterListener( const char* eventType, std::function<void( std::shared_ptr<void>)> listener  ); 
-            void LaunchEvent( atEventType eventType, std::shared_ptr<void> data );
-            void LaunchEvent( const char* eventType, std::shared_ptr<void> data );
+    /** @brief Inserts an entity into the level.
+     *  @param position The position to insert the entity to.
+     *  @param extent The extent of the entity.*/
+    void Insert( atEntity* entity, const atVector2f& position, const atVector2f& extent);
 
-            b2World&  B2World();
-            void BeginContact(b2Contact* contact);
-            void EndContact(b2Contact* contact);
-            void PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
-            void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
+    /** @brief Removes an entity from the level. */
+    void Remove( atEntity* entity );
 
+    /** @brief Gets an entity. */
+    atEntity* GetEntity( const char* name );
 
-        private:
-            atLevel( const atLevel& );
-            void SimulatePhysics( const double elapsedTime );
+    /** Event managing functions. **/
+    void RegisterListener( atEventType eventType, std::function<void( std::shared_ptr<void>)> listener ); 
+    void RegisterListener( const char* eventType,std::function<void( std::shared_ptr<void>)> listener  ); 
+    void UnregisterListener( atEventType eventType, std::function<void( std::shared_ptr<void>)> listener ); 
+    void UnregisterListener( const char* eventType, std::function<void( std::shared_ptr<void>)> listener  ); 
+    void LaunchEvent( atEventType eventType, std::shared_ptr<void> data );
+    void LaunchEvent( const char* eventType, std::shared_ptr<void> data );
 
-            /** @brief Processes the level events.**/
-            void ProcessEvents();
+    b2World&  B2World();
+    void BeginContact(b2Contact* contact);
+    void EndContact(b2Contact* contact);
+    void PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
+    void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
 
-            atEntity* LoadCharacter( const atTiledLevel& level, const atTiledObject& object );
-            atEntity* LoadPortal( const atTiledLevel& level, const atTiledObject& object );
-            atEntity* LoadBox( const atTiledLevel& level, const atTiledObject& object );
-            atEntity* LoadOccluder(const atTiledLevel& tiledLevel, const atTiledObject& object);
-            
+    private:
 
-            /** @brief Loads a level from a file.
-             *  @param fileName The level's file name .*/
-            void LoadLevel( const char* fileName );
+    void _StartUp();
+    void _ShutDown();
 
-            /** Event Handling **/
-            atEventManager    m_EventManager;
+    atLevel( const atLevel& );
+    void SimulatePhysics( const double elapsedTime );
 
-            /** Character **/
-            atVector2i      m_Velocity;    /**< @brief The current velocity vector of the main character.*/
-            float           m_Speed;       /**< @brief The speed of the main character.*/
+    /** @brief Processes the level events.**/
+    void ProcessEvents();
 
-            /** Scene **/
-            Background                   m_Background;
-            std::vector<atEntity*>       m_Entities;
+    /** Event Handling **/
+    atEventManager    m_EventManager;
 
-            /** Physics **/
-            b2Vec2          m_Gravity;      /**< @brief The physics of the scene.*/
-            b2World*        m_B2World;      /**< @brief The physics world.*/
-            double          m_PhysicsTime;  /**< @brief The physics time.*/
-            double          m_TimeStep;     /**< @brief The physics time step.*/
-    };
+    /** Scene **/
+    std::vector<atEntity*>       m_Entities;
+
+    /** Physics **/
+    b2Vec2          m_Gravity;      /**< @brief The physics of the scene.*/
+    b2World*        m_B2World;      /**< @brief The physics world.*/
+    double          m_PhysicsTime;  /**< @brief The physics time.*/
+    double          m_TimeStep;     /**< @brief The physics time step.*/
+};
 #endif
 

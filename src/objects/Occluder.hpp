@@ -14,9 +14,9 @@
 #ifndef OCCLUDER_H
 #define OCCLUDER_H
 
+#include "arnitech/scene/Body.hpp"
 #include "arnitech/scene/Entity.hpp"
-#include "objects/Body.hpp"
-#include "objects/StaticSprite.hpp"
+#include "arnitech/scene/StaticSprite.hpp"
 #include "math/Types.hpp"
 
 class Occluder : public atEntity {
@@ -35,7 +35,7 @@ class Occluder : public atEntity {
 
     private:
         static const char*                  m_Type;
-        Body                                m_Body;
-        StaticSprite                        m_Sprite;
+        atBody                              m_Body;
+        atStaticSprite                      m_Sprite;
 };
 #endif

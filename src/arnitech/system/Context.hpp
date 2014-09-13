@@ -46,8 +46,13 @@ class atContext {
 
         static atConfig GetConfig();
 
+        static void PushLevel( atLevel* level );
+
+        static void PopLevel();
+
 
     private:
+
         /** @brief Starts SDL stuff.*/
         static void SDLStartUp();
         /** @brief Frees SDL stuff.*/
@@ -65,7 +70,7 @@ class atContext {
 
         /** Flow control **/
         static bool             m_Run;
-        static atLevel          m_CurrentLevel;
+        static atLevel*         m_CurrentLevel;
 };
 
 #endif

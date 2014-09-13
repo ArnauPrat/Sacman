@@ -19,43 +19,42 @@
 #include "scene/Entity.hpp"
 #include <vector>
 
-    struct atTiledLevel;
-    struct atTiledTileSet;
-    struct atTiledCell;
-    struct atTiledLayer;
-    class Background : public atEntity {
+struct atTiledLevel;
+struct atTiledTileSet;
+struct atTiledCell;
+struct atTiledLayer;
 
-        struct Chunk {
-            atVertexBuffer      m_Vertices;
-            atTexCoordBuffer    m_TexCoords;
-            atIndexBuffer       m_Indices;
-            atTexture*          m_Texture;
-            int                 m_Depth;
-            atVector2f          m_Min;
-            atVector2f          m_Max;
-        };
+struct Chunk {
+    atVertexBuffer      m_Vertices;
+    atTexCoordBuffer    m_TexCoords;
+    atIndexBuffer       m_Indices;
+    atTexture*          m_Texture;
+    int                 m_Depth;
+    atVector2f          m_Min;
+    atVector2f          m_Max;
+};
 
-        public:
-            Background( const char* name );
-            ~Background();
-            
-            void                    Load( const atTiledLevel& tiledLevel );
-            void                    Draw( const double elapsedTime, const int depth ) const;
-            void                    DrawShape(const double elapsedTime, const int depth) const;
-            atVector2f              Position() const;
-            void                    SetPosition( const atVector2f& position );
-            atVector2f              Extent() const;
-            const char*             Type() const;
+class Background : public atEntity {
 
-        private:
+    public:
+    Background( const char* name );
+    ~Background();
 
-            void                    LoadLayer(const atTiledLevel& tiledLevel, const atTiledLayer& layer );
-            void                    LoadChunk(const atTiledLevel& tiledLevel, const atTiledLayer& layer, const atTiledTileSet& tileSet, const atTiledCell cells[], const int numCells);
-            void                    Subdivide(const atTiledLevel& tiledLevel, const atTiledLayer& layer, const atTiledTileSet& tileSet, const atTiledCell cells[], const int numCells);
+    void                    Load( const atTiledLevel& tiledLevel );
+    void                    Draw( const double elapsedTime, const int depth ) const;
+    void                    DrawShape(const double elapsedTime, const int depth) const;
+    atVector2f              Position() const;
+    void                    SetPosition( const atVector2f& position );
+    atVector2f              Extent() const;
+    const char*             Type() const;
+    
+    void                    InsertChunk( Chunk* chunk );
 
-            static const char*      m_Type;
-            std::vector<Chunk*>     m_Chunks;
-            atVector2f              m_Min;
-            atVector2f              m_Max;
-    };
+    private:
+
+    static const char*      m_Type;
+    std::vector<Chunk*>     m_Chunks;
+    atVector2f              m_Min;
+    atVector2f              m_Max;
+};
 #endif

@@ -11,8 +11,10 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
-#include "Config.hpp"
-#include "Context.hpp"
+#include "arnitech/system/Config.hpp"
+#include "arnitech/system/Context.hpp"
+#include "objects/LoadLevel.hpp"
+#include "objects/Level.hpp"
 #include <iostream>
 
 #define CHECK_ARGUMENT_STRING(index, option,variable,setVariable) \
@@ -61,11 +63,14 @@ int main( int argc, char** argv ) {
         CHECK_ARGUMENT_STRING(i, "-c", configFilename, configFilenameSet)
     }
 
-
     const char* defaultFile = "config.ini";
     configFilename = !configFilename ? defaultFile : configFilename;
-    sacman::Context::StartUp( configFilename );
-    sacman::Context::StartGameLoop();
-    sacman::Context::ShutDown();
+    atContext::StartUp( configFilename );
+    Level* level = new Level("test.json");
+    atContext::PushLevel(level);
+    atContext::StartGameLoop();
+    atContext::PopLevel();
+    delete level;
+    atContext::ShutDown();
     return 0;
 }

@@ -17,7 +17,7 @@
 #include "arnitech/system/Context.hpp"
 #include "arnitech/renderer/Buffer.hpp"
 #include "arnitech/renderer/Texture.hpp"
-#include "Body.hpp"
+#include "arnitech/scene/Body.hpp"
 
 class Portal : public atEntity {
     public:
@@ -44,7 +44,7 @@ class Portal : public atEntity {
         atVector2fBuffer        m_TexCoords;
         char                    m_TargetLevel[ATLEVEL_NAME_LENGTH];
         atVector2f              m_TargetPosition;
-        Body                    m_Body;
+        atBody                  m_Body;
 
 };
 #endif

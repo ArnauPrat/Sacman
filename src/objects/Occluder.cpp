@@ -13,53 +13,49 @@
 
 #include "Occluder.hpp"
 
+const char* Occluder::m_Type = "occluder";
 
-namespace sacman {
-
-    const char* Occluder::m_Type = "occluder";
-
-    Occluder::Occluder(const char* name, const char* textureName, const math::Vector2f texCoords[4]) : 
-        Entity(name),
-        m_Body( "", E_STATIC),
-        m_Sprite("",textureName, texCoords){
+Occluder::Occluder( const char* name, const char* textureName, const atVector2f texCoords[4] ) : 
+    atEntity(name),
+    m_Body( "", E_STATIC),
+    m_Sprite("",textureName, texCoords){
     }
 
-    Occluder::~Occluder() {
+Occluder::~Occluder() {
 
-    }
+}
 
-    math::Vector2f Occluder::Position() const {
-        return m_Body.Position();
-    }
+atVector2f Occluder::Position() const {
+    return m_Body.Position();
+}
 
-    math::Vector2f Occluder::Extent() const {
-        return m_Body.Extent();
-    }
+atVector2f Occluder::Extent() const {
+    return m_Body.Extent();
+}
 
-    void Occluder::SetPosition(const math::Vector2f& position) {
-        m_Body.SetPosition(position);
-    }
+void Occluder::SetPosition(const atVector2f& position) {
+    m_Body.SetPosition(position);
+}
 
-    const char* Occluder::Type() const {
-        return Occluder::m_Type;
-    }
+const char* Occluder::Type() const {
+    return Occluder::m_Type;
+}
 
-    void Occluder::Draw(const double elapsedTime, const int depth) const {
-        m_Sprite.Draw(elapsedTime, depth);
-    }
+void Occluder::Draw(const double elapsedTime, const int depth) const {
+    m_Sprite.Draw(elapsedTime, depth);
+}
 
-    void Occluder::DrawShape(const double elapsedTime, const int depth) const {
-        m_Body.DrawShape(elapsedTime, depth);
-    }
+void Occluder::DrawShape(const double elapsedTime, const int depth) const {
+    m_Body.DrawShape(elapsedTime, depth);
+}
 
-    void Occluder::Enter(Level* level, const math::Vector2f position, const math::Vector2f& extent) {
-        m_Sprite.Enter(level, position, extent);
-        m_Body.Enter( level, position, extent );
-        m_Body.AddBox({ 0.0f, 0.0f }, extent, E_SENSOR, this);
-    }
+void Occluder::Enter( atLevel* level, const atVector2f position, const atVector2f& extent ) {
+    m_Sprite.Enter( level, position, extent );
+    m_Body.Enter( level, position, extent );
+    m_Body.AddBox({ 0.0f, 0.0f }, extent, E_SENSOR, this);
+}
 
-    void Occluder::Leave(Level* level) {
-        m_Sprite.Leave(level);
-        m_Body.Leave( level );
-    }
+void Occluder::Leave( atLevel* level) {
+    m_Sprite.Leave(level);
+    m_Body.Leave( level );
 }

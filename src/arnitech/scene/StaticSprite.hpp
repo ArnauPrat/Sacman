@@ -14,23 +14,20 @@
 #ifndef SACMAN_STATICSPRITE_H
 #define SACMAN_STATICSPRITE_H
 
-#include "arnitech/scene/Entity.hpp"
-#include "arnitech/renderer/Buffer.hpp"
-#include "arnitech/renderer/Texture.hpp"
+#include "Entity.hpp"
+#include "renderer/Buffer.hpp"
+#include "renderer/Texture.hpp"
 
-class StaticSprite : public atEntity {
+ATENTITY_CLASS(atStaticSprite) {
     public:
-        StaticSprite(const char* name, const char* textureName, const atVector2f texCoords[4] );
-        ~StaticSprite();
+        atStaticSprite(const char* name, const char* textureName, const atVector2f texCoords[4] );
+        ~atStaticSprite();
 
-        atVector2f Position() const ;
-        atVector2f Extent() const ;
-        void SetPosition( const atVector2f& position );
-        const char* Type() const;
-        void Draw( const double elapsedTime, const int depth ) const;
-        void DrawShape( const double elapsedTime, const int depth ) const;
-        void Enter( atLevel* level, const atVector2f position, const atVector2f& extent);
-        void Leave( atLevel* level );
+        ATENTITY_ABSTRACT
+        ATENTITY_DRAW
+        ATENTITY_DRAW_SHAPE
+        ATENTITY_ENTER
+        ATENTITY_LEAVE
 
     private:
         static const char*              m_Type;
