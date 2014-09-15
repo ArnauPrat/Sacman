@@ -13,6 +13,7 @@
   */
 
 #include "GLSL.hpp"
+#include "system/Context.hpp"
 #include <iostream>
 #include <string.h>
 #include <string>
@@ -49,7 +50,7 @@ std::vector<atGlslVar> ParseVars( int lines, char** src, int* sizes ) {
                 }
             }
             if( !found ) {
-                std::cout << "Unknown variable " << std::string(currentLine) << std::endl;
+                atContext::log->Error("Unknown variable %s", currentLine);
             }
         }
     }

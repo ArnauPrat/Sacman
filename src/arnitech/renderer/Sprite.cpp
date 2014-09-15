@@ -62,9 +62,7 @@ void atSprite::Load( const char* fileName ) {
     Json::Reader reader;
     bool parsedSuccess = reader.parse(str, root, false);
     if(!parsedSuccess) {
-        std::cout << "Failed to parse JSON"<< std::endl 
-            << reader.getFormattedErrorMessages()
-            << std::endl;
+        atContext::log->Error("Failed to parse JSON %s", reader.getFormattedErrorMessages().c_str());
         assert(false);
     }
 
@@ -91,10 +89,10 @@ void atSprite::Load( const char* fileName ) {
         atAnimation auxAnim;
         const Json::Value animation = animations[i];
         const char* name = (animations[i])["Name"].asCString();
-        assert(std::strlen(name) < ANIMATION_NAME_LENGTH);
+        assert(std::strlen(name) < ATANIMATION_NAME_LENGTH);
         std::strcpy(auxAnim.m_Name, name);
         const Json::Value frames = animation["Frames"];
-        assert( frames.size() <= ANIMATION_NUM_FRAMES );
+        assert( frames.size() <= ATANIMATION_NUM_FRAMES );
         auxAnim.m_NumFrames = 0;
         for( unsigned j = 0; j < frames.size(); ++j ) {
             auxAnim.m_Frames[static_cast<int>(auxAnim.m_NumFrames++)] = static_cast<char>(frames[j].asInt());

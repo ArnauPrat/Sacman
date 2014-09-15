@@ -11,6 +11,7 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
+#include "system/Context.hpp"
 #include "Texture.hpp"
 #include <FreeImage.h>
 #include <cassert>
@@ -30,11 +31,11 @@ atTexture::~atTexture() {
 void atTexture::Load( const char* filename ) {
     FREE_IMAGE_FORMAT format = FreeImage_GetFileType(filename,0);//Automatocally detects the format(from over 20 formats!)
     if (format == FIF_UNKNOWN) {
-        std::cout << "Error derecting imaga file format of " << filename << std::endl;
+        atContext::log->Error("Error derecting imaga file format of %s", filename);
     }
     FIBITMAP* image = FreeImage_Load(format, filename);
     if (!image) {
-        std::cout<<"There was an error loading the texture"<<std::endl;
+        atContext::log->Error("There was an error loading the texture");
     }
 
     FIBITMAP* temp = image;
@@ -64,6 +65,6 @@ void atTexture::Load( const char* filename ) {
 
     GLenum huboError = glGetError();
     if(huboError){
-        std::cout<<"There was an error loading the texture"<<std::endl;
+        atContext::log->Error("There was an error loading the texture");
     }
 }

@@ -15,12 +15,13 @@
 #include "Effect.hpp"
 #include "Renderer.hpp"
 #include "resources/Resources.hpp"
+#include "system/Context.hpp"
+#include <FreeImage.h>
+#include <algorithm>
 #include <cassert>
 #include <cstring>
 #include <functional>
 #include <iostream>
-#include <algorithm>
-#include <FreeImage.h>
 
 
 static void SetIdentity(float matrix[3][3]) {
@@ -247,9 +248,9 @@ void atRenderer::InitOpenGL() {
     GLuint err = glewInit();
     if (GLEW_OK != err) {
         /* Problem: glewInit failed, something is seriously wrong. */
-        std::cout << "ERROR Loading glew" << std::endl;
+        atContext::log->Error("Error Loading glew");
     }
-    std::cout << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
+    atContext::log->Print("Status: Using glew %s", glewGetString(GLEW_VERSION));
     glViewport(0, 0, m_Config.m_ViewportWidth, m_Config.m_ViewportHeight);
     glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
     glEnable(GL_BLEND);

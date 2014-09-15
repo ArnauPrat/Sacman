@@ -66,6 +66,7 @@ void atLog::Warning(const char* message, ...) {
 void atLog::Message(const char* type, const char* message) {
     char buffer[1024];
     sprintf(buffer, ":%s:%s",type,message);
+    assert(strlen(buffer) < 1024);
     TIMED_MESSAGE(buffer);
 }
 

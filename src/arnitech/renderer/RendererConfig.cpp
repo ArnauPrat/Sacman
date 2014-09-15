@@ -11,6 +11,7 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
+#include "system/Context.hpp"
 #include "RendererConfig.hpp"
 #include <iostream>
 
@@ -25,16 +26,14 @@ void Initialize( atRendererConfig& config ) {
 }
 
 void PrintConfig( const atRendererConfig& config ) {
-    std::cout << std::endl;
-    std::cout << "+++++++++++++++" << std::endl;
-    std::cout << "Renderer Config" << std::endl;
-    std::cout << "+++++++++++++++" << std::endl;
-    std::cout << "Rendering Mode " << (config.m_RenderingMode==E_GRID_ALIGNED ? "GRID ALIGNED" : "PIXEL ALIGNED") << std::endl;
-    std::cout << "Cell Width " << config.m_CellWidth << std::endl;
-    std::cout << "Cell Height " << config.m_CellHeight << std::endl;
-    std::cout << "GridWidth " << config.m_GridWidth << std::endl;
-    std::cout << "GridHeight " << config.m_GridHeight << std::endl;
-    std::cout << "ViewportWidth " << config.m_ViewportWidth << std::endl;
-    std::cout << "ViewportHeight " << config.m_ViewportHeight << std::endl;
-    std::cout << std::endl;
+    atContext::log->Print("+++++++++++++++");
+    atContext::log->Print("Renderer Config");
+    atContext::log->Print("+++++++++++++++");
+    atContext::log->Print("Rendering Mode %s",config.m_RenderingMode==E_GRID_ALIGNED ? "GRID ALIGNED" : "PIXEL ALIGNED");
+    atContext::log->Print("Cell Width %d", config.m_CellWidth);
+    atContext::log->Print("Cell Height %d", config.m_CellHeight); 
+    atContext::log->Print("GridWidth %d", config.m_GridWidth); 
+    atContext::log->Print("GridHeight %d", config.m_GridHeight); 
+    atContext::log->Print("ViewportWidth %d",  config.m_ViewportWidth);
+    atContext::log->Print("ViewportHeight %d", config.m_ViewportHeight);
 }

@@ -15,6 +15,7 @@
 #ifndef ATRESOURCELOADER_H
 #define ATRESOURCELOADER_H
 
+#include "system/Context.hpp"
 #include "common/Macros.hpp"
 #include "PathFinder.hpp"
 #include <cassert>
@@ -47,7 +48,7 @@ template <class T> class atResourceLoader {
             const char* path = pathFinder.FindPath(filename);
             resource->Load( path );
             m_Resources.insert( std::pair< std::string, T*>( filename, resource ) );
-            std::cout << "Loaded resource: " << path << std::endl; 
+            atContext::log->Print("Loaded resource: %s", path); 
             return resource;
         }
 

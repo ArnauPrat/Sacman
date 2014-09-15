@@ -64,8 +64,8 @@ void atEffect::Load( const char* filename ) {
         int len;
         char log[256];
         glGetShaderInfoLog(m_ShaderID, 256, &len, log);
-        std::cout << "Error loading effect: " << filename << std::endl;
-        std::cout << std::string(log) << std::endl;
+        atContext::log->Error("Error linking effect: %s ",filename);
+        atContext::log->Error("%s ",log);
     }
 
     inFile.close();

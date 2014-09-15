@@ -16,7 +16,7 @@
 
 #include "arnitech/scene/Level.hpp"
 
-#define SACMANLEVEL_FILE_NAME
+#define SACMANLEVEL_FILE_NAME_LENGTH 32
 
 ATLEVEL_CLASS(Level) {
     public:
@@ -26,7 +26,7 @@ ATLEVEL_CLASS(Level) {
         ATLEVEL_SHUT_DOWN
 
     private:
-        char    m_LevelName[SACMANLEVEL_FILE_NAME];
+        char    m_LevelName[SACMANLEVEL_FILE_NAME_LENGTH];
 };
 
 

@@ -14,9 +14,11 @@
 #ifndef ATLOG_H
 #define ATLOG_H
 
+#include "common/Macros.hpp"
 #include <cstdio>
 
 class atLog {
+    ATNON_COPYABLE(atLog)
     public:
         atLog(const char* logFileName);
         ~atLog();

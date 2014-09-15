@@ -12,6 +12,7 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.
   */
 
+#include "system/Context.hpp"
 #include "GLSL.hpp"
 #include "PixelShader.hpp"
 #include <fstream>
@@ -69,8 +70,8 @@ void atPixelShader::Load( const char* filename ) {
     glGetShaderInfoLog(m_ShaderID, 256, &len, log);
 
     if( result != GL_TRUE ) {
-        std::cout << "Error loading pixel shader: " << filename << std::endl;
-        std::cout << std::string(log) << std::endl;
+        atContext::log->Error("Error loading pixel shader: %s ",filename);
+        atContext::log->Error("%s ",log);
     }
 
     m_Vars = ParseVars(static_cast<int>(source.size()), src, sizes); 

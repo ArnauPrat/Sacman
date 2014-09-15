@@ -19,7 +19,6 @@
 #include <cstring>
 #include <functional>
 
-
 atLevel::atLevel() :
     m_Gravity( 0.0f, -10.0f ),
     m_PhysicsTime( 0.0f ),

@@ -12,9 +12,11 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
 #include "PathFinder.hpp"
+#include "common/Log.hpp"
+#include "system/Context.hpp"
+#include <cassert>
 #include <cstring>
 #include <fstream>
-#include <cassert>
 #include <iostream>
 
 atPathFinder::atPathFinder(){
@@ -37,7 +39,7 @@ const char* atPathFinder::FindPath( const char* fileName ) {
             return m_Buffer; 
         }
     } 
-    std::cout << "FILE " << fileName << " not found" << std::endl;
+    atContext::log->Error("FILE %s not found", fileName);
     assert(false);
     return NULL;
 }

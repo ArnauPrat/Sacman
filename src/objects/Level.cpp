@@ -18,7 +18,7 @@
 #include <cstring>
 
 Level::Level( const char* name ) {
-    assert(std::strlen(name) < SACMANLEVEL_FILE_NAME);
+    assert(std::strlen(name) < SACMANLEVEL_FILE_NAME_LENGTH);
     std::strcpy(m_LevelName, name);
 }
 

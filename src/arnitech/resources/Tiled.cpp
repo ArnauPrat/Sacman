@@ -11,6 +11,7 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
+#include "system/Context.hpp"
 #include "Tiled.hpp"
 #include <cassert>
 #include <cstring>
@@ -20,7 +21,6 @@
 #include <streambuf>
 #include <string>
 
-
 atTiledLevel* LoadTiledLevel( const char* fileName ) {
     std::ifstream t(fileName);
     std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
@@ -28,9 +28,8 @@ atTiledLevel* LoadTiledLevel( const char* fileName ) {
     Json::Reader reader;
     bool parsedSuccess = reader.parse( str, root, false );
     if(!parsedSuccess) {
-        std::cout << "Failed to parse Tiled .json file: " << fileName << std::endl 
-            << reader.getFormattedErrorMessages()
-            << std::endl;
+        atContext::log->Error("Failed to parse Tiled .json file: %s", fileName);
+        atContext::log->Error("%s", reader.getFormattedErrorMessages().c_str());
         assert(false);
     }
     atTiledLevel* level = new atTiledLevel();
@@ -79,10 +78,10 @@ atTiledLevel* LoadTiledLevel( const char* fileName ) {
                     level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_TileId = 0;
                 }
                 const char* name = (*it2)["name"].asCString();
-                assert(std::strlen(name) < OBJECT_NAME_LENGTH);
+                assert(std::strlen(name) < ATTILED_OBJECT_NAME_LENGTH);
                 std::strcpy(level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_Name, name);
                 const char* type = (*it2)["type"].asCString();
-                assert(std::strlen(type) < OBJECT_TYPE_NAME_LENGTH);
+                assert(std::strlen(type) < ATTILED_OBJECT_TYPE_NAME_LENGTH);
                 std::strcpy(level->m_Layers[i].m_ObjectGroup.m_Objects[j].m_Type, type);
                 object.m_X = (*it2)["x"].asInt();
                 object.m_Y = (*it2)["y"].asInt();
@@ -98,8 +97,8 @@ atTiledLevel* LoadTiledLevel( const char* fileName ) {
                 }
                 int k = 0;
                 for( auto itP = names.begin(); itP != names.end(); ++itP, ++k) {
-                    assert( std::strlen((*itP).c_str()) < OBJECT_PROPERTY_NAME_LENGTH );
-                    assert( std::strlen(properties[(*itP)].asCString()) < OBJECT_PROPERTY_VALUE_LENGTH );
+                    assert( std::strlen((*itP).c_str()) < ATTILED_OBJECT_PROPERTY_NAME_LENGTH );
+                    assert( std::strlen(properties[(*itP)].asCString()) < ATTILED_OBJECT_PROPERTY_VALUE_LENGTH );
                     std::strcpy(object.m_Properties[k].m_Name, (*itP).c_str());
                     std::strcpy(object.m_Properties[k].m_Value, properties[(*itP)].asCString());
                 }
