@@ -14,17 +14,15 @@
 
 #include "Config.hpp"
 #include "Context.hpp"
-#include "renderer/Globals.hpp"
+#include "resources/Resources.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
-atConfig::atConfig() : 
-    m_FullScreen( false ),
-    m_DrawDebug(false) {
-    }
-
-atConfig::~atConfig() {
+void Initialize( atConfig& config ) {
+    Initialize(config.m_RendererConfig);
+    config.m_FullScreen = false;
+    config.m_DrawDebug = false;
 }
 
 bool Load( atConfig& config, const std::string& filename ) {
@@ -84,5 +82,3 @@ end:
     }
     return true;
 }
-
-#undef PRINT_OPTION

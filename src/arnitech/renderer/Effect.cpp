@@ -13,7 +13,7 @@
   */
 
 #include "Effect.hpp"
-#include "Globals.hpp"
+#include "resources/Resources.hpp"
 #include <GL/glew.h>
 #include <cstring>
 #include <fstream>

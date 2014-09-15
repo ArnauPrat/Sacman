@@ -20,9 +20,6 @@ enum atRenderingMode {
 };
 
 struct atRendererConfig {
-    atRendererConfig();
-    ~atRendererConfig();
-
     atRenderingMode     m_RenderingMode;    /**< @brief The rendering mode: pixel or grid aligned.*/
     int                 m_CellWidth;        /**< @brief The width of a cell.*/
     int                 m_CellHeight;       /**< @brief The height of a cell.*/
@@ -32,5 +29,6 @@ struct atRendererConfig {
     int                 m_ViewportHeight;   /**< @brief THe heighr of the viewport.*/
 };
 
+void Initialize( atRendererConfig& config );
 void PrintConfig( const atRendererConfig& config );
 #endif

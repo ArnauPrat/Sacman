@@ -66,6 +66,7 @@ void atContext::ProcessEvents() {
 
 void atContext::StartUp( const char* configFileName ) {
     log = new atLog("sacman.log");
+    Initialize(m_Config);
     Load(m_Config, configFileName);
     m_Run = true;
     SDLStartUp();

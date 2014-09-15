@@ -12,10 +12,10 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
 #include "Background.hpp"
-#include "arnitech/system/Context.hpp"
-#include "arnitech/resources/Tiled.hpp"
-#include "arnitech/renderer/Globals.hpp"
 #include "arnitech/math/Types.hpp"
+#include "arnitech/resources/Resources.hpp"
+#include "arnitech/resources/Tiled.hpp"
+#include "arnitech/system/Context.hpp"
 #include <cassert>
 #include <cfloat>
 #include <vector>

@@ -14,18 +14,14 @@
 #include "RendererConfig.hpp"
 #include <iostream>
 
-atRendererConfig::atRendererConfig() :
-    m_RenderingMode( E_GRID_ALIGNED ),
-    m_CellWidth( 32 ),
-    m_CellHeight( 32 ),
-    m_GridWidth( 40 ),
-    m_GridHeight( 22 ),
-    m_ViewportWidth( 1280 ),
-    m_ViewportHeight( 720 ) 
-{
-}
-
-atRendererConfig::~atRendererConfig(){
+void Initialize( atRendererConfig& config ) {
+    config.m_RenderingMode = E_GRID_ALIGNED;
+    config.m_CellWidth = 32;
+    config.m_CellHeight = 32;
+    config.m_GridWidth = 40;
+    config.m_GridHeight = 22;
+    config.m_ViewportWidth = 1280;
+    config.m_ViewportHeight = 720;
 }
 
 void PrintConfig( const atRendererConfig& config ) {

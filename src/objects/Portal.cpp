@@ -12,7 +12,7 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
 #include "Portal.hpp"
-#include "arnitech/renderer/Globals.hpp"
+#include "arnitech/resources/Resources.hpp"
 #include <cstring>
 
 

@@ -13,7 +13,7 @@
 
 #include "Level.hpp"
 #include "LoadLevel.hpp"
-#include "arnitech/renderer/Globals.hpp"
+#include "arnitech/resources/Resources.hpp"
 #include <cassert>
 #include <cstring>
 

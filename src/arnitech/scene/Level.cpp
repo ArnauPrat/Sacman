@@ -13,7 +13,7 @@
 
 #include "Body.hpp"
 #include "Level.hpp"
-#include "renderer/Globals.hpp"
+#include "resources/Resources.hpp"
 #include "resources/PathFinder.hpp"
 #include "system/Context.hpp"
 #include <cstring>

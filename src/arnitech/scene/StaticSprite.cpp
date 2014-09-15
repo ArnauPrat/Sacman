@@ -12,8 +12,8 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
 #include "StaticSprite.hpp"
+#include "arnitech/resources/Resources.hpp"
 #include "arnitech/system/Context.hpp"
-#include "arnitech/renderer/Globals.hpp"
 
 
 const char* atStaticSprite::m_Type = "staticsprite";

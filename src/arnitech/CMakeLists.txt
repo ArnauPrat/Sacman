@@ -40,52 +40,53 @@ INCLUDE_DIRECTORIES( ${LIB_DIR}/microprofile/include )
 
 
 SET( SOURCE_FILES 
-    ${LIB_DIR}/jsoncpp/jsoncpp.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/renderer/Buffer.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/renderer/Effect.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/renderer/Effect.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/renderer/Globals.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/renderer/Globals.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/renderer/GLSL.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/renderer/Effect.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/renderer/GLSL.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/renderer/PixelShader.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/renderer/GLSL.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/renderer/PixelShader.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/renderer/Renderer.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/renderer/PixelShader.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/renderer/Renderer.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/renderer/RendererConfig.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/renderer/Renderer.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/renderer/RendererConfig.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/renderer/Sprite.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/renderer/RendererConfig.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/renderer/Sprite.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/renderer/SpriteRenderer.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/renderer/Sprite.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/renderer/SpriteRenderer.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/renderer/Texture.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/renderer/SpriteRenderer.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/renderer/Texture.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/renderer/VertexShader.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/renderer/Texture.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/renderer/VertexShader.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/resources/ResourceLoader.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/resources/PathFinder.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/renderer/VertexShader.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/resources/PathFinder.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/resources/Tiled.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/resources/Tiled.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/common/Log.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/resources/PathFinder.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/common/Log.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/system/Events.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/system/Config.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/system/Config.cpp 
-    ${CMAKE_CURRENT_SOURCE_DIR}/system/Context.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/system/Context.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/system/EventManager.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/system/EventManager.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/scene/Body.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/common/Log.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/common/Macros.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/resources/ResourceLoader.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/resources/Resources.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/resources/Resources.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/resources/Tiled.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/resources/Tiled.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/scene/Body.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/scene/Camera.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/scene/Body.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/scene/Camera.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/scene/StaticSprite.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/scene/StaticSprite.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/scene/Entity.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/scene/Camera.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/scene/Entity.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/scene/Level.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/scene/Entity.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/scene/Level.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/scene/Level.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/scene/StaticSprite.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/scene/StaticSprite.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/system/Config.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/system/Config.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/system/Context.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/system/Context.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/system/EventManager.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/system/EventManager.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/system/Events.hpp
+    ${LIB_DIR}/jsoncpp/jsoncpp.cpp
 	)
 
 FIND_PACKAGE(OpenGL REQUIRED)

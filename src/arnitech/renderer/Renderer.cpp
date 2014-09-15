@@ -14,7 +14,7 @@
 
 #include "Effect.hpp"
 #include "Renderer.hpp"
-#include "Globals.hpp"
+#include "resources/Resources.hpp"
 #include <cassert>
 #include <cstring>
 #include <functional>

@@ -14,7 +14,7 @@
 
 #include "Character.hpp"
 #include "arnitech/system/Context.hpp"
-#include "arnitech/renderer/Globals.hpp"
+#include "arnitech/resources/Resources.hpp"
 #include <cstring>
 
 

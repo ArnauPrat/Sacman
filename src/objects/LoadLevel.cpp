@@ -12,7 +12,7 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
 #include "LoadLevel.hpp"
-#include "arnitech/renderer/Globals.hpp"
+#include "arnitech/resources/Resources.hpp"
 #include "arnitech/resources/Tiled.hpp"
 #include "arnitech/scene/Entity.hpp"
 #include "arnitech/scene/Level.hpp"
