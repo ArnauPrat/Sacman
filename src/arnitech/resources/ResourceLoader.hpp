@@ -15,6 +15,7 @@
 #ifndef ATRESOURCELOADER_H
 #define ATRESOURCELOADER_H
 
+#include "common/Macros.hpp"
 #include "PathFinder.hpp"
 #include <cassert>
 #include <iostream>
@@ -22,6 +23,7 @@
 
 extern atPathFinder pathFinder;
 template <class T> class atResourceLoader {
+    ATNON_COPYABLE(atResourceLoader)
     public:
         atResourceLoader() {
         }

@@ -14,9 +14,10 @@
 #ifndef SACMANBODY_H
 #define SACMANBODY_H
 
-#include "arnitech/scene/Level.hpp"
-#include "arnitech/scene/Entity.hpp"
-#include "arnitech/math/Types.hpp"
+#include "common/Macros.hpp"
+#include "scene/Level.hpp"
+#include "scene/Entity.hpp"
+#include "math/Types.hpp"
 #include <Box2D/Box2D.h>
 
 
@@ -31,10 +32,10 @@ enum atBoxType {
 };
 
 ATENTITY_CLASS(atBody) {
+    ATNON_COPYABLE(atBody)
     public:
         atBody( const char* name, 
                 const atBodyType type );
-
         ~atBody();
 
         ATENTITY_DRAW_SHAPE;
@@ -48,7 +49,6 @@ ATENTITY_CLASS(atBody) {
                 const atVector2f extent, 
                 const atBoxType boxType,
                 void* userData = NULL );
-
 
     private:
         static const char*                  m_Type;

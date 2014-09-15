@@ -14,6 +14,7 @@
 #ifndef ATLEVEL_H
 #define ATLEVEL_H
 
+#include "common/Macros.hpp"
 #include "scene/Entity.hpp"
 #include "system/EventManager.hpp"
 #include <Box2D/Box2D.h>
@@ -27,6 +28,7 @@
 
 class atRenderer;
 class atLevel : public b2ContactListener {
+    ATNON_COPYABLE(atLevel)
     friend class atContext;
     public:
     atLevel();
@@ -72,22 +74,22 @@ class atLevel : public b2ContactListener {
     void PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
     void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
 
+
     private:
 
     void _StartUp();
     void _ShutDown();
 
-    atLevel( const atLevel& );
     void SimulatePhysics( const double elapsedTime );
 
     /** @brief Processes the level events.**/
     void ProcessEvents();
 
     /** Event Handling **/
-    atEventManager    m_EventManager;
+    atEventManager              m_EventManager;
 
     /** Scene **/
-    std::vector<atEntity*>       m_Entities;
+    std::vector<atEntity*>      m_Entities;
 
     /** Physics **/
     b2Vec2          m_Gravity;      /**< @brief The physics of the scene.*/

@@ -14,9 +14,11 @@
 #ifndef ATTEXTURE_H
 #define ATTEXTURE_H
 
+#include "common/Macros.hpp"
 #include <GL/glew.h>
 
 class atTexture {
+    ATNON_COPYABLE(atTexture)
     friend class atRenderer;
     public:
     atTexture();

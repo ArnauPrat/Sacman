@@ -14,11 +14,13 @@
 #ifndef SACMAN_STATICSPRITE_H
 #define SACMAN_STATICSPRITE_H
 
+#include "common/Macros.hpp"
 #include "Entity.hpp"
 #include "renderer/Buffer.hpp"
 #include "renderer/Texture.hpp"
 
 ATENTITY_CLASS(atStaticSprite) {
+    ATNON_COPYABLE(atStaticSprite)
     public:
         atStaticSprite(const char* name, const char* textureName, const atVector2f texCoords[4] );
         ~atStaticSprite();

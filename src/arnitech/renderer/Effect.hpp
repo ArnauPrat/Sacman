@@ -15,6 +15,7 @@
 #ifndef ATEFFECT_H
 #define ATEFFECT_H
 
+#include "common/Macros.hpp"
 #include "GL/glew.h"
 #include "GLSL.hpp"
 #include "PixelShader.hpp"
@@ -23,6 +24,7 @@
 #include <map>
 
 class atEffect {
+    ATNON_COPYABLE(atEffect)
     public:
         atEffect();
         ~atEffect();

@@ -14,6 +14,7 @@
 #ifndef ATENTITY_H
 #define ATENTITY_H
 
+#include "common/Macros.hpp"
 #include "math/Types.hpp"
 #include "physics/Collision.hpp"
 
@@ -50,6 +51,7 @@ typedef short atEntityId;
 class atLevel;
 
 class atEntity {
+    ATNON_COPYABLE(atEntity)
     static atEntityId m_CurrentId;
     public:
     atEntity( const char* name );

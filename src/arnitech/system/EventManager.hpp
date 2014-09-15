@@ -13,6 +13,8 @@
 
 #ifndef ATEVENTMANAGER_H
 #define ATEVENTMANAGER_H
+
+#include "common/Macros.hpp"
 #include "Events.hpp"
 #include <map>
 #include <string>
@@ -21,6 +23,7 @@
 #include <functional>
 
     class atEventManager {
+        ATNON_COPYABLE(atEventManager)
         public:
             atEventManager();
             ~atEventManager();
@@ -56,7 +59,6 @@
             void LaunchEvent( const char* eventType, std::shared_ptr<void> data );
 
         private:
-            atEventManager( const atEventManager& eventManager );
             std::map<atEventType, std::list<std::function<void( std::shared_ptr<void> )> > >    m_EventTypeListeners; 
             std::map<std::string, std::list<std::function<void( std::shared_ptr<void> )> > >    m_StringListeners; 
     };

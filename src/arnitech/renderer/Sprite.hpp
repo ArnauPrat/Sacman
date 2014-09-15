@@ -14,36 +14,38 @@
 #ifndef ATSPRITE_H
 #define ATSPRITE_H
 
-#include "math/Types.hpp"
 #include "Buffer.hpp"
-#include "Texture.hpp"
 #include "Renderer.hpp"
+#include "Texture.hpp"
+#include "common/Macros.hpp"
+#include "math/Types.hpp"
 #include <vector>
 
 #define ATANIMATION_NAME_LENGTH 32
 #define ATANIMATION_NUM_FRAMES 16
-    class atSprite {
+class atSprite {
+    ATNON_COPYABLE(atSprite)
         friend class atSpriteRenderer;
-        public:
+    public:
 
-            struct atAnimation{
-                char     m_Name[ATANIMATION_NAME_LENGTH];
-                char     m_Frames[ATANIMATION_NUM_FRAMES];
-                char     m_NumFrames;
-            };
-
-            atSprite();
-            ~atSprite();
-
-            void Load( const char* fileName );
-
-        private:
-            static bool                 m_Initialized;
-            static atVertexBuffer       m_Vertices;
-            static atIndexBuffer        m_Indices;
-            atTexCoordBuffer            m_TexCoords;
-            atTexture*                  m_Texture;
-            std::vector<atAnimation>    m_Animations;
+    struct atAnimation{
+        char     m_Name[ATANIMATION_NAME_LENGTH];
+        char     m_Frames[ATANIMATION_NUM_FRAMES];
+        char     m_NumFrames;
     };
+
+    atSprite();
+    ~atSprite();
+
+    void Load( const char* fileName );
+
+    private:
+    static bool                 m_Initialized;
+    static atVertexBuffer       m_Vertices;
+    static atIndexBuffer        m_Indices;
+    atTexCoordBuffer            m_TexCoords;
+    atTexture*                  m_Texture;
+    std::vector<atAnimation>    m_Animations;
+};
 
 #endif

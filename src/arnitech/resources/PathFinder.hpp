@@ -14,9 +14,11 @@
 #ifndef ATPATHFINDER_H
 #define ATPATHFINDER_H
 
+#include "common/Macros.hpp"
 #include <vector>
 
 class atPathFinder {
+    ATNON_COPYABLE(atPathFinder)
     public:
         atPathFinder();
         ~atPathFinder();

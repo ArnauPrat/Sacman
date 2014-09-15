@@ -15,11 +15,13 @@
 #ifndef ATVERTEXSHADER_H
 #define ATVERTEXSHADER_H
 
+#include "common/Macros.hpp"
 #include "GLSL.hpp"
 #include <GL/glew.h>
 #include <vector>
 
 class atVertexShader {
+    ATNON_COPYABLE(atVertexShader)
     friend class atEffect;
     public:
     atVertexShader();

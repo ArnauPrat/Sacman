@@ -14,10 +14,11 @@
 #ifndef ATSPRITERENDERER_H
 #define ATSPRITERENDERER_H
 
+#include "common/Macros.hpp"
 #include "Sprite.hpp"
 
-
 class atSpriteRenderer {
+    ATNON_COPYABLE(atSpriteRenderer)
     public:
         atSpriteRenderer( const atSprite& sprite );
         ~atSpriteRenderer();

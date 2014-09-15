@@ -14,17 +14,19 @@
 #ifndef ATRENDERER_H
 #define ATRENDERER_H
 
-#include "Types.hpp"
 #include "Buffer.hpp"
 #include "Effect.hpp"
 #include "RendererConfig.hpp"
 #include "Texture.hpp"
-#include <math/Types.hpp>
+#include "Types.hpp"
+#include "common/Macros.hpp"
 #include <GL/glew.h>
+#include <math/Types.hpp>
 #include <vector>
 
 
 class atRenderer {
+    ATNON_COPYABLE(atRenderer)
 
     struct atDrawingInfo {
         atVertexBuffer*       m_Vertices;

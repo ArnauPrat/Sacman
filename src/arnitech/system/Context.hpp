@@ -15,6 +15,7 @@
 #define SACMAN_CONTEXT_H
 
 #include "common/Log.hpp"
+#include "common/Macros.hpp"
 #include "scene/Level.hpp"
 #include "system/Config.hpp"
 #include <GL/glew.h>
@@ -23,6 +24,7 @@
 #define ATLEVEL_NAME_LENGTH   32
 
 class atContext {
+    ATNON_INSTANTIABLE(atContext);
     public:
 
         /** @brief Initializes up the system.

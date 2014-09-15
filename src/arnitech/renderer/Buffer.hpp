@@ -14,22 +14,25 @@
 #ifndef ATBUFFER_H
 #define ATBUFFER_H
 
+#include "common/Macros.hpp"
+#include "math/Types.hpp"
 #include <GL/glew.h>
 #include <cassert>
 #include <cfloat>
-#include <math/Types.hpp>
 
 template <class T, GLenum BufferType >
 class atBuffer {
+    ATNON_COPYABLE(atBuffer)
     public:
         atBuffer() :
             m_Data( GL_INVALID_VALUE ),
             m_NumElements( 0 ) {
             }
 
-        atBuffer( const atBuffer<T, BufferType>& buffer ) 
+/*        atBuffer( const atBuffer<T, BufferType>& buffer ) 
         {
         }
+        */
 
         ~atBuffer() {
             if( m_Data != GL_INVALID_VALUE ) {

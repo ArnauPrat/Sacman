@@ -16,11 +16,13 @@
 #define ATPIXELSHADER_H
 
 
+#include "common/Macros.hpp"
 #include "GLSL.hpp"
 #include <GL/glew.h>
 #include <vector>
 
 class atPixelShader {
+    ATNON_COPYABLE(atPixelShader)
     friend class atEffect;
     public:
     atPixelShader();

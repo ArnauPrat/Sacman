@@ -14,10 +14,11 @@
 #ifndef ATCAMERA_HPP
 #define ATCAMERA_HPP
 
+#include "common/Macros.hpp"
 #include "Entity.hpp"
 
 ATENTITY_CLASS(atCamera) {
-    
+    ATNON_COPYABLE(atCamera)
     public:
         atCamera( const char* name );
         virtual ~atCamera();
