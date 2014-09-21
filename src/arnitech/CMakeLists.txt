@@ -2,8 +2,14 @@ CMAKE_MINIMUM_REQUIRED( VERSION 2.8.3 )
 PROJECT( arnitech )
 
 IF( UNIX )
-    SET(CMAKE_CXX_FLAGS_DEBUG "-O0 --std=c++11 -g -pg -Wall -Wno-strict-aliasing")	
-	SET(CMAKE_CXX_FLAGS_RELEASE "-O3 --std=c++11 -DNDEBUG -Wall -Wno-strict-aliasing")
+    SET(CMAKE_CXX_FLAGS_DEBUG "-O0 --std=c++11 -g -pg -Wall -Wno-sign-compare -Wno-unused-variable -Wno-strict-aliasing")	
+    SET(CMAKE_CXX_FLAGS_RELEASE "-O3 --std=c++11 -DNDEBUG -Wall -Wno-sign-compare -Wno-unused-variable -Wno-strict-aliasing")
+    FOREACH( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
+        STRING( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG )
+        SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
+        SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
+        SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
+    ENDFOREACH( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 	IF( ${CMAKE_SIZEOF_VOID_P} EQUAL 4)
         MESSAGE( FATAL_ERROR "Linux32 is Unsupported" )
 	ENDIF( ${CMAKE_SIZEOF_VOID_P} EQUAL 4)
@@ -23,6 +29,7 @@ IF( NOT PLATFORM )
 	MESSAGE(FATAL_ERROR "Unable to detect platform")
 ENDIF( NOT PLATFORM )
 
+#SET( CMAKE_VERBOSE_MAKEFILE TRUE)
 ADD_DEFINITIONS(-DGLEW_STATIC
                 -DFREEIMAGE_LIB
                 -D_CRT_SECURE_NO_WARNINGS)
@@ -95,12 +102,46 @@ LINK_DIRECTORIES( ${LIB_DIR}/glew/${PLATFORM} )
 LINK_DIRECTORIES( ${LIB_DIR}/box2d/${PLATFORM} )
 LINK_DIRECTORIES( ${LIB_DIR}/sdl2/${PLATFORM} )
 
-ADD_LIBRARY( ${PROJECT_NAME} ${SOURCE_FILES} )
+
+ADD_LIBRARY( ${PROJECT_NAME} SHARED ${SOURCE_FILES} )
+TARGET_LINK_LIBRARIES( ${PROJECT_NAME} ${OPENGL_LIBRARIES} glew freeimage Box2D SDL2)
+
+IF( UNIX )
+    add_custom_command(TARGET ${PROJECT_NAME} 
+        POST_BUILD
+        COMMAND cp ${LIB_DIR}/box2d/linux64/libBox2D.so ${CMAKE_BINARY_DIR}/libBox2D.so.2.3.0
+        )
+ENDIF( UNIX )
+
+IF( WIN32 )
+    add_custom_command(TARGET ${PROJECT_NAME} 
+        POST_BUILD
+        COMMAND cp ${LIB_DIR}/box2d/win64/Box2D.dll ${CMAKE_BINARY_DIR}/Box2D.dll
+        )
+
+    add_custom_command(TARGET ${PROJECT_NAME} 
+        POST_BUILD
+        COMMAND cp ${LIB_DIR}/sdl2/win64/sdl2.dll ${CMAKE_BINARY_DIR}/sdl2.dll
+        )
+ENDIF( WIN32 )
 
 SET( ARNITECH_INCLUDE_DIRS 
     ${CMAKE_CURRENT_SOURCE_DIR} 
-    ${LIB_DIR}/freeimage/include
-    ${LIB_DIR}/glew/include
+    ${LIB_DIR}/jsoncpp/include 
+    ${LIB_DIR}/glew/include 
+    ${LIB_DIR}/freeimage/include 
+    ${LIB_DIR}/sdl2/include 
+    ${LIB_DIR}/sdl2/${PLATFORM}/include 
+    ${LIB_DIR}/box2d/include 
+    ${LIB_DIR}/jsoncpp/include 
+    ${LIB_DIR}/microprofile/include 
     PARENT_SCOPE
 )
 
+SET( ARNITECH_LIB_DIRS 
+    ${LIB_DIR}/box2d/${PLATFORM}
+    ${LIB_DIR}/sdl2/${PLATFORM}
+    ${LIB_DIR}/freeimage/${PLATFORM}
+    ${LIB_DIR}/glew/${PLATFORM}
+    PARENT_SCOPE
+)
