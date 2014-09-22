@@ -14,6 +14,7 @@
 #ifndef ATEVENTMANAGER_H
 #define ATEVENTMANAGER_H
 
+#include "common/Platform.hpp"
 #include "common/Macros.hpp"
 #include "Events.hpp"
 #include <map>
@@ -25,38 +26,38 @@
     class atEventManager {
         ATNON_COPYABLE(atEventManager)
         public:
-            atEventManager();
-            ~atEventManager();
+            ATEXPORT atEventManager();
+            ATEXPORT ~atEventManager();
             
             /** @brief Registers an event to listen to an event type.
              *  @param eventType the event type.
              *  @param listener the listener of the event.*/ 
-            void RegisterListener( atEventType eventType, std::function<void( std::shared_ptr<void> )> listener ); 
+            ATEXPORT void RegisterListener( atEventType eventType, std::function<void( std::shared_ptr<void> )> listener ); 
 
             /** @brief Registers an event to listen to an event type.
              *  @param eventType the event type.
              *  @param listener the listener of the event.*/ 
-            void RegisterListener( const char* eventType,std::function<void( std::shared_ptr<void> )> listener  ); 
+            ATEXPORT void RegisterListener( const char* eventType,std::function<void( std::shared_ptr<void> )> listener  ); 
 
             /** @brief Unregisters an event to listen to an event type.
              *  @param eventType the event type.
              *  @param listener the listener of the event.*/ 
-            void UnregisterListener( atEventType eventType, std::function<void( std::shared_ptr<void> )> listener ); 
+            ATEXPORT void UnregisterListener( atEventType eventType, std::function<void( std::shared_ptr<void> )> listener ); 
 
             /** @brief Unregisters an event to listen to an event type.
              *  @param eventType the event type.
              *  @param listener the listener of the event.*/ 
-            void UnregisterListener( const char* eventType, std::function<void( std::shared_ptr<void> )> listener  ); 
+            ATEXPORT void UnregisterListener( const char* eventType, std::function<void( std::shared_ptr<void> )> listener  ); 
 
             /** @brief Launchs an event.
              *  @param eventType the event type.
              *  @param data data associated with the event.*/
-            void LaunchEvent( atEventType eventType, std::shared_ptr<void> data );
+            ATEXPORT void LaunchEvent( atEventType eventType, std::shared_ptr<void> data );
 
             /** @brief Launchs an event.
              *  @param eventType the event type.
              *  @param data data associated with the event.*/
-            void LaunchEvent( const char* eventType, std::shared_ptr<void> data );
+            ATEXPORT void LaunchEvent( const char* eventType, std::shared_ptr<void> data );
 
         private:
             std::map<atEventType, std::list<std::function<void( std::shared_ptr<void> )> > >    m_EventTypeListeners; 

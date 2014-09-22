@@ -55,7 +55,7 @@
         setVariable = true; \
     }
 
-int main( int argc, char** argv ) {
+int main( int argc, char* argv[] ) {
 
     const char* configFilename = NULL;
     bool configFilenameSet = false; 

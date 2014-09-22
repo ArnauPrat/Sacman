@@ -14,6 +14,7 @@
 #ifndef ATSPRITE_H
 #define ATSPRITE_H
 
+#include "common/Platform.hpp"
 #include "Buffer.hpp"
 #include "Renderer.hpp"
 #include "Texture.hpp"
@@ -34,10 +35,10 @@ class atSprite {
         char     m_NumFrames;
     };
 
-    atSprite();
-    ~atSprite();
+    ATEXPORT atSprite();
+    ATEXPORT ~atSprite();
 
-    void Load( const char* fileName );
+    ATEXPORT void Load( const char* fileName );
 
     private:
     static bool                 m_Initialized;

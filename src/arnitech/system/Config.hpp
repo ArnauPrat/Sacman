@@ -14,6 +14,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 #ifndef ATCONFIG_H
 #define ATCONFIG_H
 
+#include "common/Platform.hpp"
 #include "renderer/RendererConfig.hpp"
 #include <string>
 
@@ -26,10 +27,10 @@ struct atConfig {
 /** @brief Loads a configuration file.
  *  @param filename The name of the file.
  *  @return True if the load was successfull. False otherwise.*/
-bool Load( atConfig& config, const std::string& filename );
+ATEXPORT bool Load( atConfig& config, const std::string& filename );
 
 /** @brief Initializes a configuration structure to default parameters.
  *  @param config The config structure to initialize.*/
-void Initialize( atConfig& config );
+ATEXPORT void Initialize( atConfig& config );
 
 #endif

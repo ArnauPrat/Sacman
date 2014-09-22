@@ -27,3 +27,9 @@ build/src/dali/Release/dali.lib
 *.user
 build/dali.lib
 2p1m2ehr.3gu.txt
+build/arnitech.dll
+build/arnitech.exp
+build/arnitech.lib
+build/sacman.exp
+build/sacman.lib
+build/sdl2.dll

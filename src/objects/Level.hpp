@@ -21,7 +21,7 @@
 ATLEVEL_CLASS(Level) {
     public:
         Level( const char* name );
-        ~Level( );
+        virtual ~Level( );
         ATLEVEL_START_UP
         ATLEVEL_SHUT_DOWN
 

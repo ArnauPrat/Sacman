@@ -14,6 +14,7 @@
 #ifndef SACMAN_CONTEXT_H
 #define SACMAN_CONTEXT_H
 
+#include "common/Platform.hpp"
 #include "common/Log.hpp"
 #include "common/Macros.hpp"
 #include "scene/Level.hpp"
@@ -29,28 +30,28 @@ class atContext {
 
         /** @brief Initializes up the system.
          *  @param configFileName The configuration file name of the engine*/
-        static void StartUp( const char* configFileName );
+        ATEXPORT static void StartUp( const char* configFileName );
 
         /** @brief Frees the system.*/
-        static void ShutDown();
+        ATEXPORT static void ShutDown();
 
         /** @brief Starts the game loop.*/
-        static void StartGameLoop();
+        ATEXPORT static void StartGameLoop();
 
         /** @brief Exits the game loop.*/
-        static void Exit();
+        ATEXPORT static void Exit();
 
         /** Rendering **/
-        static atRenderer m_Renderer;
+        ATEXPORT static atRenderer m_Renderer;
 
         /** Logging **/
-        static atLog* log;
+        ATEXPORT static atLog* log;
 
-        static atConfig GetConfig();
+        ATEXPORT static atConfig GetConfig();
 
-        static void PushLevel( atLevel* level );
+        ATEXPORT static void PushLevel( atLevel* level );
 
-        static void PopLevel();
+        ATEXPORT static void PopLevel();
 
 
     private:

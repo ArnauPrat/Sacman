@@ -49,19 +49,19 @@ class atRenderer {
 
     /** @brief Starts up the renderer.
      *  @param config The structure holding the configuration of the renderer.*/
-    void            	StartUp( const atRendererConfig& config );
+    ATEXPORT void            	StartUp( const atRendererConfig& config );
 
     /** @brief Shuts down the renderer.*/
-    void            	ShutDown();
+    ATEXPORT void            	ShutDown();
 
     /** @brief Starts a new frame.*/
-    void            	BeginFrame();
+    ATEXPORT void            	BeginFrame();
 
     /** @brief Ends the current frame.*/
-    void            	EndFrame();
+    ATEXPORT void            	EndFrame();
 
 
-    void                Draw(   const atVertexBuffer* vertices, 
+    ATEXPORT void                Draw(   const atVertexBuffer* vertices, 
                                 const atTexCoordBuffer* texCoords,
                                 const atIndexBuffer* indices,
                                 const atTexture* texture,
@@ -70,18 +70,18 @@ class atRenderer {
                                 const atVector2f& translate = {0.0f, 0.0f}, 
                                 const atVector2f& scale = {1.0f, 1.0f} );
 
-    void                Draw(   const atTexCoordBuffer* texCoords,
+    ATEXPORT void                Draw(   const atTexCoordBuffer* texCoords,
                                 const atTexture* texture,
                                 const int depth,
                                 const atVector2f& translate = {0.0f, 0.0f}, 
                                 const atVector2f& scale = {1.0f, 1.0f} );
 
-    void                DrawBox( const atVector2f& min, 
+    ATEXPORT void                DrawBox( const atVector2f& min, 
                                  const atVector2f& extent,
                                  const atRGBAColor& color,
                                  const int depth );
 
-    void                SetCameraPosition( const atVector2f& position );
+    ATEXPORT void                SetCameraPosition( const atVector2f& position );
 
 
     private:

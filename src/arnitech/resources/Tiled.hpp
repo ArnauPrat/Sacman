@@ -13,7 +13,7 @@
 
 #ifndef ATTILED_H
 #define ATTILED_H
-
+#include "common/Platform.hpp"
 #include "math/Types.hpp"
 #include <map>
 #include <string>
@@ -89,12 +89,12 @@ struct atTiledLevel {
     atTiledLayer* m_Layers;
 };
 
-atTiledLevel* LoadTiledLevel( const char* fileName );
-void DeleteTiledLevel( atTiledLevel* tiledLevel );
-int FindTileSet( const atTiledLevel& tiledLevel, int id );
-atVector2f MinTexCoord( const atTiledTileSet& tileSet, int id );
-atVector2f MaxTexCoord( const atTiledTileSet& tileSet, int id );
-atVector2f TransformPosition( const atTiledLevel& level, int x, int y );
-const char* FindProperty( const atTiledObject& object, const char* propertyName );
+ATEXPORT atTiledLevel* LoadTiledLevel(const char* fileName);
+ATEXPORT void DeleteTiledLevel( atTiledLevel* tiledLevel );
+ATEXPORT int FindTileSet( const atTiledLevel& tiledLevel, int id );
+ATEXPORT atVector2f MinTexCoord( const atTiledTileSet& tileSet, int id );
+ATEXPORT atVector2f MaxTexCoord( const atTiledTileSet& tileSet, int id );
+ATEXPORT atVector2f TransformPosition( const atTiledLevel& level, int x, int y );
+ATEXPORT const char* FindProperty( const atTiledObject& object, const char* propertyName );
 
 #endif

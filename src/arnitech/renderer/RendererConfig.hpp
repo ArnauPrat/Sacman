@@ -14,6 +14,8 @@
 #ifndef ATRENDERERCONFIG_H
 #define ATRENDERERCONFIG_H
 
+#include "common/Platform.hpp"
+
 enum atRenderingMode {
     E_PIXEL_ALIGNED,
     E_GRID_ALIGNED
@@ -29,6 +31,6 @@ struct atRendererConfig {
     int                 m_ViewportHeight;   /**< @brief THe heighr of the viewport.*/
 };
 
-void Initialize( atRendererConfig& config );
-void PrintConfig( const atRendererConfig& config );
+ATEXPORT void Initialize( atRendererConfig& config );
+ATEXPORT void PrintConfig( const atRendererConfig& config );
 #endif

@@ -14,21 +14,22 @@
 #ifndef ATSPRITERENDERER_H
 #define ATSPRITERENDERER_H
 
+#include "common/Platform.hpp"
 #include "common/Macros.hpp"
 #include "Sprite.hpp"
 
 class atSpriteRenderer {
     ATNON_COPYABLE(atSpriteRenderer)
     public:
-        atSpriteRenderer( const atSprite& sprite );
-        ~atSpriteRenderer();
+        ATEXPORT atSpriteRenderer( const atSprite& sprite );
+        ATEXPORT ~atSpriteRenderer();
 
         /** @brief Draws the sprite.
          *  @param renderer The renderer to use.
          *  @param elapsedTime The elapsed time since the last call to draw.
          *  @param position The position to write the sprite to.
          *  @param scale The scale of the sprite.*/
-        void Draw( atRenderer& renderer, 
+        ATEXPORT void Draw( atRenderer& renderer, 
                 const double elapsedTime,
                 const int depth,
                 const atVector2f& position = {0.0f, 0.0f}, 
@@ -37,14 +38,14 @@ class atSpriteRenderer {
         /** @brief Launches an animation.
          *  @param name The name of the animation.
          *  @param loop True if we want to loop.*/
-        void LaunchAnimation( const char* name, double totalTime, bool loop  );
+        ATEXPORT void LaunchAnimation( const char* name, double totalTime, bool loop  );
 
         /** @brief Stops the current animation.*/
-        void StopAnimation();
+        ATEXPORT void StopAnimation();
 
         /** @brief Tells if the whe given animation is running.
          *  @return True if it is running. False otherwise.*/
-        bool IsAnimationRunning( const char* name );
+        ATEXPORT bool IsAnimationRunning( const char* name );
 
     private:
         /** @brief Gets the index of an animation.

@@ -15,6 +15,7 @@
 #ifndef ATVERTEXSHADER_H
 #define ATVERTEXSHADER_H
 
+#include "common/Platform.hpp"
 #include "common/Macros.hpp"
 #include "GLSL.hpp"
 #include <GL/glew.h>
@@ -24,12 +25,12 @@ class atVertexShader {
     ATNON_COPYABLE(atVertexShader)
     friend class atEffect;
     public:
-    atVertexShader();
-    ~atVertexShader();
+    ATEXPORT atVertexShader();
+    ATEXPORT ~atVertexShader();
 
     /** @brief Loads a vertex shader 
      *  @param filename The name of the texture.*/
-    void Load( const char* filename );
+    ATEXPORT void Load( const char* filename );
 
     private:
     GLuint                  m_ShaderID; /**< @brief The pixel shader identifier.*/

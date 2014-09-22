@@ -14,17 +14,18 @@
 #ifndef ATPATHFINDER_H
 #define ATPATHFINDER_H
 
+#include "common/Platform.hpp"
 #include "common/Macros.hpp"
 #include <vector>
 
 class atPathFinder {
     ATNON_COPYABLE(atPathFinder)
     public:
-        atPathFinder();
-        ~atPathFinder();
+        ATEXPORT atPathFinder();
+        ATEXPORT ~atPathFinder();
 
-        void                        AddDirectory( const char* directory );
-        const char*                 FindPath( const char* fileName );
+        ATEXPORT void                        AddDirectory( const char* directory );
+        ATEXPORT const char*                 FindPath( const char* fileName );
 
     private:
         char                        m_Buffer[2048];

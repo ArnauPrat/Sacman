@@ -14,23 +14,24 @@
 #ifndef ATCAMERA_HPP
 #define ATCAMERA_HPP
 
+#include "common/Platform.hpp"
 #include "common/Macros.hpp"
 #include "Entity.hpp"
 
 ATENTITY_CLASS(atCamera) {
     ATNON_COPYABLE(atCamera)
     public:
-        atCamera( const char* name );
-        virtual ~atCamera();
+        ATEXPORT atCamera( const char* name );
+        ATEXPORT virtual ~atCamera();
 
         ATENTITY_UPDATE
         ATENTITY_ENTER
         ATENTITY_LEAVE
         ATENTITY_ABSTRACT
 
-        void SetTarget( const char* name );
-        void SetLimitMin( const atVector2f& min );
-        void SetLimitMax( const atVector2f& max );
+        ATEXPORT void SetTarget( const char* name );
+        ATEXPORT void SetLimitMin( const atVector2f& min );
+        ATEXPORT void SetLimitMax( const atVector2f& max );
 
     private:
         static const char*  m_Type;

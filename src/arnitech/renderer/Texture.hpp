@@ -14,6 +14,7 @@
 #ifndef ATTEXTURE_H
 #define ATTEXTURE_H
 
+#include "common/Platform.hpp"
 #include "common/Macros.hpp"
 #include <GL/glew.h>
 
@@ -21,13 +22,13 @@ class atTexture {
     ATNON_COPYABLE(atTexture)
     friend class atRenderer;
     public:
-    atTexture();
-    ~atTexture();
+    ATEXPORT atTexture();
+    ATEXPORT ~atTexture();
 
     /** @brief Loads a texture
      *  @param library The resource library used to load other resources.
      *  @param filename The name of the texture.*/
-    void Load( const char* filename );
+    ATEXPORT void Load( const char* filename );
 
     private:
     GLuint m_TextureID; /**< @brief The texture identifier*/

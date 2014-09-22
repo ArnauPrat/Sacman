@@ -14,6 +14,7 @@
 #ifndef ATENTITY_H
 #define ATENTITY_H
 
+#include "common/Platform.hpp"
 #include "common/Macros.hpp"
 #include "math/Types.hpp"
 #include "physics/Collision.hpp"
@@ -54,23 +55,23 @@ class atEntity {
     ATNON_COPYABLE(atEntity)
     static atEntityId m_CurrentId;
     public:
-    atEntity( const char* name );
-    virtual ~atEntity();
+    ATEXPORT atEntity( const char* name );
+    ATEXPORT virtual ~atEntity();
 
-    virtual void        Draw( const double elapsedTime, const int depth ) const;
-    virtual void        DrawShape( const double elapsedTime, const int depth ) const;
-    virtual void        Update( const double elapsedTime );
-    virtual void        Collide( const atCollision& collision );
-    virtual void        Enter( atLevel* level , const atVector2f position, const atVector2f& extent);
-    virtual void        Leave( atLevel* level );
-    virtual atVector2f  Position() const = 0;
-    virtual void        SetPosition( const atVector2f& position ) = 0;
-    virtual atVector2f  Extent() const = 0;
-    virtual const char* Type() const = 0;
-    const char*         Name() const;
-    atEntityId          Id() const;
-    int                 Depth() const;
-    void                SetDepth( int depth );
+    ATEXPORT virtual void        Draw( const double elapsedTime, const int depth ) const;
+    ATEXPORT virtual void        DrawShape( const double elapsedTime, const int depth ) const;
+    ATEXPORT virtual void        Update( const double elapsedTime );
+    ATEXPORT virtual void        Collide( const atCollision& collision );
+    ATEXPORT virtual void        Enter( atLevel* level , const atVector2f position, const atVector2f& extent);
+    ATEXPORT virtual void        Leave( atLevel* level );
+    ATEXPORT virtual atVector2f  Position() const = 0;
+    ATEXPORT virtual void        SetPosition( const atVector2f& position ) = 0;
+    ATEXPORT virtual atVector2f  Extent() const = 0;
+    ATEXPORT virtual const char* Type() const = 0;
+    ATEXPORT const char*         Name() const;
+    ATEXPORT atEntityId          Id() const;
+    ATEXPORT int                 Depth() const;
+    ATEXPORT void                SetDepth( int depth );
 
     protected:
     atEntityId          m_Id;

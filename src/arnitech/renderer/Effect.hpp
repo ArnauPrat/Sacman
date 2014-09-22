@@ -15,6 +15,7 @@
 #ifndef ATEFFECT_H
 #define ATEFFECT_H
 
+#include "common/Platform.hpp"
 #include "common/Macros.hpp"
 #include "GL/glew.h"
 #include "GLSL.hpp"
@@ -26,20 +27,20 @@
 class atEffect {
     ATNON_COPYABLE(atEffect)
     public:
-        atEffect();
-        ~atEffect();
+        ATEXPORT atEffect();
+        ATEXPORT ~atEffect();
 
         /** @brief Loads an effect 
          *  @param filename The name of the texture.*/
-        void Load( const char* filename );
+        ATEXPORT void Load( const char* filename );
 
         /** @brief Sets a state function to set the state of a shader variable.
          *  @param var The variable to set.
          *  @param fp The pointer to the state function.*/
-        static void SetStateFunction( const atGlslVar var, std::function< void (GLuint) > );
+        ATEXPORT static void SetStateFunction( const atGlslVar var, std::function< void (GLuint) > );
 
         /** @brief Sets the state of an effect*/ 
-        static void SetEffect( const atEffect& effect );
+        ATEXPORT static void SetEffect( const atEffect& effect );
 
     private:
         GLuint  m_ShaderID;

@@ -14,10 +14,12 @@
 #ifndef ATLEVEL_H
 #define ATLEVEL_H
 
+#include "common/Platform.hpp"
 #include "common/Macros.hpp"
 #include "scene/Entity.hpp"
 #include "system/EventManager.hpp"
 #include <Box2D/Box2D.h>
+#include <vector>
 
 #define ATLEVEL_CLASS(className) class className : public atLevel 
 #define ATLEVEL_START_UP  virtual void StartUp();
@@ -31,48 +33,48 @@ class atLevel : public b2ContactListener {
     ATNON_COPYABLE(atLevel)
     friend class atContext;
     public:
-    atLevel();
-    virtual ~atLevel();
+    ATEXPORT atLevel();
+    ATEXPORT virtual ~atLevel();
 
     /** @brief Initializes a level.*/
-    virtual void StartUp();
+    ATEXPORT virtual void StartUp();
 
     /** @brief Frees a level.*/
-    virtual void ShutDown();
+    ATEXPORT virtual void ShutDown();
 
     /** @brief Draws the level.**/
-    void Draw( const double elapsedTime );
+    ATEXPORT void Draw( const double elapsedTime );
 
     /** @brief Draws debug information.**/
-    void DrawDebug( const double elapsedTime );
+    ATEXPORT void DrawDebug( const double elapsedTime );
 
     /** @brief Updates the entities of the level.*/
-    void Update( const double elapsedTime );
+    ATEXPORT void Update( const double elapsedTime );
 
     /** @brief Inserts an entity into the level.
      *  @param position The position to insert the entity to.
      *  @param extent The extent of the entity.*/
-    void Insert( atEntity* entity, const atVector2f& position, const atVector2f& extent);
+    ATEXPORT void Insert( atEntity* entity, const atVector2f& position, const atVector2f& extent);
 
     /** @brief Removes an entity from the level. */
-    void Remove( atEntity* entity );
+    ATEXPORT void Remove( atEntity* entity );
 
     /** @brief Gets an entity. */
-    atEntity* GetEntity( const char* name );
+    ATEXPORT atEntity* GetEntity( const char* name );
 
     /** Event managing functions. **/
-    void RegisterListener( atEventType eventType, std::function<void( std::shared_ptr<void>)> listener ); 
-    void RegisterListener( const char* eventType,std::function<void( std::shared_ptr<void>)> listener  ); 
-    void UnregisterListener( atEventType eventType, std::function<void( std::shared_ptr<void>)> listener ); 
-    void UnregisterListener( const char* eventType, std::function<void( std::shared_ptr<void>)> listener  ); 
-    void LaunchEvent( atEventType eventType, std::shared_ptr<void> data );
-    void LaunchEvent( const char* eventType, std::shared_ptr<void> data );
+    ATEXPORT void RegisterListener( atEventType eventType, std::function<void( std::shared_ptr<void>)> listener ); 
+    ATEXPORT void RegisterListener( const char* eventType,std::function<void( std::shared_ptr<void>)> listener  ); 
+    ATEXPORT void UnregisterListener( atEventType eventType, std::function<void( std::shared_ptr<void>)> listener ); 
+    ATEXPORT void UnregisterListener( const char* eventType, std::function<void( std::shared_ptr<void>)> listener  ); 
+    ATEXPORT void LaunchEvent( atEventType eventType, std::shared_ptr<void> data );
+    ATEXPORT void LaunchEvent( const char* eventType, std::shared_ptr<void> data );
 
-    b2World&  B2World();
-    void BeginContact(b2Contact* contact);
-    void EndContact(b2Contact* contact);
-    void PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
-    void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
+    ATEXPORT b2World&  B2World();
+    ATEXPORT void BeginContact(b2Contact* contact);
+    ATEXPORT void EndContact(b2Contact* contact);
+    ATEXPORT void PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
+    ATEXPORT void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
 
 
     private:

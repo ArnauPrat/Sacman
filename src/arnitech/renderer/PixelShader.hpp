@@ -25,12 +25,12 @@ class atPixelShader {
     ATNON_COPYABLE(atPixelShader)
     friend class atEffect;
     public:
-    atPixelShader();
-    ~atPixelShader();
+    ATEXPORT atPixelShader();
+    ATEXPORT ~atPixelShader();
 
     /** @brief Loads a pixel shader 
      *  @param filename The name of the texture.*/
-    void Load( const char* filename );
+    ATEXPORT void Load( const char* filename );
 
     private:
 

@@ -14,6 +14,7 @@
 #ifndef ATRESOURCES_H
 #define ATRESOURCES_H
 
+#include "common/Platform.hpp"
 #include "renderer/Effect.hpp"
 #include "renderer/PixelShader.hpp"
 #include "renderer/Sprite.hpp"
@@ -28,11 +29,11 @@ typedef atResourceLoader<atEffect>        atEffectLoader;
 typedef atResourceLoader<atPixelShader>   atPixelShaderLoader;
 typedef atResourceLoader<atVertexShader>  atVertexShaderLoader;
 
-extern atTextureLoader          textureLoader;
-extern atSpriteLoader           spriteLoader;
-extern atEffectLoader           effectLoader;
-extern atVertexShaderLoader     vertexShaderLoader;
-extern atPixelShaderLoader      pixelShaderLoader;
-extern atPathFinder             pathFinder;
+ATEXPORT extern atTextureLoader          textureLoader;
+ATEXPORT extern atSpriteLoader           spriteLoader;
+ATEXPORT extern atEffectLoader           effectLoader;
+ATEXPORT extern atVertexShaderLoader     vertexShaderLoader;
+ATEXPORT extern atPixelShaderLoader      pixelShaderLoader;
+ATEXPORT extern atPathFinder             pathFinder;
 
 #endif

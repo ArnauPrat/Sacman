@@ -14,6 +14,7 @@
 #ifndef SACMANBODY_H
 #define SACMANBODY_H
 
+#include "common/Platform.hpp"
 #include "common/Macros.hpp"
 #include "scene/Level.hpp"
 #include "scene/Entity.hpp"
@@ -34,18 +35,18 @@ enum atBoxType {
 ATENTITY_CLASS(atBody) {
     ATNON_COPYABLE(atBody)
     public:
-        atBody( const char* name, 
+        ATEXPORT atBody( const char* name, 
                 const atBodyType type );
-        ~atBody();
+        ATEXPORT ~atBody();
 
         ATENTITY_DRAW_SHAPE;
         ATENTITY_ENTER;
         ATENTITY_LEAVE;
         ATENTITY_ABSTRACT;
         
-        void Move( const float speed );
-        void ApplyForce( const atVector2f& force );
-        void AddBox( const atVector2f& position, 
+        ATEXPORT void Move( const float speed );
+        ATEXPORT void ApplyForce( const atVector2f& force );
+        ATEXPORT void AddBox( const atVector2f& position, 
                 const atVector2f extent, 
                 const atBoxType boxType,
                 void* userData = NULL );

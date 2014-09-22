@@ -11,26 +11,17 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
-#ifndef ATLOG_H
-#define ATLOG_H
+#ifndef ATPLATFORM_HPP
+#define ATPLATFORM_HPP
 
-#include "common/Platform.hpp"
-#include "common/Macros.hpp"
-#include <cstdio>
-
-class atLog {
-    ATNON_COPYABLE(atLog)
-    public:
-        ATEXPORT atLog(const char* logFileName);
-        ATEXPORT ~atLog();
-
-        ATEXPORT void Print( const char* message, ... );
-        ATEXPORT void Error( const char* message, ... );
-        ATEXPORT void Warning( const char* message, ... );
-
-    private:
-        void Message(const char* type, const char* message );
-        FILE* fd;
-};
+#ifdef _WINDOWS
+#    ifdef ATBUILDING
+#        define ATEXPORT __declspec( dllexport )
+#    else
+#        define ATEXPORT __declspec( dllimport )
+#    endif
+#else
+#        define ATEXPORT
+#endif
 
 #endif

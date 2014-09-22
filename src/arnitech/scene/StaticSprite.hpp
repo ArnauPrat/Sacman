@@ -14,6 +14,7 @@
 #ifndef SACMAN_STATICSPRITE_H
 #define SACMAN_STATICSPRITE_H
 
+#include "common/Platform.hpp"
 #include "common/Macros.hpp"
 #include "Entity.hpp"
 #include "renderer/Buffer.hpp"
@@ -22,8 +23,8 @@
 ATENTITY_CLASS(atStaticSprite) {
     ATNON_COPYABLE(atStaticSprite)
     public:
-        atStaticSprite(const char* name, const char* textureName, const atVector2f texCoords[4] );
-        ~atStaticSprite();
+        ATEXPORT atStaticSprite(const char* name, const char* textureName, const atVector2f texCoords[4] );
+        ATEXPORT ~atStaticSprite();
 
         ATENTITY_ABSTRACT
         ATENTITY_DRAW

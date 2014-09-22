@@ -14,6 +14,7 @@
 #ifndef ATBUFFER_H
 #define ATBUFFER_H
 
+#include "common/Platform.hpp"
 #include "common/Macros.hpp"
 #include "math/Types.hpp"
 #include <GL/glew.h>
@@ -24,7 +25,7 @@ template <class T, GLenum BufferType >
 class atBuffer {
     ATNON_COPYABLE(atBuffer)
     public:
-        atBuffer() :
+        ATEXPORT atBuffer() :
             m_Data( GL_INVALID_VALUE ),
             m_NumElements( 0 ) {
             }
@@ -34,13 +35,13 @@ class atBuffer {
         }
         */
 
-        ~atBuffer() {
+        ATEXPORT ~atBuffer() {
             if( m_Data != GL_INVALID_VALUE ) {
                 glDeleteBuffers( 1, &m_Data );
             }
         }
 
-        void AddData( const T vertices[], const int numElements ) {
+        ATEXPORT void AddData( const T vertices[], const int numElements ) {
             glGenBuffers(1,&m_Data);
             assert( m_Data != GL_INVALID_VALUE );
             m_NumElements = numElements;
@@ -59,7 +60,7 @@ typedef atBuffer<unsigned short, GL_ELEMENT_ARRAY_BUFFER> atIndexBuffer;
 
 class atVertexBuffer : public atVector2fBuffer {
     public:
-        void AddData(const atVector2f vertices[], const int numElements) {
+        ATEXPORT void AddData(const atVector2f vertices[], const int numElements) {
             atVector2fBuffer::AddData(vertices, numElements);
             m_AABBMin = { FLT_MAX, FLT_MAX };
             m_AABBMax = { -FLT_MAX, -FLT_MAX };
