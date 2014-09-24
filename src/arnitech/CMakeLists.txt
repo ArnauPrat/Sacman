@@ -2,8 +2,8 @@ CMAKE_MINIMUM_REQUIRED( VERSION 2.8.3 )
 PROJECT( arnitech )
 
 IF( UNIX )
-    SET(CMAKE_CXX_FLAGS_DEBUG "-O0 --std=c++11 -g -pg -Wall -Wno-sign-compare -Wno-unused-variable -Wno-strict-aliasing")	
-    SET(CMAKE_CXX_FLAGS_RELEASE "-O3 --std=c++11 -DNDEBUG -Wall -Wno-sign-compare -Wno-unused-variable -Wno-strict-aliasing")
+    SET(CMAKE_CXX_FLAGS_DEBUG "-O0 --std=c++11 -g -pg -Wall -Wno-sign-compare -Wno-unused-variable -Wno-strict-aliasing -Wno-format")	
+    SET(CMAKE_CXX_FLAGS_RELEASE "-O3 --std=c++11 -DNDEBUG -Wall -Wno-sign-compare -Wno-unused-variable -Wno-strict-aliasing -Wno-format")
     FOREACH( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
         STRING( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG )
         SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
@@ -98,6 +98,7 @@ SET( SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/system/Config.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/system/Context.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/system/Context.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/system/Profiler.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/system/EventManager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/system/EventManager.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/system/Events.hpp

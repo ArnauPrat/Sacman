@@ -44,8 +44,8 @@ class atRenderer {
 
     public:
 
-    atRenderer();
-    ~atRenderer();
+    ATEXPORT atRenderer();
+    ATEXPORT ~atRenderer();
 
     /** @brief Starts up the renderer.
      *  @param config The structure holding the configuration of the renderer.*/

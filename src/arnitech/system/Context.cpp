@@ -31,7 +31,6 @@ MICROPROFILE_DEFINE(MAIN, "MAIN", "Main", 0xff0000);
 
 #define FRAMES_PER_SECOND 60
 
-
 SDL_GLContext       atContext::m_GLcontext;
 SDL_Window*         atContext::m_Window = NULL;
 atConfig            atContext::m_Config;
