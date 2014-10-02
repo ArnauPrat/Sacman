@@ -16,20 +16,7 @@
 #include "renderer/Sprite.hpp"
 #include <iostream>
 
-/** PROFILING STUFF **/
-#if defined(__APPLE__) || defined(__linux__)
-#include <unistd.h>
-#endif
-
-#define MICRO_PROFILE_IMPL
-#define MICROPROFILE_UI 0
-#define MICROPROFILE_GPU_TIMERS 0
-#define MICROPROFILE_WEBSERVER 0 
-#include <microprofile.h>
-MICROPROFILE_DEFINE(MAIN, "MAIN", "Main", 0xff0000);
-/*********************/
-
-#define FRAMES_PER_SECOND 60
+#define FRAMES_PER_SECOND 60.0
 
 SDL_GLContext       atContext::m_GLcontext;
 SDL_Window*         atContext::m_Window = NULL;
@@ -44,14 +31,16 @@ void atContext::SDLStartUp() {
         log->Error("SDL_Init Error: ", SDL_GetError());
         exit(1);
     }
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     // Window mode MUST include SDL_WINDOW_OPENGL for use with OpenGL.
     m_Window = SDL_CreateWindow( "Sacman", 0, 0, 
             m_Config.m_RendererConfig.m_ViewportWidth,
             m_Config.m_RendererConfig.m_ViewportHeight, 
-            SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
+            SDL_WINDOW_OPENGL);
 
     // Create an OpenGL context associated with the window.
     m_GLcontext = SDL_GL_CreateContext(m_Window);
+    SDL_GL_SetSwapInterval(1);
 }
 
 void atContext::SDLShutDown() {
@@ -89,30 +78,26 @@ void atContext::ShutDown() {
 }
 
 void atContext::StartGameLoop() {
-    MicroProfileOnThreadCreate("Main");
-    MicroProfileSetForceEnable(true);
-    MicroProfileSetEnableAllGroups(true);
-    MicroProfileSetForceMetaCounters(true);
     unsigned int currentTime = SDL_GetTicks();
+    double renderElapsed = 0.0;
     while (m_Run) {
         unsigned int newTime = SDL_GetTicks();
         double elapsedTime = (newTime - currentTime);
-        MICROPROFILE_SCOPE(MAIN);
-        {
-            currentTime += static_cast<unsigned int>(elapsedTime);
-            MICROPROFILE_SCOPEI("Main", "Dummy", 0xff3399ff);
-            MICROPROFILE_META_CPU("Frame", 1);
-            m_CurrentLevel->Update(elapsedTime / 1000.0f);
+        currentTime += static_cast<unsigned int>(elapsedTime);
+        m_CurrentLevel->SimulatePhysics(elapsedTime / 1000.0f);
+
+        renderElapsed += elapsedTime;
+        while (renderElapsed >= 1000/FRAMES_PER_SECOND) {
+            m_CurrentLevel->Update(renderElapsed / 1000.0f);
             m_Renderer.BeginFrame();
-            m_CurrentLevel->Draw(elapsedTime / 1000.0);
+            m_CurrentLevel->Draw(renderElapsed / 1000.0);
             if (m_Config.m_DrawDebug)
-                m_CurrentLevel->DrawDebug(elapsedTime / 1000.0);
+                m_CurrentLevel->DrawDebug(renderElapsed / 1000.0);
+            m_Renderer.EndFrame();
+            SDL_GL_SwapWindow(m_Window);
+            renderElapsed -= 1000/FRAMES_PER_SECOND;
         }
-        MicroProfileFlip();
-        m_Renderer.EndFrame();
-        SDL_GL_SwapWindow(m_Window);
     }
-    MicroProfileShutdown();
 }
 
 void atContext::Exit() {

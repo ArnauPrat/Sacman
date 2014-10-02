@@ -135,8 +135,6 @@ void atLevel::Update( const double elapsedTime ) {
     for( atEntity* e : m_Entities ) {
         e->Update( elapsedTime );
     }
-    SimulatePhysics( elapsedTime );
-
 }
 
 void atLevel::Insert( atEntity* entity, const atVector2f& position, const atVector2f& extent ) {
@@ -160,7 +158,8 @@ atEntity* atLevel::GetEntity( const char* name ) {
 void atLevel::SimulatePhysics( const double elapsedTime ) {
     m_PhysicsTime+=elapsedTime;
     while(m_PhysicsTime >= m_TimeStep ) {
-        m_B2World->Step(static_cast<float32>(m_TimeStep), 6, 2);
+        //m_B2World->Step(static_cast<float32>(m_TimeStep), 6, 2);
+        m_B2World->Step(static_cast<float32>(m_TimeStep), 3, 1);
         m_PhysicsTime-=m_TimeStep;
     }
 }

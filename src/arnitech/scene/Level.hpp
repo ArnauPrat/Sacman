@@ -51,6 +51,9 @@ class atLevel : public b2ContactListener {
     /** @brief Updates the entities of the level.*/
     ATEXPORT void Update( const double elapsedTime );
 
+    /** @brief Simulates the physics. **/
+    ATEXPORT void SimulatePhysics( const double elapsedTime );
+
     /** @brief Inserts an entity into the level.
      *  @param position The position to insert the entity to.
      *  @param extent The extent of the entity.*/
@@ -76,13 +79,11 @@ class atLevel : public b2ContactListener {
     ATEXPORT void PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
     ATEXPORT void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
 
-
     private:
 
     void _StartUp();
     void _ShutDown();
 
-    void SimulatePhysics( const double elapsedTime );
 
     /** @brief Processes the level events.**/
     void ProcessEvents();
