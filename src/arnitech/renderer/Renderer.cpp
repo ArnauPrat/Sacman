@@ -251,6 +251,13 @@ void atRenderer::InitOpenGL() {
         atContext::log->Error("Error Loading glew");
     }
     atContext::log->Print("Status: Using glew %s", glewGetString(GLEW_VERSION));
+    if (glewIsSupported("GL_VERSION_3_0"))
+      atContext::log->Print("Ready for OpenGL 3.0\n");
+    else {
+      atContext::log->Error("OpenGL 3.0 not supported\n");
+      exit(1);
+    }
+          
     glViewport(0, 0, m_Config.m_ViewportWidth, m_Config.m_ViewportHeight);
     glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
     glEnable(GL_BLEND);

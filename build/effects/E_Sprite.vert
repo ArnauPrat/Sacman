@@ -1,8 +1,9 @@
+#version 130
 uniform mat3 uProjectionMatrix;
 uniform mat3 uViewMatrix;
 uniform mat3 uModelMatrix;
-vec2 in aPosition;
-vec2 in aTexCoord;
+in vec2 aPosition;
+in vec2 aTexCoord;
 varying vec2 vTexCoord;
 void main()
 {

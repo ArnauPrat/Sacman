@@ -1,3 +1,4 @@
+#version 330 
 uniform mat3 uProjectionMatrix;
 uniform mat3 uViewMatrix;
 uniform mat3 uModelMatrix;

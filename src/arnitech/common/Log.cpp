@@ -12,9 +12,10 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.*/
 
 #include "Log.hpp"
-#include <cstdarg>
-#include <cstring>
 #include <cassert>
+#include <cstdarg>
+#include <cstdlib>
+#include <cstring>
 #include <ctime>
 
 
@@ -54,7 +55,7 @@ void atLog::Print(const char* message, ...) {
 void atLog::Error(const char* message, ...) {
     char buffer[VARIADIC_BUFFER_SIZE]; 
     EXTRACT_VARIADIC(buffer, message)
-        Message("ERROR", buffer);
+      Message("ERROR", buffer);
 }
 
 void atLog::Warning(const char* message, ...) {

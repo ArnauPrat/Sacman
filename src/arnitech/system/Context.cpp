@@ -32,6 +32,9 @@ void atContext::SDLStartUp() {
         exit(1);
     }
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+
     // Window mode MUST include SDL_WINDOW_OPENGL for use with OpenGL.
     m_Window = SDL_CreateWindow( "Sacman", 0, 0, 
             m_Config.m_RendererConfig.m_ViewportWidth,
@@ -40,6 +43,12 @@ void atContext::SDLStartUp() {
 
     // Create an OpenGL context associated with the window.
     m_GLcontext = SDL_GL_CreateContext(m_Window);
+    log->Print("OpenGL Version string %s",reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+    int glslMajorVersion = -1, glslMinorVersion = -1;
+    SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &glslMajorVersion);
+    SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &glslMinorVersion);
+
+    log->Print("Executing with with shader version %d.%d",glslMajorVersion, glslMinorVersion);
     SDL_GL_SetSwapInterval(1);
 }
 
